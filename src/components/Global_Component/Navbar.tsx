@@ -141,14 +141,12 @@ const Navbar: React.FC = () => {
 
           {/* Right Side - Auth & Language */}
           <div className="hidden md:flex items-center space-x-4">
-            <motion.button
-              whileHover={{ scale: 1.05, backgroundColor: "#2563eb" }}
-              whileTap={{ scale: 0.95 }}
-              className="flex items-center space-x-1 px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 rounded-md hover:bg-gray-50 transition-all duration-300"
+            <button // Menghapus motion dan whileHover untuk menghilangkan efek hover
+              className="flex items-center space-x-1 px-3 py-2 text-sm font-medium text-gray-600 rounded-md"
             >
               <Globe className="h-4 w-4" />
               <span>EN</span>
-            </motion.button>
+            </button>
             <button
               onClick={handleLoginClick}
               className="text-gray-600 px-3 py-2 rounded-md text-sm font-medium transition-all duration-300"
@@ -167,13 +165,11 @@ const Navbar: React.FC = () => {
 
           {/* Mobile menu button */}
           <div className="md:hidden flex items-center space-x-2">
-            <motion.button
-              whileHover={{ scale: 1.1, rotate: 5 }}
-              whileTap={{ scale: 0.9 }}
-              className="p-2 text-gray-600 hover:text-gray-900 rounded-md transition-all duration-300"
+            <button // Menghapus motion dan whileHover untuk menghilangkan efek hover
+              className="p-2 text-gray-600 rounded-md"
             >
               <Globe className="h-5 w-5" />
-            </motion.button>
+            </button>
             <button
               onClick={toggleMenu}
               className="inline-flex items-center justify-center p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500 transition-all duration-300"
