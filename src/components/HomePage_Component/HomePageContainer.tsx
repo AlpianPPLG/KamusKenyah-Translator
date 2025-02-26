@@ -3,8 +3,6 @@ import WhyChooseUs from "./WhyChooseUs";
 import HowItWorks from "./HowItWorks";
 import Testimonials from "./Testimonials";
 import FAQ from "./FAQ";
-import ContactUs from "../Global_Component/ContactUs";
-import FooterSection from "../Global_Component/Footer";
 
 const HomePageContainer = () => {
   return (
@@ -14,8 +12,6 @@ const HomePageContainer = () => {
       <HowItWorks />
       <Testimonials />
       <FAQ />
-      <ContactUs />
-      <FooterSection />
     </div>
   );
 };

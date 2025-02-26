@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import {
   Mail,
   Phone,
@@ -10,12 +11,34 @@ import {
   ArrowRight,
   Globe,
   Send,
+  Star,
+  Award,
+  Users,
 } from "lucide-react";
+
+// Interface untuk link navigasi
+interface NavLink {
+  name: string;
+  href: string;
+}
+
+// Interface untuk grup navigasi
+interface NavGroup {
+  title: string;
+  links: NavLink[];
+}
+
+// Interface untuk testimonial singkat
+interface Testimonial {
+  name: string;
+  content: string;
+  rating: number;
+}
 
 const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
 
-  const footerLinks = [
+  const footerLinks: NavGroup[] = [
     {
       title: "Product",
       links: [
@@ -58,6 +81,64 @@ const Footer: React.FC = () => {
     },
   ];
 
+  // Data kontak
+  const contactInfo = [
+    {
+      icon: <Mail className="w-5 h-5" />,
+      detail: "support@kamuskenyah.com",
+      href: "mailto:support@kamuskenyah.com",
+    },
+    {
+      icon: <Phone className="w-5 h-5" />,
+      detail: "+62 123 456 7890",
+      href: "tel:+621234567890",
+    },
+    {
+      icon: <MapPin className="w-5 h-5" />,
+      detail: "123 Language Street, Translation Tower, Digital City, 98765",
+      href: "#",
+    },
+  ];
+
+  // Data media sosial
+  const socialLinks = [
+    { icon: <Facebook className="w-6 h-6" />, href: "#facebook" },
+    { icon: <Twitter className="w-6 h-6" />, href: "#twitter" },
+    { icon: <Instagram className="w-6 h-6" />, href: "#instagram" },
+    { icon: <Linkedin className="w-6 h-6" />, href: "#linkedin" },
+  ];
+
+  // Testimonial singkat untuk layar besar
+  const testimonials: Testimonial[] = [
+    {
+      name: "Sarah Putri",
+      content:
+        "KamusKenyah benar-benar membantu melestarikan bahasa Dayak Kenyah!",
+      rating: 5,
+    },
+    {
+      name: "Budi Santoso",
+      content: "Fitur terjemahan cepat dan akurat, sangat direkomendasikan!",
+      rating: 4,
+    },
+  ];
+
+  const [isHovered, setIsHovered] = useState(false);
+
+  // UseEffect untuk efek samping (contoh penggunaan, bisa diubah sesuai konteks)
+  useEffect(() => {
+    if (isHovered) {
+      console.log("Hovered!");
+    }
+    // Gunakan index untuk animasi atau logika tambahan
+    const interval = setInterval(() => {
+      footerLinks.forEach((group, index) => {
+        console.log(`Group ${index + 1}: ${group.title}`);
+      });
+    }, 5000); // Log setiap 5 detik untuk debugging/animasi
+    return () => clearInterval(interval);
+  }, [isHovered]);
+
   return (
     <footer className="bg-gradient-to-r from-gray-900 to-gray-800 text-white">
       {/* Top Section with Newsletter */}
@@ -80,7 +161,11 @@ const Footer: React.FC = () => {
                     className="w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                 </div>
-                <button className="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-medium rounded-lg transition-all duration-200 flex items-center justify-center">
+                <button
+                  className="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-medium rounded-lg transition-all duration-200 flex items-center justify-center"
+                  onMouseEnter={() => setIsHovered(true)}
+                  onMouseLeave={() => setIsHovered(false)}
+                >
                   Subscribe
                   <Send className="ml-2 h-4 w-4" />
                 </button>
@@ -96,9 +181,9 @@ const Footer: React.FC = () => {
 
       {/* Main Footer Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
           {/* Company Info */}
-          <div className="md:col-span-2">
+          <div className="md:col-span-2 lg:col-span-2 space-y-6">
             <div className="flex items-center mb-4">
               <span className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">
                 KamusKenyah
@@ -110,94 +195,162 @@ const Footer: React.FC = () => {
               digital tools.
             </p>
             <div className="space-y-3">
-              <div className="flex items-start">
-                <MapPin className="h-5 w-5 text-blue-400 mr-3 mt-0.5 flex-shrink-0" />
-                <p className="text-gray-300">
-                  123 Language Street, Translation Tower, Digital City, 98765
-                </p>
-              </div>
-              <div className="flex items-center">
-                <Phone className="h-5 w-5 text-blue-400 mr-3 flex-shrink-0" />
-                <p className="text-gray-300">+1 (234) 567-8901</p>
-              </div>
-              <div className="flex items-center">
-                <Mail className="h-5 w-5 text-blue-400 mr-3 flex-shrink-0" />
-                <p className="text-gray-300">contact@kamuskenyah.com</p>
-              </div>
+              {contactInfo.map((info, index) => (
+                <motion.div
+                  key={info.detail}
+                  initial={{ opacity: 0, x: -20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                  className="flex items-start"
+                >
+                  <div className="text-blue-400 mr-3 mt-0.5 flex-shrink-0">
+                    {info.icon}
+                  </div>
+                  <a
+                    href={info.href}
+                    className="text-gray-300 hover:text-white transition-colors duration-300"
+                  >
+                    {info.detail}
+                  </a>
+                </motion.div>
+              ))}
             </div>
             <div className="mt-6">
               <div className="flex space-x-4">
-                <a
-                  href="#"
-                  className="w-10 h-10 rounded-full bg-gray-800 hover:bg-blue-600 flex items-center justify-center transition-colors duration-200"
-                >
-                  <Facebook className="h-5 w-5" />
-                </a>
-                <a
-                  href="#"
-                  className="w-10 h-10 rounded-full bg-gray-800 hover:bg-blue-600 flex items-center justify-center transition-colors duration-200"
-                >
-                  <Twitter className="h-5 w-5" />
-                </a>
-                <a
-                  href="#"
-                  className="w-10 h-10 rounded-full bg-gray-800 hover:bg-blue-600 flex items-center justify-center transition-colors duration-200"
-                >
-                  <Instagram className="h-5 w-5" />
-                </a>
-                <a
-                  href="#"
-                  className="w-10 h-10 rounded-full bg-gray-800 hover:bg-blue-600 flex items-center justify-center transition-colors duration-200"
-                >
-                  <Linkedin className="h-5 w-5" />
-                </a>
+                {socialLinks.map((social, index) => (
+                  <motion.a
+                    key={social.href}
+                    href={social.href}
+                    whileHover={{ scale: 1.2, rotate: 5 }}
+                    whileTap={{ scale: 0.9 }}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6, delay: index * 0.1 }}
+                    className="w-10 h-10 rounded-full bg-gray-800 hover:bg-blue-600 flex items-center justify-center transition-colors duration-200"
+                    onMouseEnter={() => setIsHovered(true)}
+                    onMouseLeave={() => setIsHovered(false)}
+                  >
+                    {social.icon}
+                  </motion.a>
+                ))}
               </div>
             </div>
           </div>
 
-          {/* Links Sections */}
-          {footerLinks.map((section) => (
-            <div key={section.title}>
+          {/* Product, Company, Resources */}
+          {footerLinks.slice(0, 3).map((section, index) => (
+            <div key={section.title} className="space-y-4">
               <h4 className="text-lg font-semibold mb-4 text-white">
                 {section.title}
               </h4>
               <ul className="space-y-2">
-                {section.links.map((link) => (
+                {section.links.map((link, linkIndex) => (
                   <li key={link.name}>
-                    <a
+                    <motion.a
                       href={link.href}
-                      className="text-gray-300 hover:text-white transition-colors duration-200 flex items-center group"
+                      initial={{ opacity: 0, x: 20 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true }}
+                      transition={{
+                        duration: 0.6,
+                        delay: index * 0.1 + linkIndex * 0.05,
+                      }}
+                      className="text-gray-300 hover:text-white flex items-center group transition-colors duration-300"
                     >
                       <ArrowRight className="h-3 w-3 mr-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
                       {link.name}
-                    </a>
+                    </motion.a>
                   </li>
                 ))}
               </ul>
             </div>
           ))}
+
+          {/* Legal (Kembali ke Posisi Semula di Kolom Terakhir) */}
+          <div className="space-y-4">
+            <h4 className="text-lg font-semibold mb-4 text-white">Legal</h4>
+            <ul className="space-y-2">
+              {footerLinks[3].links.map((link, linkIndex) => (
+                <li key={link.name}>
+                  <motion.a
+                    href={link.href}
+                    initial={{ opacity: 0, x: 20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{
+                      duration: 0.6,
+                      delay: 3 * 0.1 + linkIndex * 0.05, // Delay berdasarkan posisi "Legal" di indeks 3
+                    }}
+                    className="text-gray-300 hover:text-white flex items-center group transition-colors duration-300"
+                  >
+                    <ArrowRight className="h-3 w-3 mr-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+                    {link.name}
+                  </motion.a>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Testimonial Singkat (Hanya di Layar Besar, sebelah kanan Legal) */}
+          <div className="hidden lg:block space-y-6">
+            <h4 className="text-lg font-semibold text-white mb-2">
+              Testimony Singkat
+            </h4>
+            <div className="space-y-4">
+              {testimonials.map((testimonial, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                  className="bg-gray-800 p-4 rounded-lg"
+                >
+                  <div className="flex items-center mb-2">
+                    {[...Array(testimonial.rating)].map((_, i) => (
+                      <Star
+                        key={i}
+                        className="w-5 h-5 text-yellow-400 fill-current"
+                      />
+                    ))}
+                  </div>
+                  <p className="text-gray-300 text-sm italic">
+                    "{testimonial.content}"
+                  </p>
+                  <p className="text-gray-200 text-sm mt-2 font-medium">
+                    - {testimonial.name}
+                  </p>
+                </motion.div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* App Download and Language Selector */}
+      {/* App Download, Awards, and Language Selector */}
       <div className="border-t border-gray-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
+            {/* App Download */}
             <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4">
-            <a
+              <a
                 href="#"
                 className="flex items-center justify-center px-4 py-2 border border-gray-600 rounded-lg hover:bg-gray-700 transition-colors duration-200"
               >
                 <svg
-                  className="h-6 w-6 mr-2"
+                  className="h-6 w-6 mr-2 text-blue-400"
                   viewBox="0 0 24 24"
                   fill="currentColor"
                 >
                   <path d="M20.55,10.26l-6.25-3.61c-0.58-0.34-1.17-0.37-1.66-0.08L5.38,10.26c-0.44,0.25-0.7,0.67-0.7,1.12c0,0.45,0.26,0.87,0.7,1.12l1.5,0.86v3.85c0,0.33,0.17,0.63,0.44,0.8C7.59,18.17,8.53,18.64,12,18.64s4.41-0.47,4.68-0.63c0.27-0.17,0.44-0.47,0.44-0.8v-3.85l1.5-0.86c0.44-0.25,0.7-0.67,0.7-1.12C21.25,10.93,20.99,10.51,20.55,10.26z" />
                 </svg>
                 <div>
-                  <div className="text-xs">GET IT ON</div>
-                  <div className="text-sm font-semibold">Google Play</div>
+                  <div className="text-xs text-gray-300">GET IT ON</div>
+                  <div className="text-sm font-semibold text-white">
+                    Google Play
+                  </div>
                 </div>
               </a>
               <a
@@ -205,19 +358,45 @@ const Footer: React.FC = () => {
                 className="flex items-center justify-center px-4 py-2 border border-gray-600 rounded-lg hover:bg-gray-700 transition-colors duration-200"
               >
                 <svg
-                  className="h-6 w-6 mr-2"
+                  className="h-6 w-6 mr-2 text-blue-400"
                   viewBox="0 0 24 24"
                   fill="currentColor"
                 >
                   <path d="M17.05,20.25a1,1,0,0,1-.5-.13l-4.55-2.64-4.55,2.64a1,1,0,0,1-1-.08,1,1,0,0,1-.46-.92V4.38A1,1,0,0,1,7,3.38H17.05a1,1,0,0,1,1,1V19.12a1,1,0,0,1-.46.92A1,1,0,0,1,17.05,20.25ZM12,15.88a1,1,0,0,1,.5.13l3.55,2.06V4.38H8V18.07l3.55-2.06A1,1,0,0,1,12,15.88Z" />
                 </svg>
                 <div>
-                  <div className="text-xs">Download on the</div>
-                  <div className="text-sm font-semibold">App Store</div>
+                  <div className="text-xs text-gray-300">Download on the</div>
+                  <div className="text-sm font-semibold text-white">
+                    App Store
+                  </div>
                 </div>
               </a>
             </div>
-            <div className="flex flex-col sm:flex-row sm:justify-end items-center gap-4">
+
+            {/* Awards/Badges (Laptop View) */}
+            <div className="hidden md:flex items-center justify-center space-x-4">
+              <motion.div
+                whileHover={{ scale: 1.05, rotate: 5 }}
+                className="bg-gradient-to-r from-yellow-500 to-orange-500 p-2 rounded-lg shadow-md"
+              >
+                <Award className="w-8 h-8 text-white" />
+                <p className="text-xs text-white text-center">
+                  Best Language App 2024
+                </p>
+              </motion.div>
+              <motion.div
+                whileHover={{ scale: 1.05, rotate: 5 }}
+                className="bg-gradient-to-r from-green-500 to-emerald-500 p-2 rounded-lg shadow-md"
+              >
+                <Users className="w-8 h-8 text-white" />
+                <p className="text-xs text-white text-center">
+                  Top Community Choice
+                </p>
+              </motion.div>
+            </div>
+
+            {/* Language Selector */}
+            <div className="flex justify-center md:justify-end items-center">
               <div className="flex items-center">
                 <Globe className="h-5 w-5 mr-2 text-blue-400" />
                 <select className="bg-gray-800 border border-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">

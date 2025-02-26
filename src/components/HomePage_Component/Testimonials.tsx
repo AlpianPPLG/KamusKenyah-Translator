@@ -95,15 +95,36 @@ const TestimonialsSection: React.FC = () => {
     enter: (direction: number) => ({
       x: direction > 0 ? 1000 : -1000,
       opacity: 0,
+      position: "absolute", // Tetapkan posisi absolut untuk mencegah glitch
+      width: "100%", // Pastikan lebar penuh untuk stabilitas
+      top: 0,
+      left: 0,
     }),
     center: {
       x: 0,
       opacity: 1,
+      position: "relative", // Kembali ke posisi relatif saat aktif
+      width: "100%",
+      top: 0,
+      left: 0,
     },
     exit: (direction: number) => ({
       x: direction < 0 ? 1000 : -1000,
       opacity: 0,
+      position: "absolute",
+      width: "100%",
+      top: 0,
+      left: 0,
     }),
+  };
+
+  // Variasi untuk kontainer agar tetap stabil
+  const containerVariants = {
+    hidden: { height: "auto" }, // Tinggi otomatis berdasarkan konten
+    visible: {
+      height: "auto",
+      transition: { duration: 0.5, ease: "easeInOut" },
+    },
   };
 
   return (
@@ -133,8 +154,13 @@ const TestimonialsSection: React.FC = () => {
         </motion.div>
 
         {/* Testimonial Slider */}
-        <div className="relative mb-20">
-          <div className="overflow-hidden">
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          className="relative mb-20"
+        >
+          <div className="overflow-hidden relative h-full">
             <AnimatePresence initial={false} custom={direction}>
               <motion.div
                 key={currentIndex}
@@ -144,7 +170,7 @@ const TestimonialsSection: React.FC = () => {
                 animate="center"
                 exit="exit"
                 transition={{ duration: 0.5, ease: "easeInOut" }}
-                className="bg-white rounded-2xl shadow-xl p-8 md:p-12 relative overflow-hidden"
+                className="bg-white rounded-2xl shadow-xl p-8 md:p-12 relative overflow-hidden w-full"
               >
                 {/* Background Decorations */}
                 <div className="absolute top-0 right-0 w-64 h-64 bg-blue-50 rounded-full -mr-32 -mt-32 opacity-30" />
@@ -250,7 +276,7 @@ const TestimonialsSection: React.FC = () => {
               />
             ))}
           </div>
-        </div>
+        </motion.div>
 
         {/* Call to Action */}
         <motion.div
