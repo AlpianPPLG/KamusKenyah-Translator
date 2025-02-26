@@ -18,6 +18,7 @@ import {
   Clock,
   ChevronLeft,
   ChevronRight,
+  Trophy,
 } from "lucide-react";
 
 // Interface untuk statistik
@@ -40,45 +41,85 @@ interface Feature {
 
 const FeaturesHighlight: React.FC = () => {
   const [currentStat, setCurrentStat] = useState(0);
-  const [direction, setDirection] = useState(0); // Tambahkan state untuk direction
+  const [direction, setDirection] = useState(0); // State untuk arah navigasi
   const [isHovered, setIsHovered] = useState<number | null>(null);
 
-  const stats: Stat[] = [
+  // Mengelompokkan stats menjadi dua slide
+  const slide1: Stat[] = [
     {
-      icon: <Users className="w-6 h-6" />,
+      icon: <Users className="w-6 h-6 text-blue-600" />,
       value: "10.000+",
       label: "Pengguna",
       description: "Pengguna Aktif",
-      color: "from-blue-600 to-indigo-600",
-      shadowColor: "shadow-blue-500/20",
+      color: "from-blue-100 to-indigo-100",
+      shadowColor: "shadow-blue-200/30",
       tooltip: "Lebih dari 10.000 pengguna aktif setiap bulan!",
     },
     {
-      icon: <Globe2 className="w-6 h-6" />,
+      icon: <Globe2 className="w-6 h-6 text-emerald-600" />,
       value: "50+",
       label: "Bahasa",
       description: "yang Didukung",
-      color: "from-emerald-600 to-teal-600",
-      shadowColor: "shadow-emerald-500/20",
+      color: "from-emerald-100 to-teal-100",
+      shadowColor: "shadow-emerald-200/30",
       tooltip: "Mendukung lebih dari 50 bahasa lokal dan internasional.",
     },
     {
-      icon: <Zap className="w-6 h-6" />,
+      icon: <Zap className="w-6 h-6 text-amber-600" />,
       value: "<1",
       label: "Detik",
       description: "Kecepatan Terjemahan",
-      color: "from-amber-500 to-orange-600",
-      shadowColor: "shadow-amber-500/20",
+      color: "from-amber-100 to-orange-100",
+      shadowColor: "shadow-amber-200/30",
       tooltip: "Terjemahan instan dengan latensi kurang dari 1 detik.",
     },
     {
-      icon: <Star className="w-6 h-6" />,
+      icon: <Star className="w-6 h-6 text-purple-600" />,
       value: "4.8/5",
       label: "Rating",
       description: "di TrustPilot",
-      color: "from-purple-600 to-pink-600",
-      shadowColor: "shadow-purple-500/20",
+      color: "from-purple-100 to-pink-100",
+      shadowColor: "shadow-purple-200/30",
       tooltip: "Rating tinggi dari pengguna di platform TrustPilot.",
+    },
+  ];
+
+  const slide2: Stat[] = [
+    {
+      icon: <ArrowUpRight className="w-6 h-6 text-cyan-600" />,
+      value: "50%",
+      label: "Hasil",
+      description: "Terjemahan yang Akurat",
+      color: "from-cyan-100 to-sky-100",
+      shadowColor: "shadow-cyan-200/30",
+      tooltip: "Terjemahan akurat dengan tingkat akurasi sekitar 50%.",
+    },
+    {
+      icon: <BarChart3 className="w-6 h-6 text-pink-600" />,
+      value: "30%",
+      label: "Pengguna",
+      description: "yang Mendapatkan Hasil Terbaik",
+      color: "from-pink-100 to-rose-100",
+      shadowColor: "shadow-pink-200/30",
+      tooltip: "30% dari pengguna mendapatkan hasil terbaik.",
+    },
+    {
+      icon: <Sparkles className="w-6 h-6 text-amber-600" />,
+      value: "99%",
+      label: "Tingkat",
+      description: "Akurasi Terjemahan",
+      color: "from-amber-100 to-orange-100",
+      shadowColor: "shadow-amber-200/30",
+      tooltip: "Tingkat akurasi terjemahan sekitar 99%.",
+    },
+    {
+      icon: <Trophy className="w-6 h-6 text-yellow-600" />,
+      value: "1st",
+      label: "Peringkat",
+      description: "Terbaik",
+      color: "from-yellow-100 to-amber-100",
+      shadowColor: "shadow-yellow-200/30",
+      tooltip: "Peringkat terbaik di kategori terjemahan.",
     },
   ];
 
@@ -90,13 +131,13 @@ const FeaturesHighlight: React.FC = () => {
         "Teknologi AI mutakhir untuk terjemahan yang akurat dan kontekstual.",
     },
     {
-      icon: <BookOpen className="w-6 h-6" />,
+      icon: <BookOpen className="w-6 h-6 text-emerald-600" />,
       title: "Pembelajaran Interaktif",
       detail:
         "Fitur edukasi untuk memahami bahasa Dayak Kenyah secara mendalam.",
     },
     {
-      icon: <Clock className="w-6 h-6" />,
+      icon: <Clock className="w-6 h-6 text-amber-600" />,
       title: "Kecepatan Tinggi",
       detail: "Terjemahan cepat dengan performa optimal di semua platform.",
     },
@@ -106,66 +147,82 @@ const FeaturesHighlight: React.FC = () => {
   const y = useTransform(scrollYProgress, [0, 1], [0, -100]);
   const scale = useTransform(scrollYProgress, [0, 1], [1, 1.1]);
 
-  // Auto-slide untuk statistik
+  // Auto-slide untuk statistik, hanya berpindah antara dua slide
   useEffect(() => {
     const interval = setInterval(() => {
       setDirection(1); // Set direction untuk animasi
-      setCurrentStat((prev) => (prev + 1) % stats.length);
+      setCurrentStat((prev) => (prev + 1) % 2); // Hanya berpindah antara 0 (slide 1) dan 1 (slide 2)
     }, 5000); // Ganti statistik setiap 5 detik
     return () => clearInterval(interval);
-  }, [stats.length]);
+  }, []);
 
-  // Fungsi navigasi manual untuk statistik
+  // Fungsi navigasi manual untuk statistik, hanya berpindah antara dua slide
   const handleNextStat = () => {
     setDirection(1);
-    setCurrentStat((prev) => (prev + 1) % stats.length);
+    setCurrentStat((prev) => (prev + 1) % 2); // Hanya berpindah antara 0 dan 1
   };
 
   const handlePrevStat = () => {
     setDirection(-1);
-    setCurrentStat((prev) => (prev - 1 + stats.length) % stats.length);
+    setCurrentStat((prev) => (prev - 1 + 2) % 2); // Hanya berpindah antara 0 dan 1
   };
 
   // Animasi untuk statistik carousel
   const statVariants = {
     enter: (direction: number) => ({
-      x: direction > 0 ? 100 : -100,
+      x: direction > 0 ? 1000 : -1000, // Menggunakan pergerakan yang lebih besar untuk slider
       opacity: 0,
       scale: 0.9,
+      position: "absolute", // Tetapkan posisi absolut untuk mencegah glitch
+      width: "100%", // Pastikan lebar penuh untuk stabilitas
+      top: 0,
+      left: 0,
     }),
     center: {
       x: 0,
       opacity: 1,
       scale: 1,
+      position: "relative", // Kembali ke posisi relatif saat aktif
+      width: "100%",
+      top: 0,
+      left: 0,
     },
     exit: (direction: number) => ({
-      x: direction < 0 ? 100 : -100,
+      x: direction < 0 ? 1000 : -1000,
       opacity: 0,
       scale: 0.9,
+      position: "absolute",
+      width: "100%",
+      top: 0,
+      left: 0,
     }),
   };
 
+  // Variasi untuk kontainer agar tetap stabil
+  const containerVariants = {
+    hidden: { height: "auto" }, // Tinggi otomatis berdasarkan konten
+    visible: {
+      height: "auto",
+      transition: { duration: 0.5, ease: "easeInOut" },
+    },
+  };
+
   return (
-    <section className="relative py-28 overflow-hidden bg-gradient-to-b from-gray-50 to-blue-50">
-      {/* Decorative Elements with Sparkles */}
+    <section className="relative py-20 bg-gradient-to-b from-blue-50 to-white overflow-hidden">
+      {/* Decorative Elements */}
       <div className="absolute inset-0 z-0">
-        <div className="absolute top-0 left-0 w-96 h-96 bg-gradient-to-r from-blue-100 to-indigo-100 rounded-full -translate-x-1/3 -translate-y-1/3 blur-3xl opacity-30" />
-        <div className="absolute bottom-0 right-0 w-96 h-96 bg-gradient-to-r from-purple-100 to-pink-100 rounded-full translate-x-1/3 translate-y-1/3 blur-3xl opacity-30" />
+        <div className="absolute top-0 left-0 w-72 h-72 bg-gradient-to-r from-blue-100 to-indigo-100 rounded-full -translate-x-1/2 -translate-y-1/2 blur-3xl opacity-30" />
+        <div className="absolute bottom-0 right-0 w-72 h-72 bg-gradient-to-r from-purple-100 to-pink-100 rounded-full translate-x-1/2 translate-y-1/2 blur-3xl opacity-30" />
         <motion.div
-          className="absolute top-1/4 left-1/4 w-32 h-32 bg-gradient-to-br from-yellow-200 to-orange-200 rounded-full opacity-20"
+          className="absolute top-1/3 left-1/3 w-32 h-32 bg-gradient-to-br from-yellow-200 to-orange-200 rounded-full opacity-20"
           animate={{ rotate: 360 }}
           transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
         />
-        {/* Tambahkan Sparkles sebagai elemen dekoratif interaktif */}
         <motion.div
-          className="absolute top-1/3 right-1/4 w-12 h-12 text-yellow-500 opacity-0 hover:opacity-100 transition-opacity duration-300"
-          animate={{ rotate: 360, scale: [1, 1.2, 1] }}
-          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-          onMouseEnter={() => setIsHovered(0)} // Gunakan isHovered untuk efek hover
-          onMouseLeave={() => setIsHovered(null)}
-        >
-          <Sparkles className="w-full h-full" />
-        </motion.div>
+          className="absolute top-2/3 right-1/3 w-24 h-24 bg-gradient-to-br from-green-200 to-emerald-200 rounded-full opacity-20"
+          animate={{ rotate: -360, scale: [1, 1.1, 1] }}
+          transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
+        />
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -175,22 +232,29 @@ const FeaturesHighlight: React.FC = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-20"
+          className="text-center mb-16"
         >
-          <h2 className="text-5xl font-bold text-gray-900 mb-6">
+          <h2 className="text-4xl font-bold text-gray-900 mb-4">
             Pencapaian{" "}
             <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
               KamusKenyah
             </span>
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
             Jelajahi dampak luar biasa yang telah kami capai dalam pelestarian
             dan pembelajaran bahasa Dayak Kenyah melalui teknologi modern
           </p>
         </motion.div>
+
         {/* Stats Carousel */}
-        <motion.div style={{ y, scale }} className="relative mb-24">
-          <div className="overflow-hidden">
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          style={{ y, scale }}
+          className="relative mb-20"
+        >
+          <div className="overflow-hidden relative h-full">
             <AnimatePresence initial={false} custom={direction}>
               <motion.div
                 key={currentStat}
@@ -199,37 +263,54 @@ const FeaturesHighlight: React.FC = () => {
                 initial="enter"
                 animate="center"
                 exit="exit"
-                transition={{ duration: 0.6, ease: "easeInOut" }}
-                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
+                transition={{ duration: 0.8, ease: "easeInOut" }}
+                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
               >
-                {stats.map((stat, index) => (
+                {(currentStat === 0 ? slide1 : slide2).map((stat, index) => (
                   <motion.div
                     key={stat.label}
                     initial={{ opacity: 0, y: 50 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.5, delay: index * 0.1 }}
-                    whileHover={{ y: -10, scale: 1.05 }}
-                    className={`relative bg-white rounded-2xl p-6 shadow-lg ${stat.shadowColor} overflow-hidden group`}
-                    onMouseEnter={() => setIsHovered(index)} // Gunakan isHovered untuk efek hover
-                    onMouseLeave={() => setIsHovered(null)}
+                    whileHover={{ y: -5, scale: 1.05, rotate: 2 }}
+                    onMouseEnter={() => setIsHovered(index)} // Gunakan setIsHovered untuk efek hover
+                    onMouseLeave={() => setIsHovered(null)} // Gunakan setIsHovered untuk reset hover
+                    className={`relative bg-white rounded-[20px] p-6 shadow-md ${stat.shadowColor} overflow-hidden group`}
                   >
-                    {/* Background Gradient */}
+                    {/* Background Gradient with Dynamic Effect */}
                     <div
                       className={`absolute inset-0 bg-gradient-to-br ${stat.color} opacity-0 group-hover:opacity-10 transition-opacity duration-300`}
-                    />
-
-                    {/* Icon */}
-                    <div
-                      className={`inline-flex p-3 rounded-lg bg-gradient-to-br ${stat.color} text-white mb-4`}
                     >
-                      {stat.icon}
+                      {isHovered === index && (
+                        <motion.div
+                          initial={{ opacity: 0, scale: 0 }}
+                          animate={{ opacity: 0.5, scale: 1 }}
+                          exit={{ opacity: 0, scale: 0 }}
+                          transition={{ duration: 0.3 }}
+                          className="absolute top-4 left-4 text-yellow-500"
+                        >
+                          <Sparkles className="w-6 h-6" />
+                        </motion.div>
+                      )}
                     </div>
+
+                    {/* Icon with Animation */}
+                    {stat.icon && (
+                      <motion.div
+                        whileHover={{ scale: 1.1, rotate: 15 }}
+                        className={`inline-flex p-3 rounded-lg bg-${
+                          stat.color.split("from-")[1].split(" ")[0]
+                        } text-white mb-4`}
+                      >
+                        {stat.icon}
+                      </motion.div>
+                    )}
 
                     {/* Content */}
                     <div className="space-y-2">
                       <div className="flex items-baseline gap-2">
-                        <h3 className="text-4xl font-bold text-gray-900">
+                        <h3 className="text-3xl font-bold text-gray-900">
                           {stat.value}
                         </h3>
                         <motion.div
@@ -263,22 +344,14 @@ const FeaturesHighlight: React.FC = () => {
                       </motion.div>
                     )}
 
-                    {/* Hover Effect with Sparkles */}
-                    {isHovered === index && (
-                      <motion.div
-                        initial={{ opacity: 0, scale: 0 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0, scale: 0 }}
-                        className="absolute top-4 left-4 text-yellow-500 opacity-50"
-                      >
-                        <Sparkles className="w-6 h-6" />
-                      </motion.div>
-                    )}
-
-                    {/* Hover Effect */}
-                    <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <ArrowUpRight className={`w-5 h-5 text-gray-400`} />
-                    </div>
+                    {/* Navigation Arrow */}
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      whileHover={{ opacity: 1 }}
+                      className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    >
+                      <ArrowUpRight className="w-5 h-5 text-gray-400" />
+                    </motion.div>
                   </motion.div>
                 ))}
               </motion.div>
@@ -288,26 +361,32 @@ const FeaturesHighlight: React.FC = () => {
           {/* Navigation Arrows for Stats Carousel */}
           <button
             onClick={handlePrevStat}
-            className="absolute top-1/2 left-4 -translate-y-1/2 bg-white p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 group"
+            className="absolute top-1/2 left-4 -translate-y-1/2 bg-white p-3 rounded-full shadow-md hover:shadow-lg transition-all duration-300 group"
+            onMouseEnter={() => setIsHovered(-1)} // Gunakan setIsHovered untuk efek hover pada panah kiri
+            onMouseLeave={() => setIsHovered(null)} // Gunakan setIsHovered untuk reset hover
           >
             <ChevronLeft className="w-6 h-6 text-blue-600 group-hover:scale-110 transition-transform" />
           </button>
           <button
             onClick={handleNextStat}
-            className="absolute top-1/2 right-4 -translate-y-1/2 bg-white p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 group"
+            className="absolute top-1/2 right-4 -translate-y-1/2 bg-white p-3 rounded-full shadow-md hover:shadow-lg transition-all duration-300 group"
+            onMouseEnter={() => setIsHovered(-2)} // Gunakan setIsHovered untuk efek hover pada panah kanan
+            onMouseLeave={() => setIsHovered(null)} // Gunakan setIsHovered untuk reset hover
           >
             <ChevronRight className="w-6 h-6 text-blue-600 group-hover:scale-110 transition-transform" />
           </button>
 
           {/* Dots Navigation for Stats */}
           <div className="flex justify-center mt-6 space-x-2">
-            {stats.map((_, index) => (
+            {Array.from({ length: 2 }).map((_, index) => (
               <button
                 key={index}
                 onClick={() => {
                   setDirection(index > currentStat ? 1 : -1); // Set direction berdasarkan navigasi
                   setCurrentStat(index);
                 }}
+                onMouseEnter={() => setIsHovered(index)} // Gunakan setIsHovered untuk efek hover pada dots
+                onMouseLeave={() => setIsHovered(null)} // Gunakan setIsHovered untuk reset hover
                 className={`w-3 h-3 rounded-full transition-all duration-300 ${
                   index === currentStat
                     ? "bg-blue-600 scale-125"
@@ -317,8 +396,9 @@ const FeaturesHighlight: React.FC = () => {
             ))}
           </div>
         </motion.div>
+
         {/* Additional Features Highlight */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-24">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
           {features.map((feature, index) => (
             <motion.div
               key={feature.title}
@@ -326,22 +406,18 @@ const FeaturesHighlight: React.FC = () => {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: index * 0.2 }}
-              whileHover={{ y: -10, scale: 1.05 }}
-              className="bg-white rounded-2xl shadow-lg p-8 overflow-hidden relative group"
-              onMouseEnter={() => setIsHovered(index + stats.length)} // Gunakan isHovered untuk fitur
-              onMouseLeave={() => setIsHovered(null)}
+              whileHover={{ y: -5, scale: 1.05, rotate: 2 }}
+              onMouseEnter={() => setIsHovered(index + 2)} // Gunakan setIsHovered untuk efek hover pada fitur (offset untuk stats)
+              onMouseLeave={() => setIsHovered(null)} // Gunakan setIsHovered untuk reset hover
+              className={`bg-white rounded-[20px] shadow-md p-6 overflow-hidden relative group`}
             >
               {/* Background Decoration */}
-              <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-full -mr-16 -mt-16 opacity-20 group-hover:opacity-30 transition-opacity duration-300" />
+              <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-full -mr-12 -mt-12 opacity-20 group-hover:opacity-30 transition-opacity duration-300" />
               <div className="flex items-center space-x-4">
                 <div
-                  className={`p-3 rounded-lg bg-gradient-to-br ${
-                    index === 0
-                      ? "from-blue-600 to-indigo-600"
-                      : index === 1
-                      ? "from-emerald-600 to-teal-600"
-                      : "from-amber-500 to-orange-600"
-                  } text-white`}
+                  className={`p-3 rounded-lg bg-${
+                    index === 0 ? "blue" : index === 1 ? "emerald" : "amber"
+                  }-600 text-white`}
                 >
                   {feature.icon}
                 </div>
@@ -363,11 +439,12 @@ const FeaturesHighlight: React.FC = () => {
               </motion.div>
 
               {/* Sparkles Effect on Hover */}
-              {isHovered === index + stats.length && (
+              {isHovered === index + 2 && (
                 <motion.div
                   initial={{ opacity: 0, scale: 0 }}
                   animate={{ opacity: 0.5, scale: 1 }}
                   exit={{ opacity: 0, scale: 0 }}
+                  transition={{ duration: 0.3 }}
                   className="absolute top-4 left-4 text-yellow-500"
                 >
                   <Sparkles className="w-6 h-6" />
@@ -376,9 +453,10 @@ const FeaturesHighlight: React.FC = () => {
             </motion.div>
           ))}
         </div>
-        {/* Parallax CTA */}
+
+        {/* Call to Action */}
         <motion.div style={{ y }} className="text-center mt-16">
-          <p className="text-gray-600 mb-6 max-w-3xl mx-auto">
+          <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
             Bergabunglah dengan komunitas kami dan jadilah bagian dari
             perjalanan pelestarian bahasa Dayak Kenyah dengan fitur-fitur
             canggih kami
@@ -386,20 +464,13 @@ const FeaturesHighlight: React.FC = () => {
           <motion.button
             whileHover={{ scale: 1.05, rotate: 2 }}
             whileTap={{ scale: 0.95 }}
-            className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg font-medium hover:shadow-xl transition-all duration-300"
+            className="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-[20px] font-medium hover:shadow-lg transition-all duration-300"
           >
             Mulai Sekarang
-            <ArrowUpRight className="ml-2 w-5 h-5" />
+            <ArrowUpRight className="ml-2 w-4 h-4" />
           </motion.button>
         </motion.div>
       </div>
-
-      {/* Floating Sparkles for Visual Effect */}
-      <motion.div
-        className="absolute top-1/3 right-1/4 w-16 h-16 bg-gradient-to-br from-yellow-300 to-orange-300 rounded-full opacity-20"
-        animate={{ rotate: 360, scale: [1, 1.1, 1] }}
-        transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
-      />
     </section>
   );
 };
