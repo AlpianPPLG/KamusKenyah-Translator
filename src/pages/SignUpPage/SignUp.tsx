@@ -1,0 +1,246 @@
+import React, { useState } from "react";
+import { motion } from "framer-motion";
+import { ArrowLeft, Lock, User, Mail, Phone } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+
+const SignUp: React.FC = () => {
+  const [username, setUsername] = useState("");
+  const [name, setName] = useState(""); // State baru untuk Nama
+  const [telephone, setTelephone] = useState(""); // State baru untuk Telephone Number
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (
+      !username ||
+      !name ||
+      !telephone ||
+      !email ||
+      !password ||
+      !confirmPassword
+    ) {
+      setError("Please fill in all fields.");
+      return;
+    }
+    if (password !== confirmPassword) {
+      setError("Passwords do not match.");
+      return;
+    }
+    // Add your sign-up logic here (e.g., API call) with additional fields
+    console.log("Signing up with:", {
+      username,
+      name,
+      telephone,
+      email,
+      password,
+    });
+    setError("");
+    navigate("/"); // Redirect to home after sign-up (adjust as needed)
+  };
+
+  const handleLoginClick = () => {
+    navigate("/login");
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white flex items-center justify-center relative overflow-hidden">
+      {/* Decorative Background Elements */}
+      <div className="absolute inset-0 z-0">
+        <motion.div
+          className="absolute top-0 left-0 w-72 h-72 bg-gradient-to-r from-blue-100 to-indigo-100 rounded-full -translate-x-1/2 -translate-y-1/2 blur-3xl opacity-30"
+          animate={{ rotate: 360 }}
+          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+        />
+        <motion.div
+          className="absolute bottom-0 right-0 w-72 h-72 bg-gradient-to-r from-purple-100 to-pink-100 rounded-full translate-x-1/2 translate-y-1/2 blur-3xl opacity-30"
+          animate={{ rotate: -360 }}
+          transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
+        />
+      </div>
+
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -20 }}
+        transition={{ duration: 0.5, ease: "easeInOut" }}
+        className="relative z-10 w-full max-w-md p-6 md:p-8 bg-white rounded-[20px] shadow-lg border border-gray-200 mx-auto"
+      >
+        <motion.button
+          onClick={() => navigate(-1)}
+          whileHover={{ scale: 1.1, rotate: -5 }}
+          whileTap={{ scale: 0.9 }}
+          className="absolute top-4 left-4 p-2 text-blue-600 hover:text-blue-700 rounded-full bg-blue-100 transition-all duration-300"
+        >
+          <ArrowLeft className="w-5 h-5" />
+        </motion.button>
+
+        <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
+          Sign Up
+        </h2>
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Username Input */}
+          <div className="relative">
+            <motion.div
+              initial={{ x: -20, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              transition={{ delay: 0.1, duration: 0.5 }}
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+            >
+              <User className="w-5 h-5" />
+            </motion.div>
+            <input
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              placeholder="Enter your username"
+              className="w-full pl-10 pr-4 py-2 md:py-3 rounded-[15px] border border-gray-200 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-300 text-gray-700 placeholder-gray-400"
+            />
+          </div>
+
+          {/* Nama Input (di bawah Username) */}
+          <div className="relative">
+            <motion.div
+              initial={{ x: -20, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              transition={{ delay: 0.2, duration: 0.5 }}
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+            >
+              <User className="w-5 h-5" />
+            </motion.div>
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Enter your full name"
+              className="w-full pl-10 pr-4 py-2 md:py-3 rounded-[15px] border border-gray-200 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-300 text-gray-700 placeholder-gray-400"
+            />
+          </div>
+
+          {/* Telephone Number Input (di atas Password) */}
+          <div className="relative">
+            <motion.div
+              initial={{ x: -20, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              transition={{ delay: 0.3, duration: 0.5 }}
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+            >
+              <Phone className="w-5 h-5 text-green-500" />{" "}
+              {/* Menggunakan ikon Phone sebagai pengganti WhatsApp */}
+            </motion.div>
+            <input
+              type="tel"
+              value={telephone}
+              onChange={(e) => setTelephone(e.target.value)}
+              placeholder="Enter your telephone number"
+              className="w-full pl-10 pr-4 py-2 md:py-3 rounded-[15px] border border-gray-200 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-300 text-gray-700 placeholder-gray-400"
+            />
+          </div>
+
+          {/* Email Input */}
+          <div className="relative">
+            <motion.div
+              initial={{ x: -20, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              transition={{ delay: 0.4, duration: 0.5 }}
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+            >
+              <Mail className="w-5 h-5" />
+            </motion.div>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Enter your email"
+              className="w-full pl-10 pr-4 py-2 md:py-3 rounded-[15px] border border-gray-200 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-300 text-gray-700 placeholder-gray-400"
+            />
+          </div>
+
+          {/* Password Input */}
+          <div className="relative">
+            <motion.div
+              initial={{ x: -20, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              transition={{ delay: 0.5, duration: 0.5 }}
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+            >
+              <Lock className="w-5 h-5" />
+            </motion.div>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Enter your password"
+              className="w-full pl-10 pr-4 py-2 md:py-3 rounded-[15px] border border-gray-200 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-300 text-gray-700 placeholder-gray-400"
+            />
+          </div>
+
+          {/* Confirm Password Input */}
+          <div className="relative">
+            <motion.div
+              initial={{ x: -20, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              transition={{ delay: 0.6, duration: 0.5 }}
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+            >
+              <Lock className="w-5 h-5" />
+            </motion.div>
+            <input
+              type="password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              placeholder="Confirm your password"
+              className="w-full pl-10 pr-4 py-2 md:py-3 rounded-[15px] border border-gray-200 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-300 text-gray-700 placeholder-gray-400"
+            />
+          </div>
+
+          {error && (
+            <motion.p
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="text-red-500 text-sm text-center"
+            >
+              {error}
+            </motion.p>
+          )}
+
+          {/* Sign Up Button */}
+          <motion.button
+            type="submit"
+            whileHover={{ scale: 1.05, backgroundColor: "#2563eb" }}
+            whileTap={{ scale: 0.95 }}
+            className="w-full bg-blue-600 text-white py-2 md:py-3 rounded-[15px] font-medium hover:bg-blue-700 transition-all duration-300 shadow-md hover:shadow-lg"
+          >
+            Sign Up
+          </motion.button>
+        </form>
+
+        {/* Login Link */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.7, duration: 0.5 }}
+          className="text-center mt-4"
+        >
+          <p className="text-gray-600 text-sm">
+            Already have an account?{" "}
+            <motion.button
+              onClick={handleLoginClick}
+              whileHover={{ scale: 1.05, color: "#4f46e5" }}
+              whileTap={{ scale: 0.95 }}
+              className="text-blue-600 font-medium hover:text-blue-700 transition-colors duration-300"
+            >
+              Log In
+            </motion.button>
+          </p>
+        </motion.div>
+      </motion.div>
+    </div>
+  );
+};
+
+export default SignUp;

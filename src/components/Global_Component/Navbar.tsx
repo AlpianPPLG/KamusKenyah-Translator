@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Menu, X, ChevronDown, Search, Globe } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -15,7 +18,7 @@ const Navbar: React.FC = () => {
   }, []);
 
   const toggleMenu = () => {
-  setIsOpen(!isOpen);
+    setIsOpen(!isOpen);
   };
 
   const toggleDropdown = (name: string) => {
@@ -25,7 +28,7 @@ const Navbar: React.FC = () => {
   const navItems = [
     {
       name: "Home",
-      href: "#",
+      href: "/",
       hasDropdown: false,
     },
     {
@@ -35,12 +38,12 @@ const Navbar: React.FC = () => {
       dropdownItems: ["Our Story", "Team", "Careers"],
     },
     {
-      name: "Feature",
+      name: "Features",
       href: "#",
       hasDropdown: false,
     },
     {
-      name: "Product",
+      name: "Products",
       href: "#",
       hasDropdown: true,
       dropdownItems: ["Translation", "Dictionary", "Learning"],
@@ -51,6 +54,14 @@ const Navbar: React.FC = () => {
       hasDropdown: false,
     },
   ];
+
+  const handleLoginClick = () => {
+    navigate("/login");
+  };
+
+  const handleSignUpClick = () => {
+    navigate("/signup");
+  };
 
   return (
     <nav
@@ -72,7 +83,7 @@ const Navbar: React.FC = () => {
                 <input
                   type="text"
                   placeholder="Search..."
-                  className="w-64 pl-10 pr-4 py-1.5 rounded-full text-sm border border-gray-200 focus:outline-none focus:border-blue-500 transition-colors"
+                  className="w-64 pl-10 pr-4 py-1.5 rounded-full text-sm border border-gray-200 focus:outline-none focus:border-blue-500 transition-colors duration-300"
                 />
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
               </div>
@@ -84,37 +95,44 @@ const Navbar: React.FC = () => {
             <div className="flex space-x-1">
               {navItems.map((item) => (
                 <div key={item.name} className="relative group">
-                  <button
-                    onClick={() =>
-                      item.hasDropdown && toggleDropdown(item.name)
-                    }
-                    className="flex items-center px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 rounded-md hover:bg-gray-50 transition-colors duration-200"
+                  <a
+                    href={item.href}
+                    onClick={(e) => {
+                      if (item.hasDropdown) {
+                        e.preventDefault();
+                        toggleDropdown(item.name);
+                      }
+                    }}
+                    className="flex items-center px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 rounded-md hover:bg-gray-50 transition-colors duration-300"
                   >
                     {item.name}
                     {item.hasDropdown && (
-                      <ChevronDown className="ml-1 h-4 w-4 transition-transform duration-200 transform group-hover:rotate-180" />
+                      <ChevronDown className="ml-1 h-4 w-4 transition-transform duration-300 transform group-hover:rotate-180" />
                     )}
-                  </button>
+                  </a>
                   {item.hasDropdown && (
-                    <div
-                      className={`absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 transition-all duration-200 ${
-                        activeDropdown === item.name
-                          ? "opacity-100 visible"
-                          : "opacity-0 invisible"
-                      }`}
+                    <motion.div
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{
+                        opacity: activeDropdown === item.name ? 1 : 0,
+                        y: activeDropdown === item.name ? 0 : -10,
+                      }}
+                      exit={{ opacity: 0, y: -10 }}
+                      transition={{ duration: 0.3, ease: "easeInOut" }}
+                      className={`absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5`}
                     >
                       <div className="py-1">
                         {item.dropdownItems?.map((dropdownItem) => (
                           <a
                             key={dropdownItem}
                             href="#"
-                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-colors duration-300"
                           >
                             {dropdownItem}
                           </a>
                         ))}
                       </div>
-                    </div>
+                    </motion.div>
                   )}
                 </div>
               ))}
@@ -123,32 +141,42 @@ const Navbar: React.FC = () => {
 
           {/* Right Side - Auth & Language */}
           <div className="hidden md:flex items-center space-x-4">
-            <button className="flex items-center space-x-1 px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 rounded-md hover:bg-gray-50">
+            <motion.button
+              whileHover={{ scale: 1.05, backgroundColor: "#2563eb" }}
+              whileTap={{ scale: 0.95 }}
+              className="flex items-center space-x-1 px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 rounded-md hover:bg-gray-50 transition-all duration-300"
+            >
               <Globe className="h-4 w-4" />
               <span>EN</span>
-            </button>
-            <a
-              href="#"
-              className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-50"
+            </motion.button>
+            <button
+              onClick={handleLoginClick}
+              className="text-gray-600 px-3 py-2 rounded-md text-sm font-medium transition-all duration-300"
             >
               Login
-            </a>
-            <a
-              href="#"
-              className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:from-blue-700 hover:to-indigo-700 px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 hover:shadow-md"
+            </button>
+            <motion.button
+              onClick={handleSignUpClick}
+              whileHover={{ scale: 1.1, backgroundColor: "#4f46e5" }}
+              whileTap={{ scale: 0.9 }}
+              className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:from-blue-700 hover:to-indigo-700 px-4 py-2 rounded-md text-sm font-medium transition-all duration-300 hover:shadow-md"
             >
               Sign Up
-            </a>
+            </motion.button>
           </div>
 
           {/* Mobile menu button */}
           <div className="md:hidden flex items-center space-x-2">
-            <button className="p-2 text-gray-600 hover:text-gray-900 rounded-md">
+            <motion.button
+              whileHover={{ scale: 1.1, rotate: 5 }}
+              whileTap={{ scale: 0.9 }}
+              className="p-2 text-gray-600 hover:text-gray-900 rounded-md transition-all duration-300"
+            >
               <Globe className="h-5 w-5" />
-            </button>
+            </motion.button>
             <button
               onClick={toggleMenu}
-              className="inline-flex items-center justify-center p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
+              className="inline-flex items-center justify-center p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500 transition-all duration-300"
             >
               <span className="sr-only">Open main menu</span>
               {isOpen ? (
@@ -162,10 +190,11 @@ const Navbar: React.FC = () => {
       </div>
 
       {/* Mobile menu */}
-      <div
-        className={`md:hidden transition-all duration-300 ease-in-out ${
-          isOpen ? "max-h-screen opacity-100" : "max-h-0 opacity-0"
-        } overflow-hidden bg-white border-t border-gray-200`}
+      <motion.div
+        initial={{ height: 0, opacity: 0 }}
+        animate={{ height: isOpen ? "auto" : 0, opacity: isOpen ? 1 : 0 }}
+        transition={{ duration: 0.3, ease: "easeInOut" }}
+        className="md:hidden overflow-hidden bg-white border-t border-gray-200"
       >
         <div className="px-4 pt-2 pb-3 space-y-1">
           {/* Search in mobile */}
@@ -173,7 +202,7 @@ const Navbar: React.FC = () => {
             <input
               type="text"
               placeholder="Search..."
-              className="w-full pl-10 pr-4 py-2 rounded-md text-sm border border-gray-200 focus:outline-none focus:border-blue-500"
+              className="w-full pl-10 pr-4 py-2 rounded-md text-sm border border-gray-200 focus:outline-none focus:border-blue-500 transition-colors duration-300"
             />
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
           </div>
@@ -182,52 +211,60 @@ const Navbar: React.FC = () => {
             <div key={item.name}>
               <button
                 onClick={() => item.hasDropdown && toggleDropdown(item.name)}
-                className="w-full flex items-center justify-between px-3 py-2 text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-md"
+                className="w-full flex items-center justify-between px-3 py-2 text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-md transition-colors duration-300"
               >
                 {item.name}
                 {item.hasDropdown && (
                   <ChevronDown
-                    className={`h-4 w-4 transition-transform duration-200 ${
+                    className={`h-4 w-4 transition-transform duration-300 ${
                       activeDropdown === item.name ? "rotate-180" : ""
                     }`}
                   />
                 )}
               </button>
               {item.hasDropdown && (
-                <div
-                  className={`pl-4 ${
-                    activeDropdown === item.name ? "block" : "hidden"
-                  }`}
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{
+                    height: activeDropdown === item.name ? "auto" : 0,
+                    opacity: activeDropdown === item.name ? 1 : 0,
+                  }}
+                  transition={{ duration: 0.3, ease: "easeInOut" }}
+                  className="pl-4"
                 >
                   {item.dropdownItems?.map((dropdownItem) => (
                     <a
                       key={dropdownItem}
                       href="#"
-                      className="block px-3 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-md"
+                      className="block px-3 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-md transition-colors duration-300"
                     >
                       {dropdownItem}
                     </a>
                   ))}
-                </div>
+                </motion.div>
               )}
             </div>
           ))}
           <div className="border-t border-gray-200 pt-4 pb-3">
-            <a
-              href="#"
-              className="block text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-base font-medium hover:bg-gray-50"
+            <motion.button
+              onClick={handleLoginClick}
+              whileHover={{ scale: 1.05, backgroundColor: "#2563eb" }}
+              whileTap={{ scale: 0.95 }}
+              className="block w-full text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-base font-medium hover:bg-gray-50 transition-all duration-300"
             >
               Login
-            </a>
-            <a
-              href="#"
-              className="block mt-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:from-blue-700 hover:to-indigo-700 px-3 py-2 rounded-md text-base font-medium text-center"
+            </motion.button>
+            <motion.button
+              onClick={handleSignUpClick}
+              whileHover={{ scale: 1.1, backgroundColor: "#4f46e5" }}
+              whileTap={{ scale: 0.9 }}
+              className="block mt-2 w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:from-blue-700 hover:to-indigo-700 px-3 py-2 rounded-md text-base font-medium text-center transition-all duration-300 hover:shadow-md"
             >
               Sign Up
-            </a>
+            </motion.button>
           </div>
         </div>
-      </div>
+      </motion.div>
     </nav>
   );
 };
