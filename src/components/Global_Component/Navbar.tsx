@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Menu, X, ChevronDown, Search, Globe } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { BsFlagFill } from "react-icons/bs";  // Menggunakan icon bendera dari react-icons
+import { BsFlagFill } from "react-icons/bs"; // Menggunakan icon bendera dari react-icons
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -102,28 +102,37 @@ const Navbar: React.FC = () => {
             <div className="flex space-x-1">
               {navItems.map((item) => (
                 <div key={item.name} className="relative group">
-                  <a
-                    href={item.href}
-                    onClick={(e) => {
-                      if (item.hasDropdown) {
-                        e.preventDefault();
-                        toggleDropdown(item.name);
-                      }
-                    }}
-                    className="flex items-center px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 rounded-md hover:bg-gray-50 transition-colors duration-300"
-                  >
-                    {item.name}
+                  <div className="flex items-center">
+                    {/* Link untuk navigasi langsung tanpa dropdown */}
+                    <a
+                      href={item.href}
+                      onClick={(e) => {
+                        if (!item.hasDropdown) {
+                          e.preventDefault(); // Hanya mencegah default jika tidak ada dropdown
+                        }
+                      }}
+                      className="px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 rounded-md hover:bg-gray-50 transition-colors duration-300"
+                    >
+                      {item.name}
+                    </a>
+                    {/* Panah hanya untuk item dengan dropdown */}
                     {item.hasDropdown && (
-                      <ChevronDown className="ml-1 h-4 w-4 transition-transform duration-300 transform group-hover:rotate-180" />
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault(); // Mencegah navigasi saat klik panah
+                          toggleDropdown(item.name);
+                        }}
+                        className="ml-1 p-1 text-gray-600 hover:text-gray-900 rounded-md hover:bg-gray-50 transition-colors duration-300"
+                      >
+                        <ChevronDown className="h-4 w-4 transition-transform duration-300 transform -translate-x-px group-hover:rotate-180" />
+                      </button>
                     )}
-                  </a>
-                  {item.hasDropdown && (
+                  </div>
+                  {/* Dropdown hanya muncul saat panah diklik */}
+                  {item.hasDropdown && activeDropdown === item.name && (
                     <motion.div
                       initial={{ opacity: 0, y: -10 }}
-                      animate={{
-                        opacity: activeDropdown === item.name ? 1 : 0,
-                        y: activeDropdown === item.name ? 0 : -10,
-                      }}
+                      animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -10 }}
                       transition={{ duration: 0.3, ease: "easeInOut" }}
                       className={`absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5`}
@@ -148,24 +157,22 @@ const Navbar: React.FC = () => {
 
           {/* Right Side - Auth & Language */}
           <div className="hidden md:flex items-center space-x-4">
-            <div className="relative">
+            <div className="relative group">
               <button
                 onClick={() => toggleDropdown("language")}
-                className="flex items-center space-x-1 px-3 py-2 text-sm font-medium text-gray-600 rounded-md"
+                className="flex items-center space-x-1 px-3 py-2 text-sm font-medium text-gray-600 rounded-md hover:text-gray-900 hover:bg-gray-50 transition-colors duration-300"
               >
                 <Globe className="h-4 w-4" />
-                <span>{selectedLanguage}</span>
+                <span>{selectedLanguage === "ID" ? "ID" : "EN"}</span>
+                <ChevronDown className="ml-1 h-4 w-4 transition-transform duration-300 transform group-hover:rotate-180" />
               </button>
               {activeDropdown === "language" && (
                 <motion.div
                   initial={{ opacity: 0, y: -10 }}
-                  animate={{
-                    opacity: 1,
-                    y: 0,
-                  }}
+                  animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
                   transition={{ duration: 0.3, ease: "easeInOut" }}
-                  className="absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5"
+                  className="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5"
                 >
                   <div className="py-1">
                     {["ID", "EN"].map((lang) => (
@@ -174,9 +181,11 @@ const Navbar: React.FC = () => {
                         onClick={() => handleLanguageChange(lang)}
                         className="w-full flex items-center justify-between px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-colors duration-300"
                       >
-                        <span>{lang === "ID" ? "🇮🇩 Indonesia" : "🇬🇧 English"}</span>
+                        <span>
+                          {lang === "ID" ? "🇮🇩 Bahasa Indonesia" : "🇬🇧 English"}
+                        </span>
                         {selectedLanguage === lang && (
-                          <BsFlagFill className="text-green-500" />
+                          <BsFlagFill className="text-green-500 h-4 w-4" />
                         )}
                       </button>
                     ))}
@@ -202,65 +211,55 @@ const Navbar: React.FC = () => {
           </div>
 
           {/* Mobile menu button */}
-<div className="md:hidden flex items-center space-x-">
-  
-  
-            <button
-              onClick={() => toggleDropdown('language')}
-              className="flex items-center space-x-1 text-gray-600 px-2 py-2 rounded-md"
-            >
-              <Globe className="h-5 w-5" />
-              <span>{selectedLanguage === 'ID' ? 'ID' : 'EN'}</span>
-              <ChevronDown className="h-4 w-4" />
-            </button>
-
-          <button
-            onClick={toggleMenu}
-            className="inline-flex items-center justify-center p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500 transition-all duration-300"
-          >
-            <span className="sr-only">Open main menu</span>
-            {isOpen ? (
-              <X className="block h-6 w-6" />
-            ) : (
-              <Menu className="block h-6 w-6" />
-            )}
-          </button>
-          </div>
-
-        {/* Mobile Dropdown - Language */}
-        {activeDropdown === 'language' && (
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="absolute top-16 left-0 w-full bg-white shadow-lg z-50"
-          >
-            <div className="px-4 py-2">
+          <div className="md:hidden flex items-center space-x-2">
+            <div className="relative">
               <button
-                onClick={() => setSelectedLanguage('ID')}
-                className="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-gray-900 rounded-md transition-colors duration-300"
+                onClick={() => toggleDropdown("language")}
+                className="flex items-center space-x-1 text-gray-600 px-2 py-2 rounded-md"
               >
-                <span className="flex items-center space-x-2">
-                  {/* Bendera ID */}
-                  <BsFlagFill className="h-4 w-4" />
-                  <span>Bahasa Indonesia</span>
-                </span>
+                <Globe className="h-5 w-5" />
+                <span>{selectedLanguage === "ID" ? "ID" : "EN"}</span>
+                <ChevronDown className="h-4 w-4" />
               </button>
-              <button
-                onClick={() => setSelectedLanguage('EN')}
-                className="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-gray-900 rounded-md transition-colors duration-300"
-              >
-                <span className="flex items-center space-x-2">
-                  {/* Bendera EN */}
-                  <BsFlagFill className="h-4 w-4" />
-                  <span>English</span>
-                </span>
-              </button>
+              {activeDropdown === "language" && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.3, ease: "easeInOut" }}
+                  className="absolute right-2 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5"
+                >
+                  <div className="py-1">
+                    {["ID", "EN"].map((lang) => (
+                      <button
+                        key={lang}
+                        onClick={() => handleLanguageChange(lang)}
+                        className="w-full flex items-center justify-between px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-gray-900 rounded-md transition-colors duration-300"
+                      >
+                        <span>
+                          {lang === "ID" ? "🇮🇩 Bahasa Indonesia" : "🇬🇧 English"}
+                        </span>
+                        {selectedLanguage === lang && (
+                          <BsFlagFill className="text-green-500 h-4 w-4" />
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
             </div>
-          </motion.div>
-        )}
-
+            <button
+              onClick={toggleMenu}
+              className="inline-flex items-center justify-center p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500 transition-all duration-300"
+            >
+              <span className="sr-only">Open main menu</span>
+              {isOpen ? (
+                <X className="block h-6 w-6" />
+              ) : (
+                <Menu className="block h-6 w-6" />
+              )}
+            </button>
+          </div>
         </div>
       </div>
 
@@ -284,25 +283,40 @@ const Navbar: React.FC = () => {
 
           {navItems.map((item) => (
             <div key={item.name}>
-              <button
-                onClick={() => item.hasDropdown && toggleDropdown(item.name)}
-                className="w-full flex items-center justify-between px-3 py-2 text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-md transition-colors duration-300"
-              >
-                {item.name}
+              <div className="flex items-center">
+                <button
+                  onClick={() => {
+                    if (!item.hasDropdown) {
+                      // Navigasi langsung untuk item tanpa dropdown
+                      navigate(item.href === "#" ? "/" : item.href);
+                    }
+                  }}
+                  className="w-full flex items-center justify-between px-3 py-2 text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-md transition-colors duration-300"
+                >
+                  {item.name}
+                </button>
                 {item.hasDropdown && (
-                  <ChevronDown
-                    className={`h-4 w-4 transition-transform duration-300 ${
-                      activeDropdown === item.name ? "rotate-180" : ""
-                    }`}
-                  />
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault(); // Mencegah navigasi saat klik panah
+                      toggleDropdown(item.name);
+                    }}
+                    className="p-1 text-gray-600 hover:text-gray-900 rounded-md hover:bg-gray-50 transition-colors duration-300"
+                  >
+                    <ChevronDown
+                      className={`h-4 w-4 transition-transform duration-300 ${
+                        activeDropdown === item.name ? "rotate-180" : ""
+                      }`}
+                    />
+                  </button>
                 )}
-              </button>
-              {item.hasDropdown && (
+              </div>
+              {item.hasDropdown && activeDropdown === item.name && (
                 <motion.div
                   initial={{ height: 0, opacity: 0 }}
                   animate={{
-                    height: activeDropdown === item.name ? "auto" : 0,
-                    opacity: activeDropdown === item.name ? 1 : 0,
+                    height: "auto",
+                    opacity: 1,
                   }}
                   transition={{ duration: 0.3, ease: "easeInOut" }}
                   className="pl-4"
