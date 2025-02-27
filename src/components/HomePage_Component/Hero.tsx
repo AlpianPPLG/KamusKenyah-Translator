@@ -73,16 +73,54 @@ const Hero: React.FC = () => {
       if (response && response.record) {
         const words = inputText.toLowerCase().split(/\s+/); // Split input text into words
         const translations = words.map((word: string) => {
-          // Check if the word exists in the record
-          if (response.record[word]) {
-            return response.record[word];
-          } else {
-            // Find the closest match if the word is not found
-            const closestMatch = findClosestMatch(
-              word,
-              response.record as RecordType
+          if (isSwapped) {
+            // Translate from Dayak Kenyah to Indonesian
+            const entry = Object.entries(response.record).find(([, value]) =>
+              (value as string).includes(word)
             );
-            return closestMatch || word; // Return the original word if no match is found
+            if (entry) {
+              const [key, value] = entry;
+              console.log(
+                `Translating "${word}" from Dayak Kenyah to Indonesian using key "${key}" with value "${value}"`
+              );
+              return key; // Return the Indonesian word
+            } else {
+              console.log(`No exact match found for "${word}"`);
+              // Attempt to find the closest match
+              const closestMatch = findClosestMatch(
+                word,
+                Object.fromEntries(
+                  Object.entries(response.record).map(([key, value]) => [
+                    value,
+                    key,
+                  ])
+                ) as RecordType
+              );
+              console.log(`Closest match for "${word}": "${closestMatch}"`);
+              return closestMatch || word;
+            }
+          } else {
+            // Translate from Indonesian to Dayak Kenyah
+            const entry = Object.entries(response.record).find(([, value]) =>
+              (value as string).includes(word)
+            );
+            if (entry) {
+              const [key, value] = entry;
+              console.log(
+                `Translating "${word}" from Indonesian to Dayak Kenyah using key "${key}" with value "${value}"`
+              );
+              return value;
+            } else {
+              // Find the closest match if the word is not found
+              const closestMatch = findClosestMatch(
+                word,
+                response.record as RecordType
+              );
+              console.log(
+                `No exact match found for "${word}". Closest match: "${closestMatch}"`
+              );
+              return closestMatch || word; // Return the original word if no match is found
+            }
           }
         });
 
@@ -126,7 +164,7 @@ const Hero: React.FC = () => {
   };
 
   const calculateSimilarity = (word1: string, word2: string) => {
-    // Simple similarity calculation based on common prefix
+    // Simple similarity calculation based on common prefix and length
     const minLength = Math.min(word1.length, word2.length);
     let commonPrefixLength = 0;
 
@@ -138,7 +176,11 @@ const Hero: React.FC = () => {
       }
     }
 
-    return commonPrefixLength / minLength;
+    // Adjust the similarity calculation to consider the length of the words
+    const lengthFactor =
+      Math.min(word1.length, word2.length) /
+      Math.max(word1.length, word2.length);
+    return (commonPrefixLength / minLength) * lengthFactor;
   };
 
   const handleCopy = async () => {
