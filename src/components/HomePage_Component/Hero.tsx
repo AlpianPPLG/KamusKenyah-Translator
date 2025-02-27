@@ -13,6 +13,7 @@ import {
   Clock,
   X,
 } from "lucide-react";
+import { fetchTranslationData } from "../../api/translatorApi"; // Import API
 
 interface Translation {
   id: number;
@@ -56,25 +57,50 @@ const Hero: React.FC = () => {
     }
   }, [inputText]);
 
-  const handleTranslate = () => {
+  const handleTranslate = async () => {
     if (!inputText.trim()) return;
 
     setIsLoading(true);
-    setTimeout(() => {
-      setTranslatedText("Terjemahan akan muncul di sini...");
+
+    try {
+      const response = await fetchTranslationData();
+      console.log("API Response:", response); // Log the response for debugging
+
+      if (response && response.record) {
+        const words = inputText.toLowerCase().split(/\s+/); // Split input text into words
+        const translations = words
+          .map((word) => response.record[word])
+          .filter(Boolean);
+
+        if (translations.length === words.length) {
+          const translatedSentence = translations.join(" ");
+          setTranslatedText(translatedSentence);
+
+          const newTranslation: Translation = {
+            id: Date.now(),
+            from: isSwapped ? "Dayak Kenyah" : "Indonesia",
+            to: isSwapped ? "Indonesia" : "Dayak Kenyah",
+            text: inputText,
+            translatedText: translatedSentence,
+            timestamp: new Date(),
+          };
+
+          setRecentTranslations((prev) => [
+            newTranslation,
+            ...prev.slice(0, 4),
+          ]);
+        } else {
+          setTranslatedText("Terjemahan tidak ditemukan untuk beberapa kata.");
+        }
+      } else {
+        setTranslatedText("Gagal mengambil data terjemahan.");
+      }
+    } catch (error) {
+      console.error("Error during translation:", error);
+      setTranslatedText("Terjadi kesalahan dalam menerjemahkan.");
+    } finally {
       setIsLoading(false);
-
-      const newTranslation: Translation = {
-        id: Date.now(),
-        from: isSwapped ? "Dayak Kenyah" : "Indonesia",
-        to: isSwapped ? "Indonesia" : "Dayak Kenyah",
-        text: inputText,
-        translatedText: "Terjemahan akan muncul di sini...",
-        timestamp: new Date(),
-      };
-
-      setRecentTranslations((prev) => [newTranslation, ...prev.slice(0, 4)]);
-    }, 1000);
+    }
   };
 
   const handleCopy = async () => {
