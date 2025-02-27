@@ -14,6 +14,7 @@ import {
   X,
 } from "lucide-react";
 import { fetchTranslationData } from "../../api/translatorApi"; // Import API
+import Speech from "react-speech"; // Import react-speech
 
 interface Translation {
   id: number;
@@ -31,6 +32,7 @@ const Hero: React.FC = () => {
   const [showHistory, setShowHistory] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
   const [isSwapped, setIsSwapped] = useState(false);
+  const [selectedLanguage] = useState("ID"); // Default language is Indonesian
   const [recentTranslations, setRecentTranslations] = useState<Translation[]>([
     {
       id: 1,
@@ -198,6 +200,16 @@ const Hero: React.FC = () => {
 
   const characterLimit = 500;
 
+  // Fungsi untuk membaca teks menggunakan react-speech
+  const handleSpeak = () => {
+    if (translatedText) {
+      // Menggunakan SpeechSynthesisUtterance secara langsung karena react-speech lebih kuno dan mungkin tidak kompatibel dengan versi React terbaru
+      const utterance = new SpeechSynthesisUtterance(translatedText);
+      utterance.lang = selectedLanguage === "ID" ? "id-ID" : "en-US"; // Sesuaikan bahasa berdasarkan pilihan
+      window.speechSynthesis.speak(utterance);
+    }
+  };
+
   return (
     <section className="relative min-h-screen pt-20 overflow-hidden bg-gradient-to-b from-white to-blue-50">
       <div className="absolute inset-0 overflow-hidden">
@@ -354,12 +366,17 @@ const Hero: React.FC = () => {
                   </span>
                 </div>
                 <div className="flex space-x-2">
-                  <button className="p-2 hover:bg-gray-200 rounded-lg transition-colors relative group">
+                  <motion.button
+                    onClick={handleSpeak}
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                    className="p-2 hover:bg-gray-200 rounded-lg transition-colors relative group"
+                  >
                     <Volume2 className="h-5 w-5 text-gray-600" />
                     <span className="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">
                       Play Audio
                     </span>
-                  </button>
+                  </motion.button>
                   <button
                     onClick={handleCopy}
                     className="p-2 hover:bg-gray-200 rounded-lg transition-colors relative group"
