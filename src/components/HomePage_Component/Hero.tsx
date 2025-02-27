@@ -57,6 +57,10 @@ const Hero: React.FC = () => {
     }
   }, [inputText]);
 
+  interface RecordType {
+    [key: string]: string;
+  }
+
   const handleTranslate = async () => {
     if (!inputText.trim()) return;
 
@@ -68,30 +72,33 @@ const Hero: React.FC = () => {
 
       if (response && response.record) {
         const words = inputText.toLowerCase().split(/\s+/); // Split input text into words
-        const translations = words
-          .map((word) => response.record[word])
-          .filter(Boolean);
+        const translations = words.map((word: string) => {
+          // Check if the word exists in the record
+          if (response.record[word]) {
+            return response.record[word];
+          } else {
+            // Find the closest match if the word is not found
+            const closestMatch = findClosestMatch(
+              word,
+              response.record as RecordType
+            );
+            return closestMatch || word; // Return the original word if no match is found
+          }
+        });
 
-        if (translations.length === words.length) {
-          const translatedSentence = translations.join(" ");
-          setTranslatedText(translatedSentence);
+        const translatedSentence = translations.join(" ");
+        setTranslatedText(translatedSentence);
 
-          const newTranslation: Translation = {
-            id: Date.now(),
-            from: isSwapped ? "Dayak Kenyah" : "Indonesia",
-            to: isSwapped ? "Indonesia" : "Dayak Kenyah",
-            text: inputText,
-            translatedText: translatedSentence,
-            timestamp: new Date(),
-          };
+        const newTranslation: Translation = {
+          id: Date.now(),
+          from: isSwapped ? "Dayak Kenyah" : "Indonesia",
+          to: isSwapped ? "Indonesia" : "Dayak Kenyah",
+          text: inputText,
+          translatedText: translatedSentence,
+          timestamp: new Date(),
+        };
 
-          setRecentTranslations((prev) => [
-            newTranslation,
-            ...prev.slice(0, 4),
-          ]);
-        } else {
-          setTranslatedText("Terjemahan tidak ditemukan untuk beberapa kata.");
-        }
+        setRecentTranslations((prev) => [newTranslation, ...prev.slice(0, 4)]);
       } else {
         setTranslatedText("Gagal mengambil data terjemahan.");
       }
@@ -101,6 +108,37 @@ const Hero: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const findClosestMatch = (word: string, record: RecordType) => {
+    let closestWord = null;
+    let maxSimilarity = 0;
+
+    for (const key in record) {
+      const similarity = calculateSimilarity(word, key);
+      if (similarity > maxSimilarity) {
+        maxSimilarity = similarity;
+        closestWord = record[key];
+      }
+    }
+
+    return closestWord;
+  };
+
+  const calculateSimilarity = (word1: string, word2: string) => {
+    // Simple similarity calculation based on common prefix
+    const minLength = Math.min(word1.length, word2.length);
+    let commonPrefixLength = 0;
+
+    for (let i = 0; i < minLength; i++) {
+      if (word1[i] === word2[i]) {
+        commonPrefixLength++;
+      } else {
+        break;
+      }
+    }
+
+    return commonPrefixLength / minLength;
   };
 
   const handleCopy = async () => {
