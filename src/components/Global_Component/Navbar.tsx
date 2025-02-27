@@ -2,11 +2,13 @@ import React, { useState, useEffect } from "react";
 import { Menu, X, ChevronDown, Search, Globe } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { BsFlagFill } from "react-icons/bs";  // Menggunakan icon bendera dari react-icons
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const [selectedLanguage, setSelectedLanguage] = useState<string>("ID"); // Default bahasa Indonesia
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -61,6 +63,11 @@ const Navbar: React.FC = () => {
 
   const handleSignUpClick = () => {
     navigate("/signup");
+  };
+
+  const handleLanguageChange = (lang: string) => {
+    setSelectedLanguage(lang);
+    setActiveDropdown(null); // Close the dropdown after selection
   };
 
   return (
@@ -141,12 +148,43 @@ const Navbar: React.FC = () => {
 
           {/* Right Side - Auth & Language */}
           <div className="hidden md:flex items-center space-x-4">
-            <button // Menghapus motion dan whileHover untuk menghilangkan efek hover
-              className="flex items-center space-x-1 px-3 py-2 text-sm font-medium text-gray-600 rounded-md"
-            >
-              <Globe className="h-4 w-4" />
-              <span>EN</span>
-            </button>
+            <div className="relative">
+              <button
+                onClick={() => toggleDropdown("language")}
+                className="flex items-center space-x-1 px-3 py-2 text-sm font-medium text-gray-600 rounded-md"
+              >
+                <Globe className="h-4 w-4" />
+                <span>{selectedLanguage}</span>
+              </button>
+              {activeDropdown === "language" && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{
+                    opacity: 1,
+                    y: 0,
+                  }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.3, ease: "easeInOut" }}
+                  className="absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5"
+                >
+                  <div className="py-1">
+                    {["ID", "EN"].map((lang) => (
+                      <button
+                        key={lang}
+                        onClick={() => handleLanguageChange(lang)}
+                        className="w-full flex items-center justify-between px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-colors duration-300"
+                      >
+                        <span>{lang === "ID" ? "🇮🇩 Indonesia" : "🇬🇧 English"}</span>
+                        {selectedLanguage === lang && (
+                          <BsFlagFill className="text-green-500" />
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+            </div>
+
             <button
               onClick={handleLoginClick}
               className="text-gray-600 px-3 py-2 rounded-md text-sm font-medium transition-all duration-300"
@@ -164,24 +202,65 @@ const Navbar: React.FC = () => {
           </div>
 
           {/* Mobile menu button */}
-          <div className="md:hidden flex items-center space-x-2">
-            <button // Menghapus motion dan whileHover untuk menghilangkan efek hover
-              className="p-2 text-gray-600 rounded-md"
+<div className="md:hidden flex items-center space-x-">
+  
+  
+            <button
+              onClick={() => toggleDropdown('language')}
+              className="flex items-center space-x-1 text-gray-600 px-2 py-2 rounded-md"
             >
               <Globe className="h-5 w-5" />
+              <span>{selectedLanguage === 'ID' ? 'ID' : 'EN'}</span>
+              <ChevronDown className="h-4 w-4" />
             </button>
-            <button
-              onClick={toggleMenu}
-              className="inline-flex items-center justify-center p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500 transition-all duration-300"
-            >
-              <span className="sr-only">Open main menu</span>
-              {isOpen ? (
-                <X className="block h-6 w-6" />
-              ) : (
-                <Menu className="block h-6 w-6" />
-              )}
-            </button>
+
+          <button
+            onClick={toggleMenu}
+            className="inline-flex items-center justify-center p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500 transition-all duration-300"
+          >
+            <span className="sr-only">Open main menu</span>
+            {isOpen ? (
+              <X className="block h-6 w-6" />
+            ) : (
+              <Menu className="block h-6 w-6" />
+            )}
+          </button>
           </div>
+
+        {/* Mobile Dropdown - Language */}
+        {activeDropdown === 'language' && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
+            className="absolute top-16 left-0 w-full bg-white shadow-lg z-50"
+          >
+            <div className="px-4 py-2">
+              <button
+                onClick={() => setSelectedLanguage('ID')}
+                className="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-gray-900 rounded-md transition-colors duration-300"
+              >
+                <span className="flex items-center space-x-2">
+                  {/* Bendera ID */}
+                  <BsFlagFill className="h-4 w-4" />
+                  <span>Bahasa Indonesia</span>
+                </span>
+              </button>
+              <button
+                onClick={() => setSelectedLanguage('EN')}
+                className="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-gray-900 rounded-md transition-colors duration-300"
+              >
+                <span className="flex items-center space-x-2">
+                  {/* Bendera EN */}
+                  <BsFlagFill className="h-4 w-4" />
+                  <span>English</span>
+                </span>
+              </button>
+            </div>
+          </motion.div>
+        )}
+
         </div>
       </div>
 
