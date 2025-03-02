@@ -4,7 +4,6 @@ import {
   Languages,
   ArrowRight,
   ArrowLeftRight,
-  Mic,
   Copy,
   Volume2,
   History,
@@ -14,7 +13,7 @@ import {
   X,
 } from "lucide-react";
 import { fetchTranslationData } from "../../api/translatorApi"; // Import API
-import Speech from "react-speech"; // Import react-speech
+import VoiceInput from "./VoiceInput";
 
 interface Translation {
   id: number;
@@ -200,10 +199,14 @@ const Hero: React.FC = () => {
 
   const characterLimit = 500;
 
-  // Fungsi untuk membaca teks menggunakan react-speech
+  // Handle voice input transcript
+  const handleVoiceInput = (transcript: string) => {
+    setInputText(transcript);
+  };
+
+  // Fungsi untuk membaca teks menggunakan SpeechSynthesis
   const handleSpeak = () => {
     if (translatedText) {
-      // Menggunakan SpeechSynthesisUtterance secara langsung karena react-speech lebih kuno dan mungkin tidak kompatibel dengan versi React terbaru
       const utterance = new SpeechSynthesisUtterance(translatedText);
       utterance.lang = selectedLanguage === "ID" ? "id-ID" : "en-US"; // Sesuaikan bahasa berdasarkan pilihan
       window.speechSynthesis.speak(utterance);
@@ -323,12 +326,11 @@ const Hero: React.FC = () => {
               </div>
               <div className="flex items-center justify-between pt-4 border-t border-gray-100">
                 <div className="flex space-x-4">
-                  <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors relative group">
-                    <Mic className="h-5 w-5 text-gray-600" />
-                    <span className="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">
-                      Voice Input
-                    </span>
-                  </button>
+                  {/* Using VoiceInput component here */}
+                  <VoiceInput
+                    onTranscript={handleVoiceInput}
+                    isDisabled={isLoading}
+                  />
                   <button
                     onClick={() => setShowHistory(!showHistory)}
                     className="p-2 hover:bg-gray-100 rounded-lg transition-colors relative group"
