@@ -31,7 +31,7 @@ const Hero: React.FC = () => {
   const [showHistory, setShowHistory] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
   const [isSwapped, setIsSwapped] = useState(false);
-  const [selectedLanguage] = useState("ID"); // Default language is Indonesian
+  const [selectedLanguage, setSelectedLanguage] = useState("ID"); // Default language is Indonesian
   const [recentTranslations, setRecentTranslations] = useState<Translation[]>([
     {
       id: 1,
@@ -70,6 +70,7 @@ const Hero: React.FC = () => {
     try {
       const response = await fetchTranslationData();
       console.log("API Response:", response); // Log the response for debugging
+      console.log("Using selected language:", selectedLanguage); // Log the selected language
 
       if (response && response.record) {
         const words = inputText.toLowerCase().split(/\s+/); // Split input text into words
@@ -82,7 +83,7 @@ const Hero: React.FC = () => {
             if (entry) {
               const [key, value] = entry;
               console.log(
-                `Translating "${word}" from Dayak Kenyah to Indonesian using key "${key}" with value "${value}"`
+                `Translating "${word}" from Dayak Kenyah to Indonesian using key "${key}" with value "${value}" (${selectedLanguage})`
               );
               return key; // Return the Indonesian word
             } else {
@@ -108,7 +109,7 @@ const Hero: React.FC = () => {
             if (entry) {
               const [key, value] = entry;
               console.log(
-                `Translating "${word}" from Indonesian to Dayak Kenyah using key "${key}" with value "${value}"`
+                `Translating "${word}" from Indonesian to Dayak Kenyah using key "${key}" with value "${value}" (${selectedLanguage})`
               );
               return value;
             } else {
@@ -195,6 +196,15 @@ const Hero: React.FC = () => {
     setIsSwapped(!isSwapped);
     setInputText(translatedText);
     setTranslatedText(inputText);
+    // Update the selected language when swapping
+    setSelectedLanguage(selectedLanguage === "ID" ? "DY" : "ID");
+  };
+
+  const handleLanguageChange = (languageCode: string) => {
+    setSelectedLanguage(languageCode);
+    // Reset text fields when changing language
+    setInputText("");
+    setTranslatedText("");
   };
 
   const characterLimit = 500;
@@ -204,14 +214,70 @@ const Hero: React.FC = () => {
     setInputText(transcript);
   };
 
-  // Fungsi untuk membaca teks menggunakan SpeechSynthesis
+  // Function to speak text using SpeechSynthesis with Indonesian accent
   const handleSpeak = () => {
     if (translatedText) {
+      // Clear any existing speech queue
+      window.speechSynthesis.cancel();
+
+      // Create new utterance
       const utterance = new SpeechSynthesisUtterance(translatedText);
-      utterance.lang = selectedLanguage === "ID" ? "id-ID" : "en-US"; // Sesuaikan bahasa berdasarkan pilihan
+
+      // Set language based on the target language (when not swapped, target is Dayak Kenyah)
+      // When swapped, target is Indonesian
+      utterance.lang = isSwapped ? "id-ID" : "id-ID"; // Use Indonesian for both since Dayak Kenyah isn't supported
+
+      // Adjust speech rate and pitch for more natural speaking
+      utterance.rate = 0.9; // Slightly slower than default (1.0)
+      utterance.pitch = 1.1; // Slightly higher than default (1.0)
+
+      // Get available voices
+      const voices = window.speechSynthesis.getVoices();
+
+      // Try to find Indonesian voice if available
+      const indonesianVoice = voices.find(
+        (voice) =>
+          voice.lang.includes("id") || voice.name.includes("Indonesian")
+      );
+
+      // Use Indonesian voice if found
+      if (indonesianVoice) {
+        utterance.voice = indonesianVoice;
+      }
+
+      // Start speaking
       window.speechSynthesis.speak(utterance);
+
+      // Log for debugging
+      console.log("Speaking with voice:", utterance.voice?.name);
+      console.log("Language:", utterance.lang);
+      console.log("Selected language setting:", selectedLanguage);
     }
   };
+
+  // Ensure voices list is loaded
+  useEffect(() => {
+    // Function to load voices
+    const loadVoices = () => {
+      window.speechSynthesis.getVoices();
+    };
+
+    // Call once when component loads
+    loadVoices();
+
+    // Add event listener for voices changed
+    if (window.speechSynthesis.onvoiceschanged !== undefined) {
+      window.speechSynthesis.onvoiceschanged = loadVoices;
+    }
+
+    // Cleanup
+    return () => {
+      window.speechSynthesis.cancel();
+      if (window.speechSynthesis.onvoiceschanged !== undefined) {
+        window.speechSynthesis.onvoiceschanged = null;
+      }
+    };
+  }, []);
 
   return (
     <section className="relative min-h-screen pt-20 overflow-hidden bg-gradient-to-b from-white to-blue-50">
@@ -281,6 +347,32 @@ const Hero: React.FC = () => {
           </motion.div>
         </div>
 
+        {/* Language Selector */}
+        <div className="flex justify-center mb-8">
+          <div className="inline-flex p-1 bg-gray-100 rounded-lg">
+            <button
+              onClick={() => handleLanguageChange("ID")}
+              className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                selectedLanguage === "ID"
+                  ? "bg-white text-blue-600 shadow-sm"
+                  : "text-gray-600 hover:text-gray-900"
+              }`}
+            >
+              Bahasa Indonesia
+            </button>
+            <button
+              onClick={() => handleLanguageChange("DY")}
+              className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                selectedLanguage === "DY"
+                  ? "bg-white text-blue-600 shadow-sm"
+                  : "text-gray-600 hover:text-gray-900"
+              }`}
+            >
+              Bahasa Dayak Kenyah
+            </button>
+          </div>
+        </div>
+
         {/* Translation Box */}
         <motion.div
           className="max-w-4xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden relative"
@@ -302,7 +394,8 @@ const Hero: React.FC = () => {
                 <div className="flex items-center space-x-2">
                   <Languages className="h-5 w-5 text-blue-600" />
                   <span className="text-sm font-medium text-gray-700">
-                    {isSwapped ? "Dayak Kenyah" : "Indonesia"}
+                    {isSwapped ? "Dayak Kenyah" : "Indonesia"} (
+                    {selectedLanguage})
                   </span>
                 </div>
                 <button className="text-blue-600 hover:text-blue-700 text-sm font-medium">
@@ -317,7 +410,9 @@ const Hero: React.FC = () => {
                       setInputText(e.target.value);
                     }
                   }}
-                  placeholder="Ketik atau tempel teks di sini..."
+                  placeholder={`Ketik atau tempel teks ${
+                    isSwapped ? "Dayak Kenyah" : "Indonesia"
+                  } di sini...`}
                   className="w-full h-40 resize-none border-0 focus:ring-0 text-gray-900 placeholder-gray-400 text-lg"
                 />
                 <div className="absolute bottom-2 right-2 text-sm text-gray-400">
@@ -364,7 +459,15 @@ const Hero: React.FC = () => {
                 <div className="flex items-center space-x-2">
                   <Languages className="h-5 w-5 text-blue-600" />
                   <span className="text-sm font-medium text-gray-700">
-                    {isSwapped ? "Indonesia" : "Dayak Kenyah"}
+                    {isSwapped ? "Indonesia" : "Dayak Kenyah"} (
+                    {isSwapped
+                      ? selectedLanguage === "DY"
+                        ? "ID"
+                        : "DY"
+                      : selectedLanguage === "ID"
+                      ? "DY"
+                      : "ID"}
+                    )
                   </span>
                 </div>
                 <div className="flex space-x-2">
@@ -441,9 +544,15 @@ const Hero: React.FC = () => {
                           {new Date(translation.timestamp).toLocaleTimeString()}
                         </span>
                       </div>
-                      <button className="p-1 hover:bg-white rounded-full transition-colors">
-                        <Star className="h-4 w-4 text-gray-400 hover:text-yellow-400" />
-                      </button>
+                      <div className="flex items-center">
+                        <span className="text-xs text-gray-500 mr-2">
+                          Mode: {translation.from === "Indonesia" ? "ID" : "DY"}{" "}
+                          → {translation.to === "Indonesia" ? "ID" : "DY"}
+                        </span>
+                        <button className="p-1 hover:bg-white rounded-full transition-colors">
+                          <Star className="h-4 w-4 text-gray-400 hover:text-yellow-400" />
+                        </button>
+                      </div>
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                       <div>
@@ -475,7 +584,11 @@ const Hero: React.FC = () => {
           {[
             {
               title: "Akurat & Cepat",
-              description: "Terjemahan yang akurat dengan teknologi AI modern",
+              description: `Terjemahan ${
+                selectedLanguage === "ID"
+                  ? "Indonesia ke Dayak Kenyah"
+                  : "Dayak Kenyah ke Indonesia"
+              } yang akurat dengan teknologi AI modern`,
               icon: "🎯",
             },
             {
