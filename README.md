@@ -2,7 +2,7 @@
 
 [English](#english) | [Bahasa Indonesia](#bahasa-indonesia)
 
-![Kamus Kenyah Translator Preview](https://github.com/AlpianPPLG/KamusKenyah-Translator/raw/main/assets/preview.png)
+![Kamus Kenyah Translator Preview](preview.png)
 
 <a id="english"></a>
 ## English
