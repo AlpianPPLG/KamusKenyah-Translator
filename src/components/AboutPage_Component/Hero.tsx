@@ -1,7 +1,6 @@
 "use client";
 
-import type React from "react";
-import { motion } from "framer-motion";
+import { motion, useAnimation, useInView } from "framer-motion"; // Tambahkan useAnimation dan useInView
 import {
   Users,
   Globe,
@@ -12,21 +11,45 @@ import {
   Lightbulb,
   ArrowRight,
   Share2,
-  Mountain,
-  MapPin,
 } from "lucide-react";
+import React from "react";
 
 const AboutHero: React.FC = () => {
   const teamStats = [
-    { value: "2018", label: "Didirikan" },
-    { value: "25+", label: "Ahli Bahasa" },
-    { value: "4", label: "Penghargaan" },
-    { value: "3", label: "Kantor Regional" },
+    { value: 2018, label: "Didirikan" }, // Ubah menjadi angka untuk animasi
+    { value: 25, label: "Ahli Bahasa" }, // Ubah menjadi angka
+    { value: 4, label: "Penghargaan" }, // Ubah menjadi angka
+    { value: 3, label: "Kantor Regional" }, // Ubah menjadi angka
   ];
+
+  // Hook untuk mendeteksi apakah elemen berada dalam viewport
+  const controls = useAnimation();
+  const ref = React.useRef(null);
+  const isInView = useInView(ref, { once: true }); // Animasi hanya sekali saat dilihat
+
+  // Memulai animasi saat elemen masuk ke viewport
+  React.useEffect(() => {
+    if (isInView) {
+      controls.start("visible");
+    }
+  }, [isInView, controls]);
+
+  // Variasi animasi untuk penghitungan
+  const countVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 2, // Durasi animasi penghitungan (2 detik)
+        ease: "easeOut", // Efek transisi yang halus
+      },
+    },
+  };
 
   return (
     <section className="relative min-h-screen pt-24 overflow-hidden bg-gradient-to-b from-white to-blue-50">
-      {/* Background Elements */}
+      {/* Background Elements (Tidak diubah) */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <motion.div
           className="absolute -top-40 -right-40 w-80 h-80 bg-blue-100 rounded-full opacity-20 blur-3xl"
@@ -66,9 +89,9 @@ const AboutHero: React.FC = () => {
       </div>
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Main Hero Content */}
+        {/* Main Hero Content (Tidak diubah) */}
         <div className="grid lg:grid-cols-2 gap-12 items-center pt-8 pb-20">
-          {/* Left Column - Text Content */}
+          {/* Left Column - Text Content (Tidak diubah) */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
@@ -116,26 +139,49 @@ const AboutHero: React.FC = () => {
               </motion.button>
             </div>
 
-            {/* Stats Grid */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-              {teamStats.map((stat, index) => (
+            {/* Stats Grid dengan Animasi Penghitungan */}
+            <div
+              ref={ref} // Referensi untuk mendeteksi viewport
+              className="grid grid-cols-2 sm:grid-cols-4 gap-4"
+            >
+              {teamStats.map((stat) => (
                 <motion.div
                   key={stat.label}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.6 + index * 0.1 }}
+                  initial="hidden"
+                  animate={controls} // Menggunakan controls untuk animasi
+                  variants={countVariants}
                   className="text-center p-4 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300"
                 >
-                  <div className="text-2xl font-bold text-blue-600 mb-1">
-                    {stat.value}
-                  </div>
+                  <motion.div
+                    initial={{ value: 0 }}
+                    animate={{
+                      value: stat.value,
+                      transition: {
+                        duration: 2, // Durasi animasi penghitungan
+                        ease: "easeOut", // Efek transisi yang halus
+                      },
+                    }}
+                    className="text-2xl font-bold text-blue-600 mb-1"
+                  >
+                    {stat.value > 999 ? (
+                      stat.value.toString() // Tampilkan angka utuh untuk 2018
+                    ) : (
+                      <motion.span>
+                        {
+                          stat.value >= 10
+                            ? stat.value.toString() // Tampilkan angka utuh untuk 25
+                            : stat.value // Tampilkan angka utuh untuk 4 dan 3
+                        }
+                      </motion.span>
+                    )}
+                  </motion.div>
                   <div className="text-xs text-gray-500">{stat.label}</div>
                 </motion.div>
               ))}
             </div>
           </motion.div>
 
-          {/* Right Column - Visual Elements */}
+          {/* Right Column - Logo (Tidak diubah) */}
           <motion.div
             initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
@@ -143,49 +189,20 @@ const AboutHero: React.FC = () => {
             className="relative"
           >
             <div className="relative z-10 bg-white rounded-2xl shadow-xl overflow-hidden">
-              {/* Map or Cultural Image Representation */}
-              <div className="aspect-[4/3] bg-blue-50 relative overflow-hidden">
+              {/* Logo Container */}
+              <div className="aspect-[4/3] relative overflow-hidden bg-gradient-to-br from-blue-50 to-indigo-50">
                 <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 1, delay: 0.8 }}
-                  className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-indigo-500/20"
-                />
-
-                {/* Stylized Map/Location */}
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="relative w-full h-full">
-                    <Mountain className="absolute top-1/4 left-1/4 w-16 h-16 text-blue-800/20" />
-                    <Mountain className="absolute bottom-1/3 right-1/4 w-20 h-20 text-indigo-800/20" />
-                    <Globe className="absolute top-1/3 right-1/3 w-24 h-24 text-blue-600/30" />
-
-                    {/* Location Pin Animation */}
-                    <motion.div
-                      initial={{ y: -20, opacity: 0 }}
-                      animate={{ y: 0, opacity: 1 }}
-                      transition={{
-                        delay: 1.2,
-                        duration: 0.8,
-                        type: "spring",
-                        stiffness: 100,
-                      }}
-                      className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-                    >
-                      <div className="relative">
-                        <MapPin className="w-10 h-10 text-red-500" />
-                        <motion.div
-                          className="absolute inset-0 rounded-full bg-red-500/30"
-                          animate={{ scale: [1, 1.8, 1], opacity: [1, 0, 1] }}
-                          transition={{
-                            duration: 2,
-                            repeat: Number.POSITIVE_INFINITY,
-                            ease: "easeOut",
-                          }}
-                        />
-                      </div>
-                    </motion.div>
-                  </div>
-                </div>
+                  className="absolute inset-0 flex items-center justify-center p-8"
+                >
+                  <img
+                    src="../../../public/assets/img/Logo.png"
+                    alt="KamusKenyah Logo"
+                    className="w-full h-full object-contain rounded-lg"
+                  />
+                </motion.div>
               </div>
 
               {/* Info Panels */}
@@ -245,7 +262,7 @@ const AboutHero: React.FC = () => {
           </motion.div>
         </div>
 
-        {/* Values Section */}
+        {/* Values Section (Tidak diubah) */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}

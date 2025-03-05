@@ -93,6 +93,19 @@ const OurTeam_Carousel: React.FC = () => {
       },
       bio: "Spesialis hubungan masyarakat yang berdedikasi untuk menghubungkan komunitas Dayak Kenyah dengan dunia digital.",
     },
+    {
+      id: 6,
+      name: "Rizky Maulana",
+      position: "Community Manager",
+      title: "Outreach Director",
+      image: "/assets/img/Person6.jpg",
+      socialLinks: {
+        linkedin: "https://linkedin.com",
+        twitter: "https://twitter.com",
+        email: "rizky@kamuskenyah.com",
+      },
+      bio: "Spesialis hubungan masyarakat yang berdedikasi untuk menghubungkan komunitas Dayak Kenyah dengan dunia digital.",
+    },
   ];
 
   const [currentIndex, setCurrentIndex] = useState(0);
