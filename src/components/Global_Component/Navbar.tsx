@@ -2,13 +2,13 @@ import React, { useState, useEffect } from "react";
 import { Menu, X, ChevronDown, Search, Globe } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { BsFlagFill } from "react-icons/bs"; // Menggunakan icon bendera dari react-icons
+import { BsFlagFill } from "react-icons/bs";
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
-  const [selectedLanguage, setSelectedLanguage] = useState<string>("ID"); // Default bahasa Indonesia
+  const [selectedLanguage, setSelectedLanguage] = useState<string>("ID");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -30,12 +30,12 @@ const Navbar: React.FC = () => {
   const navItems = [
     {
       name: "Home",
-      href: "/",
+      href: "/", // Ubah menjadi "/home"
       hasDropdown: false,
     },
     {
       name: "About",
-      href: "#",
+      href: "/about", // Pastikan "/about"
       hasDropdown: true,
       dropdownItems: ["Our Story", "Team", "Careers"],
     },
@@ -67,7 +67,7 @@ const Navbar: React.FC = () => {
 
   const handleLanguageChange = (lang: string) => {
     setSelectedLanguage(lang);
-    setActiveDropdown(null); // Close the dropdown after selection
+    setActiveDropdown(null);
   };
 
   return (
@@ -78,7 +78,7 @@ const Navbar: React.FC = () => {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          {/* Logo and Search */}
+          {/* Logo and search bar */}
           <div className="flex items-center space-x-4">
             <div className="flex-shrink-0">
               <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
@@ -97,29 +97,30 @@ const Navbar: React.FC = () => {
             </div>
           </div>
 
-          {/* Desktop Menu */}
+          {/* Navigation links */}
           <div className="hidden md:flex items-center justify-center flex-1">
             <div className="flex space-x-1">
               {navItems.map((item) => (
                 <div key={item.name} className="relative group">
                   <div className="flex items-center">
-                    {/* Link untuk navigasi langsung tanpa dropdown */}
+                    {/* Link tanpa dropdown */}
                     <a
                       href={item.href}
                       onClick={(e) => {
                         if (!item.hasDropdown) {
-                          e.preventDefault(); // Hanya mencegah default jika tidak ada dropdown
+                          e.preventDefault();
+                          navigate(item.href); // Gunakan navigate untuk item tanpa dropdown
                         }
                       }}
                       className="px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 rounded-md hover:bg-gray-50 transition-colors duration-300"
                     >
                       {item.name}
                     </a>
-                    {/* Panah hanya untuk item dengan dropdown */}
+                    {/* Panah untuk dropdown */}
                     {item.hasDropdown && (
                       <button
                         onClick={(e) => {
-                          e.preventDefault(); // Mencegah navigasi saat klik panah
+                          e.preventDefault();
                           toggleDropdown(item.name);
                         }}
                         className="ml-1 p-1 text-gray-600 hover:text-gray-900 rounded-md hover:bg-gray-50 transition-colors duration-300"
@@ -128,7 +129,7 @@ const Navbar: React.FC = () => {
                       </button>
                     )}
                   </div>
-                  {/* Dropdown hanya muncul saat panah diklik */}
+                  {/* Dropdown menu */}
                   {item.hasDropdown && activeDropdown === item.name && (
                     <motion.div
                       initial={{ opacity: 0, y: -10 }}
@@ -155,7 +156,7 @@ const Navbar: React.FC = () => {
             </div>
           </div>
 
-          {/* Right Side - Auth & Language */}
+          {/* Language dropdown */}
           <div className="hidden md:flex items-center space-x-4">
             <div className="relative group">
               <button
@@ -271,7 +272,7 @@ const Navbar: React.FC = () => {
         className="md:hidden overflow-hidden bg-white border-t border-gray-200"
       >
         <div className="px-4 pt-2 pb-3 space-y-1">
-          {/* Search in mobile */}
+          {/* Search input */}
           <div className="relative mt-3 mb-4">
             <input
               type="text"
@@ -287,8 +288,7 @@ const Navbar: React.FC = () => {
                 <button
                   onClick={() => {
                     if (!item.hasDropdown) {
-                      // Navigasi langsung untuk item tanpa dropdown
-                      navigate(item.href === "#" ? "/" : item.href);
+                      navigate(item.href); // Navigasi langsung untuk item tanpa dropdown
                     }
                   }}
                   className="w-full flex items-center justify-between px-3 py-2 text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-md transition-colors duration-300"
@@ -298,7 +298,7 @@ const Navbar: React.FC = () => {
                 {item.hasDropdown && (
                   <button
                     onClick={(e) => {
-                      e.preventDefault(); // Mencegah navigasi saat klik panah
+                      e.preventDefault();
                       toggleDropdown(item.name);
                     }}
                     className="p-1 text-gray-600 hover:text-gray-900 rounded-md hover:bg-gray-50 transition-colors duration-300"
