@@ -87,7 +87,7 @@ Our RESTful API endpoints include:
 - `GET /api/audio/:word`: Retrieve pronunciation audio files
 - `GET /api/cultural-notes/:word`: Get cultural context for specific terms
 
-Detailed API documentation is available in our [API.md](API.md) file.
+Detailed API documentation is available in our [API.md](./docs/API.md) file.
 
 ### Contributing
 
@@ -107,7 +107,7 @@ Contribution process:
 4. Push to branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-Please read our [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
+Please read our [CONTRIBUTING.md](./docs/CONTRIBUTING.md) for detailed guidelines.
 
 ### License
 
