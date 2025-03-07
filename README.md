@@ -208,7 +208,7 @@ Endpoint API RESTful kami mencakup:
 - `GET /api/audio/:word`: Ambil file audio pengucapan
 - `GET /api/cultural-notes/:word`: Dapatkan konteks budaya untuk istilah tertentu
 
-Dokumentasi API detail tersedia di file [API.md](API.md).
+Dokumentasi API detail tersedia di file [API.md](./docs/API.md).
 
 ### Kontribusi
 
@@ -228,7 +228,7 @@ Proses kontribusi:
 4. Push ke branch (`git push origin fitur/fitur-luar-biasa`)
 5. Buka Pull Request
 
-Silakan baca [CONTRIBUTING.md](CONTRIBUTING.md) untuk panduan detail.
+Silakan baca [CONTRIBUTING.md](./docs/CONTRIBUTING.md) untuk panduan detail.
 
 ### Lisensi
 
