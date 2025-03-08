@@ -4,6 +4,7 @@ import OurTeam_Carousel from "./OurTeam_Carousel";
 import MeetOurCommunity from "./MeetOurCommunity";
 import UserSpotlight from "./UserSpotlight";
 import FunFacts from "./FunFacts";
+import FAQSection from "./FAQ";
 
 const AboutPageContainer = () => {
   return (
@@ -14,6 +15,7 @@ const AboutPageContainer = () => {
       <MeetOurCommunity />
       <UserSpotlight />
       <FunFacts />
+      <FAQSection />
     </div>
   );
 };
