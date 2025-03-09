@@ -41,7 +41,7 @@ const Navbar: React.FC = () => {
     },
     {
       name: "Features",
-      href: "#",
+      href: "/feature", // Pastikan "/feature"
       hasDropdown: false,
     },
     {

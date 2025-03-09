@@ -1,0 +1,14 @@
+import MainLayout from "../../layouts/MainLayout";
+import FeaturePageContainer from "../../components/FeaturePage_Component/FeaturePageContainer";
+
+const About: React.FC = () => {
+  return (
+    <MainLayout>
+      <div>
+        <FeaturePageContainer />
+      </div>
+    </MainLayout>
+  );
+};
+
+export default About;

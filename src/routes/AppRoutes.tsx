@@ -5,6 +5,7 @@ import SecondPage from "../pages/TranslatorAppPage/SecondPage";
 import Login from "../pages/LoginPage/Login";
 import SignUp from "../pages/SignUpPage/SignUp";
 import About from "../pages/AboutPage/About";
+import Feature from "../pages/FeaturePage/Feature";
 
 const AppRoutes: React.FC = () => {
   return (
@@ -12,6 +13,7 @@ const AppRoutes: React.FC = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
+        <Route path="/feature" element={<Feature />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/second-page" element={<SecondPage />} />
