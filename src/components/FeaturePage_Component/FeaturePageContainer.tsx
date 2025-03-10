@@ -1,6 +1,8 @@
 import Hero from "./Hero";
 import FeaturesList from "./FeaturesList";
 import FeatureComparison from "./FeatureComparison";
+import StatisticsAndAchievements from "./StatisticsAndAchievements";
+import SecurityPrivacyAssurance from "./SecurityPrivacyAssurance";
 
 const FeaturePageContainer = () => {
   return (
@@ -8,6 +10,8 @@ const FeaturePageContainer = () => {
       <Hero />
       <FeaturesList />
       <FeatureComparison />
+      <StatisticsAndAchievements />
+      <SecurityPrivacyAssurance />
     </div>
   );
 };
