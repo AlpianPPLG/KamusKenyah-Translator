@@ -1,7 +1,7 @@
 import MainLayout from "../../layouts/MainLayout";
 import FeaturePageContainer from "../../components/FeaturePage_Component/FeaturePageContainer";
 
-const About: React.FC = () => {
+const Feature: React.FC = () => {
   return (
     <MainLayout>
       <div>
@@ -11,4 +11,4 @@ const About: React.FC = () => {
   );
 };
 
-export default About;
+export default Feature;

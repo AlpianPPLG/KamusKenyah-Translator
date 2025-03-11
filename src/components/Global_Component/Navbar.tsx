@@ -46,7 +46,7 @@ const Navbar: React.FC = () => {
     },
     {
       name: "Products",
-      href: "#",
+      href: "/product",
       hasDropdown: true,
       dropdownItems: ["Translation", "Dictionary", "Learning"],
     },
