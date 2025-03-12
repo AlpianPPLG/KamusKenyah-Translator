@@ -1,6 +1,7 @@
 import Hero from "./Hero";
 import UseCases from "./UseCases";
 import AffiliateAndReferralProgram from "./AffiliateAndReferralProgram";
+import YouMayAlsoLike from "./YouMayAlsoLike";
 
 const ProductPageContainer = () => {
   return (
@@ -8,6 +9,7 @@ const ProductPageContainer = () => {
       <Hero />
       <UseCases />
       <AffiliateAndReferralProgram />
+      <YouMayAlsoLike />
     </div>
   );
 };
