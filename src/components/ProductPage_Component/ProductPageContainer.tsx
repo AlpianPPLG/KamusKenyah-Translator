@@ -2,6 +2,7 @@ import Hero from "./Hero";
 import UseCases from "./UseCases";
 import AffiliateAndReferralProgram from "./AffiliateAndReferralProgram";
 import YouMayAlsoLike from "./YouMayAlsoLike";
+import WhatsNext from "./What’sNext";
 
 const ProductPageContainer = () => {
   return (
@@ -10,6 +11,7 @@ const ProductPageContainer = () => {
       <UseCases />
       <AffiliateAndReferralProgram />
       <YouMayAlsoLike />
+      <WhatsNext />
     </div>
   );
 };
