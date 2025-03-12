@@ -52,7 +52,7 @@ const Navbar: React.FC = () => {
     },
     {
       name: "Pricing",
-      href: "#",
+      href: "/pricing",
       hasDropdown: false,
     },
   ];
