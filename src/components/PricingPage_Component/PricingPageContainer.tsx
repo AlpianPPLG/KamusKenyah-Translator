@@ -3,6 +3,7 @@ import SecurePaymentAndTrustedPartners from "./SecurePaymentAndTrustedPartners";
 import EnterpriseCustomPlan from "./EnterpriseCustomPlan";
 import MoneyBackGuaranteeAndRefundPolicy from "./MoneyBackGuaranteeAndRefundPolicy";
 import WhyChooseOurPricingPlans from "./WhyChooseOurPricingPlans";
+import ContactCustomerService from "./ContactCustomerService";
 import FAQ from "./FAQ";
 
 const PricingPageContainer = () => {
@@ -13,6 +14,7 @@ const PricingPageContainer = () => {
       <EnterpriseCustomPlan />
       <MoneyBackGuaranteeAndRefundPolicy />
       <WhyChooseOurPricingPlans />
+      <ContactCustomerService />
       <FAQ />
     </div>
   );
