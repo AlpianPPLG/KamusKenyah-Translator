@@ -6,6 +6,9 @@ import Login from "../pages/LoginPage/Login";
 import SignUp from "../pages/SignUpPage/SignUp";
 import About from "../pages/AboutPage/About";
 import Feature from "../pages/FeaturePage/Feature";
+import Product from "../pages/ProductPage/Product";
+import Pricing from "../pages/PricingPage/Pricing";
+import Error from "../pages/ErrorPage/Error";
 
 const AppRoutes: React.FC = () => {
   return (
