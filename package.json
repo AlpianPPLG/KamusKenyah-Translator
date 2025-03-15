@@ -16,6 +16,7 @@
     "@tailwindcss/vite": "^4.0.8",
     "aos": "^2.3.4",
     "axios": "^1.7.9",
+    "chartjs": "^0.3.24",
     "framer-motion": "^12.4.7",
     "jquery": "^3.7.1",
     "lucide-react": "^0.475.0",
