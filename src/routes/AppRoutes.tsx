@@ -11,6 +11,7 @@ import Pricing from "../pages/PricingPage/Pricing";
 import Error from "../pages/ErrorPage/Error";
 import Terms from "../pages/TermsPage/Terms";
 import Privacy from "../pages/PrivacyPage/Privacy";
+import Cookies from "../pages/CookiesPage/Cookies";
 
 const AppRoutes: React.FC = () => {
   return (
@@ -27,6 +28,7 @@ const AppRoutes: React.FC = () => {
         <Route path="/error" element={<Error />} />
         <Route path="/terms" element={<Terms />} />
         <Route path="/privacy" element={<Privacy />} />
+        <Route path="/cookies" element={<Cookies />} />
       </Routes>
     </Router>
   );

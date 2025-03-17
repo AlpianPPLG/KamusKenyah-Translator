@@ -75,7 +75,7 @@ const Footer: React.FC = () => {
       links: [
         { name: "Terms of Service", href: "/terms" },
         { name: "Privacy Policy", href: "/privacy" },
-        { name: "Cookie Policy", href: "#" },
+        { name: "Cookie Policy", href: "/cookies" },
         { name: "Data Processing", href: "#" },
         { name: "Accessibility", href: "#" },
       ],
@@ -441,12 +441,12 @@ const Footer: React.FC = () => {
               >
                 Privacy
               </Link>
-              <a
-                href="#"
+              <Link
+                to="/cookies"
                 className="hover:text-white transition-colors duration-200"
               >
                 Cookies
-              </a>
+              </Link>
               <a
                 href="#"
                 className="hover:text-white transition-colors duration-200"
