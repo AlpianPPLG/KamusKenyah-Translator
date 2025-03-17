@@ -9,6 +9,8 @@ import Feature from "../pages/FeaturePage/Feature";
 import Product from "../pages/ProductPage/Product";
 import Pricing from "../pages/PricingPage/Pricing";
 import Error from "../pages/ErrorPage/Error";
+import Terms from "../pages/TermsPage/Terms";
+import Privacy from "../pages/PrivacyPage/Privacy";
 
 const AppRoutes: React.FC = () => {
   return (
@@ -23,6 +25,8 @@ const AppRoutes: React.FC = () => {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/second-page" element={<SecondPage />} />
         <Route path="/error" element={<Error />} />
+        <Route path="/terms" element={<Terms />} />
+        <Route path="/privacy" element={<Privacy />} />
       </Routes>
     </Router>
   );
