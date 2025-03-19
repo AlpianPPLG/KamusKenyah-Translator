@@ -12,6 +12,7 @@ import Error from "../pages/ErrorPage/Error";
 import Terms from "../pages/TermsPage/Terms";
 import Privacy from "../pages/PrivacyPage/Privacy";
 import Cookies from "../pages/CookiesPage/Cookies";
+import Site from "../pages/SitemapPage/Site";
 
 const AppRoutes: React.FC = () => {
   return (
@@ -29,6 +30,7 @@ const AppRoutes: React.FC = () => {
         <Route path="/terms" element={<Terms />} />
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/cookies" element={<Cookies />} />
+        <Route path="/sitemap" element={<Site />} />
       </Routes>
     </Router>
   );

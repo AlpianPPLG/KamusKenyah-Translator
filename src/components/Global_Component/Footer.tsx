@@ -447,12 +447,12 @@ const Footer: React.FC = () => {
               >
                 Cookies
               </Link>
-              <a
-                href="#"
+              <Link
+                to="/sitemap"
                 className="hover:text-white transition-colors duration-200"
               >
                 Sitemap
-              </a>
+              </Link>
             </div>
           </div>
         </div>
