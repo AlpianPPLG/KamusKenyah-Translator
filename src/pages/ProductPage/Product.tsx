@@ -1,13 +1,13 @@
-import MainLayout from "../../layouts/MainLayout";
+import ProductLayout from "../../layouts/ProductLayout";
 import ProductPageContainer from "../../components/ProductPage_Component/ProductPageContainer";
 
 const Product: React.FC = () => {
   return (
-    <MainLayout>
+    <ProductLayout>
       <div>
         <ProductPageContainer />
       </div>
-    </MainLayout>
+    </ProductLayout>
   );
 };
 

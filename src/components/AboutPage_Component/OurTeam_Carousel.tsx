@@ -176,7 +176,7 @@ const OurTeam_Carousel: React.FC = () => {
   };
 
   return (
-    <section className="py-20 bg-gradient-to-b from-blue-50 to-white overflow-hidden">
+    <section id="#ourteam" className="py-20 bg-gradient-to-b from-blue-50 to-white overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center mb-16">

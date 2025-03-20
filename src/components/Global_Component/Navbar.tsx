@@ -142,7 +142,7 @@ const Navbar: React.FC = () => {
                         {item.dropdownItems?.map((dropdownItem) => (
                           <a
                             key={dropdownItem}
-                            href="#"
+                            href={dropdownItem === "Team" ? "#ourteam" : "#"}
                             className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-colors duration-300"
                           >
                             {dropdownItem}

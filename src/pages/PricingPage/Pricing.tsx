@@ -1,13 +1,13 @@
-import MainLayout from "../../layouts/MainLayout";
+import PricingLayout from "../../layouts/PricingLayout";
 import PricingPageContainer from "../../components/PricingPage_Component/PricingPageContainer";
 
 const Pricing: React.FC = () => {
   return (
-    <MainLayout>
+    <PricingLayout>
       <div>
         <PricingPageContainer />
       </div>
-    </MainLayout>
+    </PricingLayout>
   );
 };
 

@@ -1,13 +1,13 @@
-import MainLayout from "../../layouts/MainLayout";
+import FeatureLayout from "../../layouts/FeatureLayout";
 import FeaturePageContainer from "../../components/FeaturePage_Component/FeaturePageContainer";
 
 const Feature: React.FC = () => {
   return (
-    <MainLayout>
+    <FeatureLayout>
       <div>
         <FeaturePageContainer />
       </div>
-    </MainLayout>
+    </FeatureLayout>
   );
 };
 
