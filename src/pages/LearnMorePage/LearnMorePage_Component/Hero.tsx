@@ -246,8 +246,8 @@ const Hero = () => {
         style={{ width: `${scrollProgress}%` }}
       ></div>
 
-      {/* Navigation Tabs */}
-      <div className="sticky top-0 bg-white shadow-sm z-40 border-b border-gray-200">
+      {/* Navigation Tabs - Updated positioning */}
+      <div className="bg-white shadow-sm z-40 border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex space-x-8">
@@ -327,7 +327,7 @@ const Hero = () => {
       </div>
 
       {/* Main Hero Section */}
-      <section className="pt-20 pb-16 md:pt-28 md:pb-24 px-4 sm:px-6 lg:px-8 relative">
+      <section className="pt-12 pb-16 md:pt-16 md:pb-24 px-4 sm:px-6 lg:px-8 relative">
         <div
           className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
           aria-hidden="true"
