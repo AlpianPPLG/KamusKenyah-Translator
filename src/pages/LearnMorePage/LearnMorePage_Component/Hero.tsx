@@ -194,7 +194,7 @@ const Hero = () => {
     delay,
   }) => (
     <div
-      className={`bg-white rounded-xl shadow-xl p-6 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 border border-gray-100`}
+      className="bg-white rounded-xl shadow-xl p-6 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 border border-gray-100"
       style={{ animationDelay: `${delay}s` }}
     >
       <div
@@ -238,9 +238,9 @@ const Hero = () => {
   );
 
   return (
-    <div className="bg-white overflow-hidden">
+    <div className="w-full bg-white overflow-x-hidden">
       {/* Main Hero Section */}
-      <section className="pt-12 pb-16 md:pt-16 mt-20 md:pb-24 px-4 sm:px-6 lg:px-8 relative">
+      <section className="pt-12 pb-16 md:pt-16 mt-20 md:pb-24 px-4 sm:px-6 lg:px-8 relative w-full">
         <div
           className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
           aria-hidden="true"
@@ -249,17 +249,17 @@ const Hero = () => {
         </div>
 
         <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col lg:flex-row items-center gap-12">
+          <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-12">
             {/* Hero Text */}
             <div className="lg:w-1/2 text-center lg:text-left">
               <div className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-50 text-blue-600 mb-4">
                 <span className="w-2 h-2 rounded-full bg-blue-600 mr-2"></span>
                 Learn more about our revolutionary platform
               </div>
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6 leading-tight bg-clip-text text-transparent bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6 leading-tight bg-clip-text text-transparent bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600">
                 Breaking Language Barriers with AI
               </h1>
-              <p className="text-lg text-gray-600 mb-8 max-w-xl mx-auto lg:mx-0">
+              <p className="text-base sm:text-lg text-gray-600 mb-8 max-w-xl mx-auto lg:mx-0">
                 Discover how our cutting-edge translation technology is
                 connecting people and businesses across the globe with
                 unprecedented accuracy and speed.
@@ -310,7 +310,7 @@ const Hero = () => {
             </div>
 
             {/* Hero Visual */}
-            <div className="lg:w-1/2 relative">
+            <div className="lg:w-1/2 relative w-full max-w-md mx-auto lg:max-w-none mt-8 lg:mt-0">
               <div className="bg-white rounded-2xl shadow-2xl overflow-hidden border border-gray-100 p-2">
                 <div className="relative rounded-xl overflow-hidden bg-gray-50 aspect-video">
                   <video
@@ -352,7 +352,7 @@ const Hero = () => {
                 </div>
               </div>
 
-              {/* Floating elements */}
+              {/* Floating elements - hidden on small screens */}
               <div className="absolute -top-6 -right-6 bg-white rounded-xl shadow-lg p-4 border border-gray-100 hidden md:flex items-center">
                 <Globe className="h-5 w-5 text-blue-500 mr-2" />
                 <div>
@@ -376,14 +376,14 @@ const Hero = () => {
       </section>
 
       {/* Learn More Section with Info Icon */}
-      <section className="py-12 px-4 sm:px-6 lg:px-8 bg-blue-50">
+      <section className="py-12 px-4 sm:px-6 lg:px-8 bg-blue-50 w-full">
         <div className="max-w-7xl mx-auto">
           <div className="bg-white rounded-xl shadow-md p-6 md:p-8">
-            <div className="flex items-start">
-              <div className="flex-shrink-0 bg-blue-100 rounded-full p-3">
+            <div className="flex flex-col md:flex-row items-start">
+              <div className="flex-shrink-0 bg-blue-100 rounded-full p-3 mb-4 md:mb-0">
                 <Info className="h-6 w-6 text-blue-600" />
               </div>
-              <div className="ml-5">
+              <div className="md:ml-5">
                 <h3 className="text-lg font-semibold text-gray-900">
                   Need more information?
                 </h3>
@@ -408,19 +408,19 @@ const Hero = () => {
       </section>
 
       {/* Features Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 relative">
+      <section className="py-16 md:py-20 px-4 sm:px-6 lg:px-8 relative w-full">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+          <div className="text-center mb-12 md:mb-16">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-4">
               Powerful Features to Explore
             </h2>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+            <p className="text-base lg:text-lg text-gray-600 max-w-3xl mx-auto">
               Our platform offers a range of innovative features designed to
               make language translation seamless, accurate, and intuitive.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {features.map((feature, index) => (
               <FeatureCard
                 key={index}
@@ -433,7 +433,7 @@ const Hero = () => {
             ))}
           </div>
 
-          <div className="mt-16 flex justify-center">
+          <div className="mt-12 md:mt-16 flex justify-center">
             <Link
               to="/features"
               className="group inline-flex items-center justify-center px-6 py-3 text-base font-medium text-blue-600 hover:text-blue-800 transition-colors"
@@ -446,14 +446,14 @@ const Hero = () => {
       </section>
 
       {/* Rotating Features */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-50">
+      <section className="py-16 md:py-20 px-4 sm:px-6 lg:px-8 bg-gray-50 w-full">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
-              <h2 className="text-3xl md:text-4xl font-bold mb-6">
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-6">
                 How It Works
               </h2>
-              <p className="text-lg text-gray-600 mb-8">
+              <p className="text-base lg:text-lg text-gray-600 mb-8">
                 Our platform makes translation simple, accurate, and accessible
                 for everyone. Discover how our technology can help you break
                 down language barriers.
@@ -488,21 +488,21 @@ const Hero = () => {
               </div>
             </div>
 
-            <div className="relative">
+            <div className="relative mt-10 lg:mt-0">
               <div className="aspect-square max-w-md mx-auto bg-white rounded-2xl shadow-xl p-8 relative overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-purple-50 opacity-50"></div>
 
                 <div className="relative z-10 h-full flex flex-col justify-center items-center">
                   <div
-                    className={`w-20 h-20 rounded-full bg-gradient-to-r ${features[currentFeature].gradient} flex items-center justify-center mb-6 text-white`}
+                    className={`w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-to-r ${features[currentFeature].gradient} flex items-center justify-center mb-6 text-white`}
                   >
                     {features[currentFeature].icon}
                   </div>
 
-                  <h3 className="text-2xl font-bold mb-4 text-center">
+                  <h3 className="text-xl sm:text-2xl font-bold mb-4 text-center">
                     {features[currentFeature].title}
                   </h3>
-                  <p className="text-gray-600 text-center">
+                  <p className="text-gray-600 text-center text-sm sm:text-base">
                     {features[currentFeature].description}
                   </p>
 
@@ -521,6 +521,7 @@ const Hero = () => {
                 </div>
               </div>
 
+              {/* Floating elements - hidden on small and medium screens */}
               <div className="absolute -top-6 -right-6 bg-white rounded-xl shadow-lg p-4 border border-gray-100 hidden lg:block">
                 <div className="flex items-center">
                   <Lightbulb className="h-5 w-5 text-amber-500 mr-2" />
@@ -540,19 +541,19 @@ const Hero = () => {
       </section>
 
       {/* Testimonials */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8">
+      <section className="py-16 md:py-20 px-4 sm:px-6 lg:px-8 w-full">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+          <div className="text-center mb-12 md:mb-16">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-4">
               What Our Users Say
             </h2>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+            <p className="text-base lg:text-lg text-gray-600 max-w-3xl mx-auto">
               Thousands of users trust our platform for their translation needs.
               Here's what a few of them have to say.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {testimonials.map((testimonial, idx) => (
               <Testimonial key={idx} {...testimonial} />
             ))}
@@ -561,11 +562,13 @@ const Hero = () => {
       </section>
 
       {/* Learning Resources Section with BookOpen icon */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-50">
+      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-50 w-full">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4">Learning Resources</h2>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+            <h2 className="text-2xl md:text-3xl font-bold mb-4">
+              Learning Resources
+            </h2>
+            <p className="text-base lg:text-lg text-gray-600 max-w-3xl mx-auto">
               Enhance your skills with our comprehensive learning materials and
               guides.
             </p>
@@ -594,16 +597,16 @@ const Hero = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+      <section className="py-16 md:py-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden w-full">
         <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-purple-50"></div>
 
         <div className="max-w-5xl mx-auto relative z-10">
-          <div className="bg-white rounded-2xl shadow-xl p-8 md:p-12 border border-gray-100">
+          <div className="bg-white rounded-2xl shadow-xl p-6 md:p-12 border border-gray-100">
             <div className="text-center mb-8">
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-4">
                 Ready to Get Started?
               </h2>
-              <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              <p className="text-base lg:text-lg text-gray-600 max-w-2xl mx-auto">
                 Join thousands of users who are already breaking language
                 barriers with our platform.
               </p>

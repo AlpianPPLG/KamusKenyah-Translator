@@ -104,6 +104,10 @@ const CustomerJourneyMap: React.FC = () => {
   const [hoveredStage, setHoveredStage] = useState<number | null>(null);
   const [showInsights, setShowInsights] = useState<boolean>(false);
   const [selectedMetric, setSelectedMetric] = useState<string | null>(null);
+  const [metricDetails, setMetricDetails] = useState<{
+    icon: React.ReactNode;
+    description: string;
+  } | null>(null);
 
   const journeyStages: JourneyStage[] = [
     {
@@ -363,6 +367,70 @@ const CustomerJourneyMap: React.FC = () => {
     },
   ];
 
+  useEffect(() => {
+    if (selectedMetric) {
+      // Define custom icons and descriptions based on selected metric
+      const metricIcons = {
+        "Website Visits": {
+          icon: <Globe className="w-8 h-8 text-blue-500" />,
+          description: "Total number of unique visitors to the platform",
+        },
+        "Avg. Session": {
+          icon: <Clock className="w-8 h-8 text-purple-500" />,
+          description: "Average time users spend on the platform per visit",
+        },
+        "Bounce Rate": {
+          icon: <Zap className="w-8 h-8 text-amber-500" />,
+          description:
+            "Percentage of visitors who navigate away after viewing only one page",
+        },
+        "Social Shares": {
+          icon: <Share2 className="w-8 h-8 text-green-500" />,
+          description:
+            "Number of times platform content has been shared on social media",
+        },
+        "Demo Requests": {
+          icon: <MessageSquare className="w-8 h-8 text-indigo-500" />,
+          description: "Users who requested a product demonstration",
+        },
+        "Feature Views": {
+          icon: <Search className="w-8 h-8 text-blue-500" />,
+          description: "Number of feature page views",
+        },
+        "Compare Rate": {
+          icon: <PieChart className="w-8 h-8 text-orange-500" />,
+          description: "Percentage of users who viewed comparison pages",
+        },
+        "Support Queries": {
+          icon: <MessageSquare className="w-8 h-8 text-red-500" />,
+          description: "Number of support requests submitted",
+        },
+        "Sign-ups": {
+          icon: <UserPlus className="w-8 h-8 text-emerald-500" />,
+          description: "New user registrations",
+        },
+        "Trial Starts": {
+          icon: <Rocket className="w-8 h-8 text-violet-500" />,
+          description: "Users who began a free trial",
+        },
+        "Drop-offs": {
+          icon: <Frown className="w-8 h-8 text-rose-500" />,
+          description: "Users who abandoned the registration process",
+        },
+        "Support Usage": {
+          icon: <Users className="w-8 h-8 text-sky-500" />,
+          description: "Number of users accessing support resources",
+        },
+      };
+
+      setMetricDetails(
+        metricIcons[selectedMetric as keyof typeof metricIcons] || null
+      );
+    } else {
+      setMetricDetails(null);
+    }
+  }, [selectedMetric]);
+
   const renderMetricTrend = (
     trend: "up" | "down" | "neutral",
     change: string
@@ -402,7 +470,7 @@ const CustomerJourneyMap: React.FC = () => {
         <div className="flex justify-between text-sm mb-1">
           <span className="text-gray-600">Progress</span>
           <span className="font-medium">
-            {progress}% of {target}
+            <AnimatedCounter end={progress} duration={1500} />% of {target}
           </span>
         </div>
         <div className="w-full bg-gray-200 rounded-full h-2">
@@ -440,65 +508,116 @@ const CustomerJourneyMap: React.FC = () => {
     );
   };
 
+  // Show a different UI when a specific metric is selected
+  const renderMetricDetails = () => {
+    if (!selectedMetric || !metricDetails) return null;
+
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+        <div className="bg-white rounded-xl p-6 max-w-md w-full">
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-xl font-bold">{selectedMetric} Details</h3>
+            <button
+              onClick={() => setSelectedMetric(null)}
+              className="text-gray-500 hover:text-gray-700"
+            >
+              <svg
+                className="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          </div>
+
+          <div className="flex flex-col items-center mb-4">
+            {metricDetails.icon}
+            <p className="text-gray-600 mt-4 text-center">
+              {metricDetails.description}
+            </p>
+          </div>
+
+          <div className="mt-6 flex justify-end">
+            <button
+              onClick={() => setSelectedMetric(null)}
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
-    <div className="bg-white py-20 px-4 sm:px-6 lg:px-8">
+    <div className="bg-white py-12 sm:py-16 md:py-20 px-4 sm:px-6 lg:px-8 w-full max-w-[100vw] overflow-hidden">
       <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+        <div className="text-center mb-12 md:mb-16">
+          <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-4">
             Customer Journey Map
           </h2>
-          <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+          <p className="text-base md:text-lg text-gray-600 max-w-3xl mx-auto">
             Explore how users discover, evaluate, and embrace our translation
             platform through their journey from first contact to loyal customer.
           </p>
         </div>
 
-        {/* Journey Progress Bar */}
-        <div className="relative mb-16">
-          <div className="hidden sm:block absolute top-1/2 w-full h-0.5 bg-gray-200 -translate-y-1/2"></div>
-          <div className="relative flex justify-between max-w-4xl mx-auto">
-            {journeyStages.map((stage, index) => (
+        {/* Journey Progress Bar - Responsive */}
+        <div className="relative mb-12 md:mb-16 overflow-x-auto pb-4 sm:overflow-visible">
+          <div className="flex flex-col space-y-6">
+            {journeyStages.map((stage) => (
               <div
                 key={stage.id}
-                className="flex flex-col items-center relative"
-                onMouseEnter={() => setHoveredStage(stage.id)}
-                onMouseLeave={() => setHoveredStage(null)}
+                className={`p-4 rounded-lg cursor-pointer transition-all duration-300
+                  ${
+                    activeStage === stage.id
+                      ? "bg-blue-50 border-l-4 border-blue-500"
+                      : "bg-white border"
+                  }`}
                 onClick={() => setActiveStage(stage.id)}
               >
-                <div
-                  className={`w-12 h-12 rounded-full flex items-center justify-center z-10 transition-all duration-300 cursor-pointer
-                    ${
-                      activeStage === stage.id
-                        ? "bg-blue-600 text-white scale-110 shadow-lg"
-                        : "bg-white text-gray-500 border-2 border-gray-200 hover:border-blue-500 hover:text-blue-500"
-                    }`}
-                >
-                  {stage.icon}
-                </div>
-                <div className="absolute top-16 text-center w-32">
-                  <p
-                    className={`font-medium ${
-                      activeStage === stage.id
-                        ? "text-blue-600"
-                        : "text-gray-600"
-                    }`}
+                <div className="flex items-center">
+                  <div
+                    className={`w-10 h-10 rounded-full flex items-center justify-center mr-4
+                      ${
+                        activeStage === stage.id
+                          ? "bg-blue-600 text-white"
+                          : "bg-gray-100 text-gray-500"
+                      }`}
                   >
-                    {stage.title}
-                  </p>
-                  <p className="text-xs text-gray-500 mt-1">
-                    {stage.timeframe.average}
-                  </p>
+                    {stage.icon}
+                  </div>
+                  <div>
+                    <p
+                      className={`font-medium ${
+                        activeStage === stage.id
+                          ? "text-blue-600"
+                          : "text-gray-700"
+                      }`}
+                    >
+                      {stage.title}
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      {stage.timeframe.average}
+                    </p>
+                  </div>
                 </div>
-                {index < journeyStages.length - 1 && (
-                  <ArrowRight className="absolute left-full top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 hidden sm:block" />
-                )}
               </div>
             ))}
           </div>
         </div>
 
-        {/* Stage Details */}
-        <div className="mt-24">
+        {/* Stage Details - Responsive */}
+        <div className="mt-16 md:mt-24">
           {journeyStages.map((stage) => (
             <div
               key={stage.id}
@@ -508,24 +627,26 @@ const CustomerJourneyMap: React.FC = () => {
                   : "opacity-0 h-0 overflow-hidden"
               }`}
             >
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
                 {/* Metrics */}
-                <div className="bg-gray-50 rounded-xl p-6">
-                  <h3 className="text-lg font-semibold mb-4 flex items-center">
+                <div className="bg-gray-50 rounded-xl p-4 md:p-6">
+                  <h3 className="text-base md:text-lg font-semibold mb-3 md:mb-4 flex items-center">
                     <BarChart className="w-5 h-5 text-blue-500 mr-2" />
                     Key Metrics
                   </h3>
-                  <div className="space-y-4">
+                  <div className="space-y-3 md:space-y-4">
                     {stage.metrics.map((metric, idx) => (
                       <div
                         key={idx}
-                        className="p-3 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer"
+                        className="p-2 md:p-3 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer"
                         onClick={() => setSelectedMetric(metric.label)}
                       >
                         <div className="flex items-center justify-between">
-                          <span className="text-gray-600">{metric.label}</span>
+                          <span className="text-sm md:text-base text-gray-600">
+                            {metric.label}
+                          </span>
                           <div className="flex items-center">
-                            <span className="font-semibold mr-2">
+                            <span className="text-sm md:text-base font-semibold mr-2">
                               {metric.value}
                             </span>
                             {renderMetricTrend(metric.trend, metric.change)}
@@ -537,21 +658,23 @@ const CustomerJourneyMap: React.FC = () => {
                 </div>
 
                 {/* Touchpoints */}
-                <div className="bg-gray-50 rounded-xl p-6">
-                  <h3 className="text-lg font-semibold mb-4 flex items-center">
+                <div className="bg-gray-50 rounded-xl p-4 md:p-6">
+                  <h3 className="text-base md:text-lg font-semibold mb-3 md:mb-4 flex items-center">
                     <Target className="w-5 h-5 text-blue-500 mr-2" />
                     Touchpoints & Impact
                   </h3>
-                  <div className="space-y-4">
+                  <div className="space-y-3 md:space-y-4">
                     {stage.touchpoints.map((touchpoint, idx) => (
                       <div
                         key={idx}
-                        className="p-3 bg-white rounded-lg shadow-sm"
+                        className="p-2 md:p-3 bg-white rounded-lg shadow-sm"
                       >
                         <div className="flex items-center justify-between mb-2">
-                          <span className="font-medium">{touchpoint.name}</span>
+                          <span className="text-sm md:text-base font-medium">
+                            {touchpoint.name}
+                          </span>
                           <span
-                            className={`text-xs px-2 py-1 rounded-full ${
+                            className={`text-xs px-2 py-0.5 md:py-1 rounded-full ${
                               touchpoint.type === "digital"
                                 ? "bg-blue-100 text-blue-700"
                                 : touchpoint.type === "physical"
@@ -572,25 +695,25 @@ const CustomerJourneyMap: React.FC = () => {
                 </div>
 
                 {/* Emotional Journey */}
-                <div className="bg-gray-50 rounded-xl p-6">
-                  <h3 className="text-lg font-semibold mb-4 flex items-center">
+                <div className="bg-gray-50 rounded-xl p-4 md:p-6">
+                  <h3 className="text-base md:text-lg font-semibold mb-3 md:mb-4 flex items-center">
                     <Heart className="w-5 h-5 text-blue-500 mr-2" />
                     Emotional Journey
                   </h3>
-                  <div className="space-y-4">
+                  <div className="space-y-3 md:space-y-4">
                     {stage.emotions.map((emotion, idx) => (
                       <div
                         key={idx}
-                        className="p-3 bg-white rounded-lg shadow-sm"
+                        className="p-2 md:p-3 bg-white rounded-lg shadow-sm"
                       >
                         <div className="flex items-center justify-between mb-2">
                           <div className="flex items-center">
                             {emotion.icon}
-                            <span className="ml-2 text-gray-600">
+                            <span className="ml-2 text-sm md:text-base text-gray-600">
                               {emotion.label}
                             </span>
                           </div>
-                          <span className="text-sm font-medium">
+                          <span className="text-xs md:text-sm font-medium">
                             {emotion.score}/10
                           </span>
                         </div>
@@ -601,11 +724,14 @@ const CustomerJourneyMap: React.FC = () => {
                 </div>
               </div>
 
-              {/* Goals Section */}
-              <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+              {/* Goals Section - Responsive */}
+              <div className="mt-6 md:mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
                 {stage.goals.map((goal, idx) => (
-                  <div key={idx} className="bg-white rounded-xl p-6 shadow-sm">
-                    <h4 className="font-semibold mb-2 flex items-center">
+                  <div
+                    key={idx}
+                    className="bg-white rounded-xl p-4 md:p-6 shadow-sm"
+                  >
+                    <h4 className="text-sm md:text-base font-semibold mb-2 flex items-center">
                       <Target className="w-4 h-4 text-blue-500 mr-2" />
                       {goal.title}
                     </h4>
@@ -614,48 +740,48 @@ const CustomerJourneyMap: React.FC = () => {
                 ))}
               </div>
 
-              {/* Insights Toggle */}
-              <div className="mt-8">
+              {/* Insights Toggle - Responsive */}
+              <div className="mt-6 md:mt-8">
                 <button
                   onClick={() => setShowInsights(!showInsights)}
-                  className="flex items-center justify-center w-full bg-gray-50 p-4 rounded-xl hover:bg-gray-100 transition-colors"
+                  className="flex items-center justify-center w-full bg-gray-50 p-3 md:p-4 rounded-xl hover:bg-gray-100 transition-colors"
                 >
-                  <Lightbulb className="w-5 h-5 text-blue-500 mr-2" />
-                  <span className="font-medium">
+                  <Lightbulb className="w-4 h-4 md:w-5 md:h-5 text-blue-500 mr-2" />
+                  <span className="text-sm md:text-base font-medium">
                     {showInsights ? "Hide Insights" : "Show Insights"}
                   </span>
                 </button>
 
                 {showInsights && (
-                  <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="bg-green-50 rounded-xl p-6">
-                      <h4 className="font-semibold mb-4 text-green-800">
+                  <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+                    <div className="bg-green-50 rounded-xl p-4 md:p-6">
+                      <h4 className="text-sm md:text-base font-semibold mb-3 md:mb-4 text-green-800">
                         Positive Insights
                       </h4>
                       <ul className="space-y-2">
                         {stage.insights.positive.map((insight, idx) => (
                           <li
                             key={idx}
-                            className="flex items-center text-green-700"
+                            className="flex items-center text-sm md:text-base text-green-700"
                           >
-                            <CheckCircle className="w-4 h-4 mr-2" />
-                            {insight}
+                            <CheckCircle className="w-4 h-4 mr-2 flex-shrink-0" />
+                            <span className="break-words">{insight}</span>
                           </li>
                         ))}
                       </ul>
                     </div>
-                    <div className="bg-red-50 rounded-xl p-6">
-                      <h4 className="font-semibold mb-4 text-red-800">
+                    <div className="bg-red-50 rounded-xl p-4 md:p-6">
+                      <h4 className="text-sm md:text-base font-semibold mb-3 md:mb-4 text-red-800">
                         Areas for Improvement
                       </h4>
                       <ul className="space-y-2">
                         {stage.insights.negative.map((insight, idx) => (
                           <li
                             key={idx}
-                            className="flex items-center text-red-700"
+                            className="flex items-center text-sm md:text-base text-red-700"
                           >
-                            <Activity className="w-4 h-4 mr-2" />
-                            {insight}
+                            <Activity className="w-4 h-4 mr-2 flex-shrink-0" />
+                            <span className="break-words">{insight}</span>
                           </li>
                         ))}
                       </ul>
@@ -664,19 +790,21 @@ const CustomerJourneyMap: React.FC = () => {
                 )}
               </div>
 
-              {/* Stage Description */}
-              <div className="mt-8 bg-blue-50 rounded-xl p-6">
+              {/* Stage Description - Responsive */}
+              <div className="mt-6 md:mt-8 bg-blue-50 rounded-xl p-4 md:p-6">
                 <div className="flex items-start">
                   <div className="flex-shrink-0">
-                    <Award className="w-6 h-6 text-blue-600" />
+                    <Award className="w-5 h-5 md:w-6 md:h-6 text-blue-600" />
                   </div>
-                  <div className="ml-4">
-                    <h4 className="text-lg font-semibold text-blue-900">
+                  <div className="ml-3 md:ml-4">
+                    <h4 className="text-base md:text-lg font-semibold text-blue-900">
                       Stage Overview
                     </h4>
-                    <p className="mt-2 text-blue-800">{stage.description}</p>
-                    <div className="mt-4 flex items-center text-blue-700">
-                      <Clock className="w-4 h-4 mr-2" />
+                    <p className="mt-2 text-sm md:text-base text-blue-800">
+                      {stage.description}
+                    </p>
+                    <div className="mt-3 md:mt-4 flex items-center text-xs md:text-sm text-blue-700">
+                      <Clock className="w-3 h-3 md:w-4 md:h-4 mr-1 md:mr-2" />
                       <span>Typical timeframe: {stage.timeframe.range}</span>
                     </div>
                   </div>
@@ -686,23 +814,55 @@ const CustomerJourneyMap: React.FC = () => {
           ))}
         </div>
 
-        {/* Interactive Elements */}
-        <div className="mt-16 flex flex-col items-center space-y-4">
-          <div className="flex items-center space-x-4">
-            <button className="inline-flex items-center px-4 py-2 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors">
-              <LineChart className="w-4 h-4 mr-2" />
-              View Detailed Analytics
-            </button>
-            <button className="inline-flex items-center px-4 py-2 bg-purple-100 text-purple-700 rounded-lg hover:bg-purple-200 transition-colors">
-              <Share2 className="w-4 h-4 mr-2" />
-              Share Journey Map
-            </button>
-          </div>
-          <p className="text-sm text-gray-500">
-            Last updated: {new Date().toLocaleDateString()}
-          </p>
+        {/* Interactive Elements - Responsive */}
+        <div className="mt-12 md:mt-16 flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4">
+          <button className="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors text-sm md:text-base">
+            <LineChart className="w-4 h-4 mr-2" />
+            View Detailed Analytics
+          </button>
+          <button className="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2 bg-purple-100 text-purple-700 rounded-lg hover:bg-purple-200 transition-colors text-sm md:text-base">
+            <Share2 className="w-4 h-4 mr-2" />
+            Share Journey Map
+          </button>
         </div>
+
+        {/* Stats summary cards */}
+        <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="bg-white rounded-xl shadow-sm p-4 text-center">
+            <Globe className="w-6 h-6 mx-auto text-blue-500 mb-2" />
+            <p className="text-sm font-medium">Languages</p>
+            <p className="text-2xl font-bold text-blue-600">100+</p>
+          </div>
+          <div className="bg-white rounded-xl shadow-sm p-4 text-center">
+            <Users className="w-6 h-6 mx-auto text-purple-500 mb-2" />
+            <p className="text-sm font-medium">Active Users</p>
+            <p className="text-2xl font-bold text-purple-600">
+              <AnimatedCounter end={10} />
+              K+
+            </p>
+          </div>
+          <div className="bg-white rounded-xl shadow-sm p-4 text-center">
+            <MessageSquare className="w-6 h-6 mx-auto text-green-500 mb-2" />
+            <p className="text-sm font-medium">Translations</p>
+            <p className="text-2xl font-bold text-green-600">
+              <AnimatedCounter end={5} />
+              M+
+            </p>
+          </div>
+          <div className="bg-white rounded-xl shadow-sm p-4 text-center">
+            <Zap className="w-6 h-6 mx-auto text-amber-500 mb-2" />
+            <p className="text-sm font-medium">Response Time</p>
+            <p className="text-2xl font-bold text-amber-600">0.5s</p>
+          </div>
+        </div>
+
+        <p className="text-xs md:text-sm text-gray-500 text-center mt-8">
+          Last updated: {new Date().toLocaleDateString()}
+        </p>
       </div>
+
+      {/* Metric detail modal */}
+      {renderMetricDetails()}
     </div>
   );
 };
