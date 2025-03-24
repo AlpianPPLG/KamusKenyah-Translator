@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import {
   ArrowRight,
   CheckCircle,
-  ChevronDown,
   Globe,
   Headphones,
   Languages,
@@ -240,94 +239,8 @@ const Hero = () => {
 
   return (
     <div className="bg-white overflow-hidden">
-      {/* Progress indicator */}
-      <div
-        className="fixed top-0 left-0 h-1 bg-gradient-to-r from-blue-500 to-purple-600 z-50"
-        style={{ width: `${scrollProgress}%` }}
-      ></div>
-
-      {/* Navigation Tabs - Updated positioning */}
-      <div className="bg-white shadow-sm z-40 border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex space-x-8">
-              <button
-                onClick={() => handleTabChange("overview")}
-                className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
-                  activeTab === "overview"
-                    ? "border-blue-500 text-blue-600"
-                    : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
-                }`}
-              >
-                Overview
-              </button>
-              <button
-                onClick={() => handleTabChange("features")}
-                className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
-                  activeTab === "features"
-                    ? "border-blue-500 text-blue-600"
-                    : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
-                }`}
-              >
-                Features
-              </button>
-              <button
-                onClick={() => handleTabChange("testimonials")}
-                className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
-                  activeTab === "testimonials"
-                    ? "border-blue-500 text-blue-600"
-                    : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
-                }`}
-              >
-                Testimonials
-              </button>
-            </div>
-
-            <div className="relative" ref={dropdownRef}>
-              <button
-                onClick={() => setShowResourceDropdown(!showResourceDropdown)}
-                className="inline-flex items-center justify-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
-              >
-                Resources
-                <ChevronDown
-                  className={`ml-2 h-4 w-4 transition-transform ${
-                    showResourceDropdown ? "rotate-180" : ""
-                  }`}
-                />
-              </button>
-
-              {showResourceDropdown && (
-                <div className="origin-top-right absolute right-0 mt-2 w-80 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-50">
-                  <div className="py-1">
-                    {resourceItems.map((item, index) => (
-                      <Link
-                        key={index}
-                        to={item.url}
-                        className="group flex items-start px-4 py-3 text-sm text-gray-700 hover:bg-gray-50"
-                      >
-                        <div className="flex-shrink-0 mr-3 mt-1 text-gray-400 group-hover:text-blue-500">
-                          {item.icon}
-                        </div>
-                        <div>
-                          <p className="font-medium text-gray-900 group-hover:text-blue-600">
-                            {item.title}
-                          </p>
-                          <p className="mt-1 text-gray-500">
-                            {item.description}
-                          </p>
-                        </div>
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
-
       {/* Main Hero Section */}
-      <section className="pt-12 pb-16 md:pt-16 md:pb-24 px-4 sm:px-6 lg:px-8 relative">
+      <section className="pt-12 pb-16 md:pt-16 mt-20 md:pb-24 px-4 sm:px-6 lg:px-8 relative">
         <div
           className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
           aria-hidden="true"
