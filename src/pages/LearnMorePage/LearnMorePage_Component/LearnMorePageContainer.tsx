@@ -4,6 +4,8 @@ import CustomerJourneyMap from "./CustomerJourneyMap";
 import WhatIf from "./WhatIf";
 import SecretTips from "./SecretTips";
 import SecretDeveloperEasterEgg from "./SecretDeveloperEasterEgg";
+import CommonMistakes from "./CommonMistake";
+import FAQ from "./FAQ";
 
 const LearnMorePageContainer = () => {
   return (
@@ -13,6 +15,8 @@ const LearnMorePageContainer = () => {
       <WhatIf />
       <SecretTips />
       <SecretDeveloperEasterEgg />
+      <CommonMistakes />
+      <FAQ />
     </LearnMoreLayout>
   );
 };
