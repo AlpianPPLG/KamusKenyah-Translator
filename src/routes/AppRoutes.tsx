@@ -14,6 +14,8 @@ import Privacy from "../pages/PrivacyPage/Privacy";
 import Cookies from "../pages/CookiesPage/Cookies";
 import Site from "../pages/SitemapPage/Site";
 import LearnMorePageContainer from "../pages/LearnMorePage/LearnMorePage_Component/LearnMorePageContainer";
+import Changelog from "../pages/ChangelogPage/Changelog";
+import CommonMistakes from "../pages/CommonMistakesPage/CommonMistakes";
 
 const AppRoutes: React.FC = () => {
   return (
@@ -33,6 +35,8 @@ const AppRoutes: React.FC = () => {
         <Route path="/cookies" element={<Cookies />} />
         <Route path="/sitemap" element={<Site />} />
         <Route path="/learnmore" element={<LearnMorePageContainer />} />
+        <Route path="/changelog" element={<Changelog />} />
+        <Route path="/commonmistakes" element={<CommonMistakes />} />
       </Routes>
     </Router>
   );
