@@ -16,6 +16,8 @@ import Site from "../pages/SitemapPage/Site";
 import LearnMorePageContainer from "../pages/LearnMorePage/LearnMorePage_Component/LearnMorePageContainer";
 import Changelog from "../pages/ChangelogPage/Changelog";
 import CommonMistakes from "../pages/CommonMistakesPage/CommonMistakes";
+import Contributors from "../pages/ContributorsPage/Contributors";
+import TermsofUseforAPI from "../pages/TermsofUseforAPIPage/TermsofUseforAPI";
 
 const AppRoutes: React.FC = () => {
   return (
@@ -37,6 +39,8 @@ const AppRoutes: React.FC = () => {
         <Route path="/learnmore" element={<LearnMorePageContainer />} />
         <Route path="/changelog" element={<Changelog />} />
         <Route path="/commonmistakes" element={<CommonMistakes />} />
+        <Route path="/contributors" element={<Contributors />} />
+        <Route path="/termsofuseforapi" element={<TermsofUseforAPI />} />
       </Routes>
     </Router>
   );
