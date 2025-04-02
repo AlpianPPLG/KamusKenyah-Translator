@@ -18,6 +18,9 @@ import Changelog from "../pages/ChangelogPage/Changelog";
 import CommonMistakes from "../pages/CommonMistakesPage/CommonMistakes";
 import Contributors from "../pages/ContributorsPage/Contributors";
 import TermsofUseforAPI from "../pages/TermsofUseforAPIPage/TermsofUseforAPI";
+import ComplainPage from "../pages/ComplainPage/Complain";
+import EventsPage from "../pages/EventsPage/Events";
+import MigrationGuide from "../pages/MigrationGuidePage/MigrationGuide";
 
 const AppRoutes: React.FC = () => {
   return (
@@ -41,6 +44,9 @@ const AppRoutes: React.FC = () => {
         <Route path="/commonmistakes" element={<CommonMistakes />} />
         <Route path="/contributors" element={<Contributors />} />
         <Route path="/termsofuseforapi" element={<TermsofUseforAPI />} />
+        <Route path="/complain" element={<ComplainPage />} />
+        <Route path="/events" element={<EventsPage />} />
+        <Route path="/migrationguide" element={<MigrationGuide />} />
       </Routes>
     </Router>
   );
