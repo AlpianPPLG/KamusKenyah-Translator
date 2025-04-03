@@ -21,6 +21,8 @@ import TermsofUseforAPI from "../pages/TermsofUseforAPIPage/TermsofUseforAPI";
 import ComplainPage from "../pages/ComplainPage/Complain";
 import EventsPage from "../pages/EventsPage/Events";
 import MigrationGuide from "../pages/MigrationGuidePage/MigrationGuide";
+import CommunityForum from "../pages/CommunityForumPage/CommunityForum";
+import BetaProgram from "../pages/BetaProgramPage/BetaProgram";
 
 const AppRoutes: React.FC = () => {
   return (
@@ -47,6 +49,8 @@ const AppRoutes: React.FC = () => {
         <Route path="/complain" element={<ComplainPage />} />
         <Route path="/events" element={<EventsPage />} />
         <Route path="/migrationguide" element={<MigrationGuide />} />
+        <Route path="/communityforum" element={<CommunityForum />} />
+        <Route path="/betaprogram" element={<BetaProgram />} />
       </Routes>
     </Router>
   );
