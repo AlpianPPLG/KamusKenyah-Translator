@@ -1,34 +1,25 @@
-import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+"use client";
+
+import type React from "react";
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import {
   Languages,
   ArrowRight,
   ArrowLeftRight,
   Copy,
   Volume2,
-  History,
   Check,
-  Star,
-  Clock,
-  X,
 } from "lucide-react";
 import { fetchTranslationData } from "../../api/translatorApi"; // Import API
 import VoiceInput from "./VoiceInput";
-
-interface Translation {
-  id: number;
-  from: string;
-  to: string;
-  text: string;
-  translatedText: string;
-  timestamp: Date;
-}
+import OpenModalPopUp from "./OpenModalPopUp";
+import type { Translation } from "../../hooks/useHistoryModal";
 
 const Hero: React.FC = () => {
   const [inputText, setInputText] = useState("");
   const [translatedText, setTranslatedText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [showHistory, setShowHistory] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
   const [isSwapped, setIsSwapped] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState("ID"); // Default language is Indonesian
@@ -255,6 +246,28 @@ const Hero: React.FC = () => {
     }
   };
 
+  // Handle reuse translation from history
+  const handleReuseTranslation = (
+    text: string,
+    translatedText: string,
+    from: string
+  ) => {
+    // If the translation direction matches the current UI state
+    if (
+      (from === "Indonesia" && !isSwapped) ||
+      (from === "Dayak Kenyah" && isSwapped)
+    ) {
+      setInputText(text);
+      setTranslatedText(translatedText);
+    } else {
+      // If the translation direction is opposite, we need to swap
+      setIsSwapped(!isSwapped);
+      setInputText(text);
+      setTranslatedText(translatedText);
+      setSelectedLanguage(selectedLanguage === "ID" ? "DY" : "ID");
+    }
+  };
+
   // Ensure voices list is loaded
   useEffect(() => {
     // Function to load voices
@@ -290,7 +303,7 @@ const Hero: React.FC = () => {
           }}
           transition={{
             duration: 20,
-            repeat: Infinity,
+            repeat: Number.POSITIVE_INFINITY,
             ease: "linear",
           }}
         />
@@ -302,7 +315,7 @@ const Hero: React.FC = () => {
           }}
           transition={{
             duration: 20,
-            repeat: Infinity,
+            repeat: Number.POSITIVE_INFINITY,
             ease: "linear",
           }}
         />
@@ -426,15 +439,11 @@ const Hero: React.FC = () => {
                     onTranscript={handleVoiceInput}
                     isDisabled={isLoading}
                   />
-                  <button
-                    onClick={() => setShowHistory(!showHistory)}
-                    className="p-2 hover:bg-gray-100 rounded-lg transition-colors relative group"
-                  >
-                    <History className="h-5 w-5 text-gray-600" />
-                    <span className="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">
-                      History
-                    </span>
-                  </button>
+                  {/* Using our new OpenModalPopUp component */}
+                  <OpenModalPopUp
+                    initialTranslations={recentTranslations}
+                    onReuseTranslation={handleReuseTranslation}
+                  />
                 </div>
                 <button
                   onClick={handleTranslate}
@@ -508,76 +517,6 @@ const Hero: React.FC = () => {
             </div>
           </div>
         </motion.div>
-
-        {/* Recent Translations Popup */}
-        <AnimatePresence>
-          {showHistory && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 20 }}
-              className="absolute top-full left-1/2 -translate-x-1/2 mt-4 w-full max-w-2xl bg-white rounded-xl shadow-2xl p-4 z-20"
-            >
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold text-gray-900">
-                  Recent Translations
-                </h3>
-                <button
-                  onClick={() => setShowHistory(false)}
-                  className="p-1 hover:bg-gray-100 rounded-full transition-colors"
-                >
-                  <X className="h-5 w-5 text-gray-500" />
-                </button>
-              </div>
-              <div className="space-y-3">
-                {recentTranslations.map((translation) => (
-                  <motion.div
-                    key={translation.id}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    className="p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
-                  >
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center space-x-2 text-sm text-gray-600">
-                        <Clock className="h-4 w-4" />
-                        <span>
-                          {new Date(translation.timestamp).toLocaleTimeString()}
-                        </span>
-                      </div>
-                      <div className="flex items-center">
-                        <span className="text-xs text-gray-500 mr-2">
-                          Mode: {translation.from === "Indonesia" ? "ID" : "DY"}{" "}
-                          → {translation.to === "Indonesia" ? "ID" : "DY"}
-                        </span>
-                        <button className="p-1 hover:bg-white rounded-full transition-colors">
-                          <Star className="h-4 w-4 text-gray-400 hover:text-yellow-400" />
-                        </button>
-                      </div>
-                    </div>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <p className="text-xs text-gray-500 mb-1">
-                          {translation.from}
-                        </p>
-                        <p className="text-sm text-gray-900">
-                          {translation.text}
-                        </p>
-                      </div>
-                      <div>
-                        <p className="text-xs text-gray-500 mb-1">
-                          {translation.to}
-                        </p>
-                        <p className="text-sm text-gray-900">
-                          {translation.translatedText}
-                        </p>
-                      </div>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
 
         {/* Features Section */}
         <div className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-8">
