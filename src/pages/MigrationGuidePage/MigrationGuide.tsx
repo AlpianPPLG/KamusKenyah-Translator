@@ -4,25 +4,15 @@ import {
   CheckCircle2,
   XCircle,
   AlertCircle,
-  FileCode,
-  Database,
   Settings,
   Users,
-  Layers,
-  RefreshCw,
   Download,
   Upload,
   Clock,
   Shield,
   Zap,
   ChevronRight,
-  PlayCircle,
-  BookOpen,
   FileText,
-  Terminal,
-  GitBranch,
-  Box,
-  Server,
   MessageSquare,
 } from "lucide-react";
 
@@ -61,7 +51,6 @@ interface FAQ {
 const MigrationGuide: React.FC = () => {
   const [selectedPlatform, setSelectedPlatform] = useState<string>("All");
   const [expandedStep, setExpandedStep] = useState<number | null>(null);
-  const [showComparison, setShowComparison] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<"guide" | "comparison" | "faq">(
     "guide"
   );
