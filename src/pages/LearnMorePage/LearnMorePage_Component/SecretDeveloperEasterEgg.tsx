@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import {
   Code,
-  Eye,
-  EyeOff,
   Zap,
   Bug,
   Terminal,
@@ -10,13 +8,11 @@ import {
   Key,
   Cpu,
   Settings,
-  Database,
   GitBranch,
   GitPullRequest,
   FileCode,
   TerminalSquare,
   Server,
-  Languages,
   Globe,
   Search,
 } from "lucide-react";
@@ -43,6 +39,12 @@ interface DevNote {
   date: string;
   content: string;
   tags: string[];
+}
+
+interface TabItem {
+  id: string;
+  label: string;
+  icon: React.ReactNode;
 }
 
 const SecretDeveloperEasterEgg: React.FC = () => {
@@ -239,6 +241,48 @@ const SecretDeveloperEasterEgg: React.FC = () => {
     }
   };
 
+  // Add secret phrase tracking
+  useEffect(() => {
+    if (currentInput === secretPhrase) {
+      setIsVisible(true);
+      setSecretPhrase(""); // Reset after successful entry
+    }
+  }, [currentInput, secretPhrase]);
+
+  // Add dynamic stats updates
+  useEffect(() => {
+    const updateInterval = setInterval(() => {
+      setDevStats((prevStats) =>
+        prevStats.map((stat) => {
+          // Randomly update some stats
+          if (Math.random() > 0.7) {
+            const change = Math.floor(Math.random() * 10);
+            const newValue =
+              typeof stat.value === "number" ? stat.value + change : stat.value;
+
+            return {
+              ...stat,
+              value: newValue,
+              change: `${change}%`,
+              trend: Math.random() > 0.5 ? "up" : "down",
+            };
+          }
+          return stat;
+        })
+      );
+    }, 5000); // Update every 5 seconds
+
+    return () => clearInterval(updateInterval);
+  }, []);
+
+  // Add secret phrase customization
+  const updateSecretPhrase = (newPhrase: string) => {
+    if (newPhrase && newPhrase.length >= 4) {
+      setSecretPhrase(newPhrase);
+      console.log("Secret phrase updated!");
+    }
+  };
+
   // Add new developer note
   const addDevNote = () => {
     if (newNoteContent.trim()) {
@@ -278,6 +322,27 @@ const SecretDeveloperEasterEgg: React.FC = () => {
         <span className="ml-1">{change}</span>
       </span>
     );
+  };
+
+  // Create tabs array with conditional konami tab
+  const getTabs = (): TabItem[] => {
+    const baseTabs: TabItem[] = [
+      { id: "dashboard", label: "Dashboard", icon: <Cpu size={14} /> },
+      { id: "tools", label: "Dev Tools", icon: <Settings size={14} /> },
+      { id: "notes", label: "Dev Notes", icon: <FileCode size={14} /> },
+      { id: "terminal", label: "Terminal", icon: <Terminal size={14} /> },
+    ];
+
+    // Add the konami tab conditionally
+    if (activeTab === "konami") {
+      baseTabs.push({
+        id: "konami",
+        label: "⭐ Konami Reward",
+        icon: <Zap size={14} />,
+      });
+    }
+
+    return baseTabs;
   };
 
   // If the easter egg isn't triggered, render a subtle indicator
@@ -370,36 +435,20 @@ const SecretDeveloperEasterEgg: React.FC = () => {
         {/* Tab navigation */}
         <div className="bg-gray-100 border-b border-gray-200 overflow-x-auto">
           <div className="flex whitespace-nowrap">
-            {[
-              { id: "dashboard", label: "Dashboard", icon: <Cpu size={14} /> },
-              { id: "tools", label: "Dev Tools", icon: <Settings size={14} /> },
-              { id: "notes", label: "Dev Notes", icon: <FileCode size={14} /> },
-              {
-                id: "terminal",
-                label: "Terminal",
-                icon: <Terminal size={14} />,
-              },
-              activeTab === "konami" && {
-                id: "konami",
-                label: "⭐ Konami Reward",
-                icon: <Zap size={14} />,
-              },
-            ]
-              .filter(Boolean)
-              .map((tab) => (
-                <button
-                  key={tab!.id}
-                  className={`px-3 py-2 flex items-center text-xs sm:text-sm font-medium ${
-                    activeTab === tab!.id
-                      ? "border-b-2 border-blue-500 bg-white text-blue-600"
-                      : "text-gray-600 hover:text-gray-800 hover:bg-gray-50"
-                  }`}
-                  onClick={() => setActiveTab(tab!.id)}
-                >
-                  <span className="mr-1.5">{tab!.icon}</span>
-                  {tab!.label}
-                </button>
-              ))}
+            {getTabs().map((tab) => (
+              <button
+                key={tab.id}
+                className={`px-3 py-2 flex items-center text-xs sm:text-sm font-medium ${
+                  activeTab === tab.id
+                    ? "border-b-2 border-blue-500 bg-white text-blue-600"
+                    : "text-gray-600 hover:text-gray-800 hover:bg-gray-50"
+                }`}
+                onClick={() => setActiveTab(tab.id)}
+              >
+                <span className="mr-1.5">{tab.icon}</span>
+                {tab.label}
+              </button>
+            ))}
           </div>
         </div>
 
@@ -737,6 +786,50 @@ const SecretDeveloperEasterEgg: React.FC = () => {
               </div>
             </div>
           )}
+        </div>
+
+        {/* Add secret phrase configuration */}
+        <div className="bg-white border border-gray-200 rounded-lg p-4">
+          <h4 className="text-sm font-medium text-gray-700 mb-3 flex items-center">
+            <Key size={16} className="mr-1.5" />
+            Secret Phrase Configuration
+          </h4>
+          <div className="flex gap-2">
+            <input
+              type="text"
+              placeholder="New secret phrase"
+              className="flex-1 px-3 py-1.5 text-sm border border-gray-300 rounded-md"
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  updateSecretPhrase(e.currentTarget.value);
+                  e.currentTarget.value = "";
+                }
+              }}
+            />
+            <div className="text-xs text-gray-500 flex items-center">
+              Current: {secretPhrase}
+            </div>
+          </div>
+        </div>
+
+        {/* Previous stats grid with live updates */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {devStats.map((stat, index) => (
+            <div
+              key={index}
+              className="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow"
+            >
+              <div className="text-sm text-gray-500">{stat.label}</div>
+              <div className="mt-1 flex items-end justify-between">
+                <div className="text-2xl font-semibold text-gray-800">
+                  {stat.value}
+                </div>
+                <div className="text-xs">
+                  {renderTrend(stat.trend, stat.change)}
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
 
         {/* Footer */}

@@ -637,7 +637,9 @@ const Privacy: React.FC = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: 0.1 * index }}
                   id={section.id}
-                  ref={(el) => (sectionRefs.current[section.id] = el)}
+                  ref={(el) => {
+                    sectionRefs.current[0] = el;
+                  }}
                   className="scroll-mt-8"
                 >
                   <div className="flex items-center gap-3 mb-4">

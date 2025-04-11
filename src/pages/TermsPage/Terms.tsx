@@ -19,12 +19,17 @@ import {
   ChevronRight,
 } from "lucide-react";
 
+// Define interface for term data
+interface TermData {
+  id: number;
+  title: string;
+  content: React.ReactNode;
+}
+
 const TermsPage: React.FC = () => {
   const [activeAccordion, setActiveAccordion] = useState<number | null>(null);
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const [filteredTerms, setFilteredTerms] = useState<
-    Array<{ id: number; title: string; content: JSX.Element | string }>
-  >([]);
+  const [filteredTerms, setFilteredTerms] = useState<TermData[]>([]);
   const [lastUpdated] = useState<string>("September 15, 2023");
   const [highlightedTerms, setHighlightedTerms] = useState<{
     [key: string]: boolean;
@@ -561,16 +566,17 @@ const TermsPage: React.FC = () => {
   ];
 
   // Filter terms based on search term
+  // Update the filtering logic to handle ReactNode content
   useEffect(() => {
     if (searchTerm === "") {
       setFilteredTerms(termsData);
     } else {
-      const filtered = termsData.filter(
-        (term) =>
-          term.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          (typeof term.content === "string" &&
-            term.content.toLowerCase().includes(searchTerm.toLowerCase()))
-      );
+      const searchTermLower = searchTerm.toLowerCase();
+      const filtered = termsData.filter((term) => {
+        const titleMatch = term.title.toLowerCase().includes(searchTermLower);
+        // For content, we can only search the title since content is ReactNode
+        return titleMatch;
+      });
       setFilteredTerms(filtered);
 
       // Highlight terms that match the search

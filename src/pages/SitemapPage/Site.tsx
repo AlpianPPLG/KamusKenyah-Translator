@@ -633,7 +633,7 @@ const Site = () => {
       acc[section.id] = true;
       return acc;
     }, {} as Record<string, boolean>);
-    
+
     setExpandedSections(allExpanded);
   }, []);
 
