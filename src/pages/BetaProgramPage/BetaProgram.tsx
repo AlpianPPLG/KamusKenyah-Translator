@@ -274,7 +274,9 @@ const BetaProgram = () => {
 
       {/* Hero Section */}
       <section
-        ref={(el) => (sectionRefs.current[0] = el)}
+        ref={(el) => {
+          sectionRefs.current[0] = el;
+        }}
         className={`pt-24 pb-20 px-4 sm:px-6 lg:px-8 transition-opacity duration-1000 mt-20 ${
           isIntersecting[0] ? "opacity-100" : "opacity-0"
         }`}
@@ -410,7 +412,9 @@ const BetaProgram = () => {
 
       {/* Features Section */}
       <section
-        ref={(el) => (sectionRefs.current[1] = el)}
+        ref={(el) => {
+          sectionRefs.current[0] = el;
+        }}
         className={`py-20 px-4 sm:px-6 lg:px-8 bg-gray-50 transition-opacity duration-1000 ${
           isIntersecting[1] ? "opacity-100" : "opacity-0"
         }`}
@@ -466,7 +470,9 @@ const BetaProgram = () => {
                       <div className="mt-1 bg-blue-100 rounded-full p-1 mr-3">
                         {React.cloneElement(
                           benefit.icon as React.ReactElement,
-                          { className: "h-4 w-4 text-blue-600" }
+                          {
+                            className: "h-4 w-4 text-blue-600",
+                          }
                         )}
                       </div>
                       <div>
@@ -494,7 +500,7 @@ const BetaProgram = () => {
                     className="absolute inset-0 opacity-20 mix-blend-overlay"
                     style={{
                       backgroundImage:
-                        'url(\'data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="1"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\')',
+                        'url(\'data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fillRule="evenodd"%3E%3Cg fill="%23ffffff" fillOpacity="1"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\')',
                     }}
                   />
                   <div className="absolute inset-0 flex items-center justify-center text-white p-12">
@@ -524,7 +530,9 @@ const BetaProgram = () => {
 
       {/* Timeline Section */}
       <section
-        ref={(el) => (sectionRefs.current[2] = el)}
+        ref={(el) => {
+          sectionRefs.current[0] = el;
+        }}
         className={`py-20 px-4 sm:px-6 lg:px-8 transition-opacity duration-1000 ${
           isIntersecting[2] ? "opacity-100" : "opacity-0"
         }`}
@@ -641,7 +649,9 @@ const BetaProgram = () => {
 
       {/* Join Beta Section */}
       <section
-        ref={(el) => (sectionRefs.current[3] = el)}
+        ref={(el) => {
+          sectionRefs.current[0] = el;
+        }}
         className={`py-20 px-4 sm:px-6 lg:px-8 relative transition-opacity duration-1000 ${
           isIntersecting[3] ? "opacity-100" : "opacity-0"
         }`}
@@ -881,26 +891,30 @@ const BetaProgram = () => {
       </section>
 
       {/* Custom scrollbar styling */}
-      <style jsx global>{`
-        ::-webkit-scrollbar {
-          width: 8px;
-          height: 8px;
-        }
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
+          ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+          }
 
-        ::-webkit-scrollbar-track {
-          background: #f1f1f1;
-          border-radius: 10px;
-        }
+          ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+          }
 
-        ::-webkit-scrollbar-thumb {
-          background: #c7d2fe;
-          border-radius: 10px;
-        }
+          ::-webkit-scrollbar-thumb {
+            background: #c7d2fe;
+            border-radius: 10px;
+          }
 
-        ::-webkit-scrollbar-thumb:hover {
-          background: #a5b4fc;
-        }
-      `}</style>
+          ::-webkit-scrollbar-thumb:hover {
+            background: #a5b4fc;
+          }
+        `,
+        }}
+      />
     </div>
   );
 };
