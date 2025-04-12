@@ -1,5 +1,8 @@
-import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+"use client";
+
+import type React from "react";
+import { useState } from "react";
+import { motion } from "framer-motion";
 import {
   Github,
   Linkedin,
@@ -10,14 +13,13 @@ import {
   Star,
   Heart,
   Trophy,
-  Award,
   Code,
   MessageSquare,
   Sparkles,
   ArrowRight,
-  BookOpen,
   Rocket,
   Coffee,
+  ExternalLink,
 } from "lucide-react";
 
 interface Contributor {
@@ -274,17 +276,29 @@ const ContributorsPage: React.FC = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               whileHover={{ y: -5 }}
-              className="bg-white rounded-xl border border-gray-200 overflow-hidden hover:border-blue-200 transition-all duration-300"
+              className={`bg-white rounded-xl border overflow-hidden transition-all duration-300 ${
+                hoveredMember === contributor.id
+                  ? "border-blue-400 shadow-lg shadow-blue-100"
+                  : "border-gray-200 hover:border-blue-200"
+              }`}
               onMouseEnter={() => setHoveredMember(contributor.id)}
               onMouseLeave={() => setHoveredMember(null)}
             >
               <div className="relative">
                 <img
-                  src={contributor.image}
+                  src={contributor.image || "/placeholder.svg"}
                   alt={contributor.name}
-                  className="w-full h-64 object-cover"
+                  className={`w-full h-64 object-cover transition-transform duration-500 ${
+                    hoveredMember === contributor.id ? "scale-105" : ""
+                  }`}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                <div
+                  className={`absolute inset-0 bg-gradient-to-t from-black/60 to-transparent transition-opacity duration-300 ${
+                    hoveredMember === contributor.id
+                      ? "opacity-80"
+                      : "opacity-60"
+                  }`}
+                />
                 <div className="absolute bottom-4 left-4 right-4">
                   <h3 className="text-xl font-semibold text-white mb-1">
                     {contributor.name}
@@ -298,7 +312,11 @@ const ContributorsPage: React.FC = () => {
                   {contributor.badges.map((badge, index) => (
                     <span
                       key={index}
-                      className="px-3 py-1 text-sm bg-blue-50 text-blue-600 rounded-full flex items-center"
+                      className={`px-3 py-1 text-sm rounded-full flex items-center transition-colors duration-300 ${
+                        hoveredMember === contributor.id
+                          ? "bg-blue-100 text-blue-700"
+                          : "bg-blue-50 text-blue-600"
+                      }`}
                     >
                       <Sparkles className="w-3 h-3 mr-1" />
                       {badge}
@@ -318,7 +336,13 @@ const ContributorsPage: React.FC = () => {
                         key={index}
                         className="flex items-center text-gray-600"
                       >
-                        <ArrowRight className="w-4 h-4 text-blue-600 mr-2" />
+                        <ArrowRight
+                          className={`w-4 h-4 mr-2 transition-colors duration-300 ${
+                            hoveredMember === contributor.id
+                              ? "text-blue-700"
+                              : "text-blue-600"
+                          }`}
+                        />
                         {contribution}
                       </li>
                     ))}
@@ -330,7 +354,12 @@ const ContributorsPage: React.FC = () => {
                     {contributor.social.github && (
                       <a
                         href={contributor.social.github}
-                        className="text-gray-400 hover:text-gray-600"
+                        className={`transition-colors duration-300 ${
+                          hoveredMember === contributor.id
+                            ? "text-gray-800"
+                            : "text-gray-400 hover:text-gray-600"
+                        }`}
+                        aria-label="GitHub"
                       >
                         <Github className="w-5 h-5" />
                       </a>
@@ -338,7 +367,12 @@ const ContributorsPage: React.FC = () => {
                     {contributor.social.linkedin && (
                       <a
                         href={contributor.social.linkedin}
-                        className="text-gray-400 hover:text-gray-600"
+                        className={`transition-colors duration-300 ${
+                          hoveredMember === contributor.id
+                            ? "text-blue-600"
+                            : "text-gray-400 hover:text-gray-600"
+                        }`}
+                        aria-label="LinkedIn"
                       >
                         <Linkedin className="w-5 h-5" />
                       </a>
@@ -346,7 +380,12 @@ const ContributorsPage: React.FC = () => {
                     {contributor.social.twitter && (
                       <a
                         href={contributor.social.twitter}
-                        className="text-gray-400 hover:text-gray-600"
+                        className={`transition-colors duration-300 ${
+                          hoveredMember === contributor.id
+                            ? "text-blue-400"
+                            : "text-gray-400 hover:text-gray-600"
+                        }`}
+                        aria-label="Twitter"
                       >
                         <Twitter className="w-5 h-5" />
                       </a>
@@ -354,7 +393,12 @@ const ContributorsPage: React.FC = () => {
                     {contributor.social.email && (
                       <a
                         href={contributor.social.email}
-                        className="text-gray-400 hover:text-gray-600"
+                        className={`transition-colors duration-300 ${
+                          hoveredMember === contributor.id
+                            ? "text-red-500"
+                            : "text-gray-400 hover:text-gray-600"
+                        }`}
+                        aria-label="Email"
                       >
                         <Mail className="w-5 h-5" />
                       </a>
@@ -362,7 +406,12 @@ const ContributorsPage: React.FC = () => {
                     {contributor.social.website && (
                       <a
                         href={contributor.social.website}
-                        className="text-gray-400 hover:text-gray-600"
+                        className={`transition-colors duration-300 ${
+                          hoveredMember === contributor.id
+                            ? "text-green-500"
+                            : "text-gray-400 hover:text-gray-600"
+                        }`}
+                        aria-label="Website"
                       >
                         <Globe className="w-5 h-5" />
                       </a>
@@ -371,6 +420,16 @@ const ContributorsPage: React.FC = () => {
                   <div className="flex items-center space-x-2 text-sm text-gray-500">
                     <Code className="w-4 h-4" />
                     <span>{contributor.stats.commits} commits</span>
+                    {hoveredMember === contributor.id && (
+                      <motion.span
+                        initial={{ opacity: 0, width: 0 }}
+                        animate={{ opacity: 1, width: "auto" }}
+                        className="ml-2 flex items-center text-blue-600"
+                      >
+                        <ExternalLink className="w-3 h-3 mr-1" />
+                        View profile
+                      </motion.span>
+                    )}
                   </div>
                 </div>
               </div>

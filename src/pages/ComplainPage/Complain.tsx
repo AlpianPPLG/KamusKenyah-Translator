@@ -3,7 +3,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   MessageCircle,
   Send,
-  AlertCircle,
   CheckCircle,
   Clock,
   Search,

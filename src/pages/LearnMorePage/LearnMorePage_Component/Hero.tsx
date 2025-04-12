@@ -1,4 +1,7 @@
-import React, { useState, useEffect, useRef } from "react";
+"use client";
+
+import type React from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import {
   ArrowRight,
@@ -14,6 +17,7 @@ import {
   Info,
   BookOpen,
   ChevronRight,
+  ChevronDown,
 } from "lucide-react";
 
 interface FeatureCardProps {
@@ -42,7 +46,6 @@ interface ResourceItem {
 const Hero = () => {
   const [activeTab, setActiveTab] = useState<string>("overview");
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
-  const [scrollProgress, setScrollProgress] = useState<number>(0);
   const [currentFeature, setCurrentFeature] = useState<number>(0);
   const [showResourceDropdown, setShowResourceDropdown] =
     useState<boolean>(false);
@@ -134,18 +137,6 @@ const Hero = () => {
   ];
 
   useEffect(() => {
-    const handleScroll = () => {
-      const scrollTop = window.scrollY;
-      const docHeight = document.body.offsetHeight - window.innerHeight;
-      const progress = (scrollTop / docHeight) * 100;
-      setScrollProgress(progress);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  useEffect(() => {
     featureIntervalRef.current = setInterval(() => {
       setCurrentFeature((prev) => (prev + 1) % features.length);
     }, 5000);
@@ -226,7 +217,11 @@ const Hero = () => {
       </div>
       <p className="text-gray-600 mb-4">{content}</p>
       <div className="flex items-center">
-        <img src={image} alt={author} className="w-10 h-10 rounded-full mr-4" />
+        <img
+          src={image || "/placeholder.svg"}
+          alt={author}
+          className="w-10 h-10 rounded-full mr-4"
+        />
         <div>
           <h4 className="font-semibold">{author}</h4>
           <p className="text-sm text-gray-500">
@@ -239,6 +234,29 @@ const Hero = () => {
 
   return (
     <div className="w-full bg-white overflow-x-hidden">
+      {/* Tab Navigation */}
+      <div className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex overflow-x-auto hide-scrollbar">
+            {["overview", "features", "testimonials", "resources"].map(
+              (tab) => (
+                <button
+                  key={tab}
+                  onClick={() => handleTabChange(tab)}
+                  className={`px-4 py-4 font-medium text-sm whitespace-nowrap capitalize transition-colors ${
+                    activeTab === tab
+                      ? "text-blue-600 border-b-2 border-blue-600"
+                      : "text-gray-600 hover:text-gray-900"
+                  }`}
+                >
+                  {tab}
+                </button>
+              )
+            )}
+          </div>
+        </div>
+      </div>
+
       {/* Main Hero Section */}
       <section className="pt-12 pb-16 md:pt-16 mt-20 md:pb-24 px-4 sm:px-6 lg:px-8 relative w-full">
         <div
@@ -254,7 +272,11 @@ const Hero = () => {
             <div className="lg:w-1/2 text-center lg:text-left">
               <div className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-50 text-blue-600 mb-4">
                 <span className="w-2 h-2 rounded-full bg-blue-600 mr-2"></span>
-                Learn more about our revolutionary platform
+                {activeTab === "overview" &&
+                  "Learn more about our revolutionary platform"}
+                {activeTab === "features" && "Explore our powerful features"}
+                {activeTab === "testimonials" && "What our users are saying"}
+                {activeTab === "resources" && "Resources to help you succeed"}
               </div>
               <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6 leading-tight bg-clip-text text-transparent bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600">
                 Breaking Language Barriers with AI
@@ -375,228 +397,273 @@ const Hero = () => {
         </div>
       </section>
 
-      {/* Learn More Section with Info Icon */}
-      <section className="py-12 px-4 sm:px-6 lg:px-8 bg-blue-50 w-full">
-        <div className="max-w-7xl mx-auto">
-          <div className="bg-white rounded-xl shadow-md p-6 md:p-8">
-            <div className="flex flex-col md:flex-row items-start">
-              <div className="flex-shrink-0 bg-blue-100 rounded-full p-3 mb-4 md:mb-0">
-                <Info className="h-6 w-6 text-blue-600" />
-              </div>
-              <div className="md:ml-5">
-                <h3 className="text-lg font-semibold text-gray-900">
-                  Need more information?
-                </h3>
-                <p className="mt-2 text-gray-600">
-                  Our comprehensive documentation covers everything from getting
-                  started to advanced usage. Access user guides, API
-                  documentation, and integration examples.
-                </p>
-                <div className="mt-4">
-                  <Link
-                    to="/documentation"
-                    className="inline-flex items-center text-blue-600 hover:text-blue-800"
-                  >
-                    <BookOpen className="mr-2 h-4 w-4" />
-                    Browse documentation
-                  </Link>
+      {/* Learn More Section with Info Icon - Only show in Overview tab */}
+      {activeTab === "overview" && (
+        <section className="py-12 px-4 sm:px-6 lg:px-8 bg-blue-50 w-full">
+          <div className="max-w-7xl mx-auto">
+            <div className="bg-white rounded-xl shadow-md p-6 md:p-8">
+              <div className="flex flex-col md:flex-row items-start">
+                <div className="flex-shrink-0 bg-blue-100 rounded-full p-3 mb-4 md:mb-0">
+                  <Info className="h-6 w-6 text-blue-600" />
+                </div>
+                <div className="md:ml-5">
+                  <h3 className="text-lg font-semibold text-gray-900">
+                    Need more information?
+                  </h3>
+                  <p className="mt-2 text-gray-600">
+                    Our comprehensive documentation covers everything from
+                    getting started to advanced usage. Access user guides, API
+                    documentation, and integration examples.
+                  </p>
+                  <div className="mt-4">
+                    <Link
+                      to="/documentation"
+                      className="inline-flex items-center text-blue-600 hover:text-blue-800"
+                    >
+                      <BookOpen className="mr-2 h-4 w-4" />
+                      Browse documentation
+                    </Link>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
-      {/* Features Section */}
-      <section className="py-16 md:py-20 px-4 sm:px-6 lg:px-8 relative w-full">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12 md:mb-16">
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-4">
-              Powerful Features to Explore
-            </h2>
-            <p className="text-base lg:text-lg text-gray-600 max-w-3xl mx-auto">
-              Our platform offers a range of innovative features designed to
-              make language translation seamless, accurate, and intuitive.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {features.map((feature, index) => (
-              <FeatureCard
-                key={index}
-                icon={feature.icon}
-                title={feature.title}
-                description={feature.description}
-                gradient={feature.gradient}
-                delay={feature.delay}
-              />
-            ))}
-          </div>
-
-          <div className="mt-12 md:mt-16 flex justify-center">
-            <Link
-              to="/features"
-              className="group inline-flex items-center justify-center px-6 py-3 text-base font-medium text-blue-600 hover:text-blue-800 transition-colors"
-            >
-              Explore all features
-              <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Rotating Features */}
-      <section className="py-16 md:py-20 px-4 sm:px-6 lg:px-8 bg-gray-50 w-full">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-6">
-                How It Works
+      {/* Features Section - Show in Overview and Features tabs */}
+      {(activeTab === "overview" || activeTab === "features") && (
+        <section className="py-16 md:py-20 px-4 sm:px-6 lg:px-8 relative w-full">
+          <div className="max-w-7xl mx-auto">
+            <div className="text-center mb-12 md:mb-16">
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-4">
+                Powerful Features to Explore
               </h2>
-              <p className="text-base lg:text-lg text-gray-600 mb-8">
-                Our platform makes translation simple, accurate, and accessible
-                for everyone. Discover how our technology can help you break
-                down language barriers.
+              <p className="text-base lg:text-lg text-gray-600 max-w-3xl mx-auto">
+                Our platform offers a range of innovative features designed to
+                make language translation seamless, accurate, and intuitive.
               </p>
+            </div>
 
-              <div className="space-y-6">
-                {features.map((feature, idx) => (
-                  <div
-                    key={idx}
-                    className={`p-4 rounded-lg cursor-pointer transition-all duration-300 ${
-                      currentFeature === idx
-                        ? "bg-white shadow-md"
-                        : "hover:bg-white/50"
-                    }`}
-                    onClick={() => setCurrentFeature(idx)}
-                  >
-                    <div className="flex items-start">
-                      <div
-                        className={`p-2 rounded-lg bg-gradient-to-r ${feature.gradient} text-white mr-4`}
-                      >
-                        {feature.icon}
-                      </div>
-                      <div>
-                        <h3 className="font-bold">{feature.title}</h3>
-                        <p className="text-gray-600 text-sm mt-1">
-                          {feature.description}
-                        </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {features.map((feature, index) => (
+                <FeatureCard
+                  key={index}
+                  icon={feature.icon}
+                  title={feature.title}
+                  description={feature.description}
+                  gradient={feature.gradient}
+                  delay={feature.delay}
+                />
+              ))}
+            </div>
+
+            <div className="mt-12 md:mt-16 flex justify-center">
+              <Link
+                to="/features"
+                className="group inline-flex items-center justify-center px-6 py-3 text-base font-medium text-blue-600 hover:text-blue-800 transition-colors"
+              >
+                Explore all features
+                <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Rotating Features - Show in Overview and Features tabs */}
+      {(activeTab === "overview" || activeTab === "features") && (
+        <section className="py-16 md:py-20 px-4 sm:px-6 lg:px-8 bg-gray-50 w-full">
+          <div className="max-w-7xl mx-auto">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+              <div>
+                <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-6">
+                  How It Works
+                </h2>
+                <p className="text-base lg:text-lg text-gray-600 mb-8">
+                  Our platform makes translation simple, accurate, and
+                  accessible for everyone. Discover how our technology can help
+                  you break down language barriers.
+                </p>
+
+                <div className="space-y-6">
+                  {features.map((feature, idx) => (
+                    <div
+                      key={idx}
+                      className={`p-4 rounded-lg cursor-pointer transition-all duration-300 ${
+                        currentFeature === idx
+                          ? "bg-white shadow-md"
+                          : "hover:bg-white/50"
+                      }`}
+                      onClick={() => setCurrentFeature(idx)}
+                    >
+                      <div className="flex items-start">
+                        <div
+                          className={`p-2 rounded-lg bg-gradient-to-r ${feature.gradient} text-white mr-4`}
+                        >
+                          {feature.icon}
+                        </div>
+                        <div>
+                          <h3 className="font-bold">{feature.title}</h3>
+                          <p className="text-gray-600 text-sm mt-1">
+                            {feature.description}
+                          </p>
+                        </div>
                       </div>
                     </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="relative mt-10 lg:mt-0">
+                <div className="aspect-square max-w-md mx-auto bg-white rounded-2xl shadow-xl p-8 relative overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-purple-50 opacity-50"></div>
+
+                  <div className="relative z-10 h-full flex flex-col justify-center items-center">
+                    <div
+                      className={`w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-to-r ${features[currentFeature].gradient} flex items-center justify-center mb-6 text-white`}
+                    >
+                      {features[currentFeature].icon}
+                    </div>
+
+                    <h3 className="text-xl sm:text-2xl font-bold mb-4 text-center">
+                      {features[currentFeature].title}
+                    </h3>
+                    <p className="text-gray-600 text-center text-sm sm:text-base">
+                      {features[currentFeature].description}
+                    </p>
+
+                    <div className="mt-auto pt-6 flex space-x-2">
+                      {features.map((_, idx) => (
+                        <button
+                          key={idx}
+                          className={`w-2 h-2 rounded-full ${
+                            currentFeature === idx
+                              ? "bg-blue-600"
+                              : "bg-gray-300"
+                          }`}
+                          onClick={() => setCurrentFeature(idx)}
+                          aria-label={`View feature ${idx + 1}`}
+                        />
+                      ))}
+                    </div>
                   </div>
-                ))}
+                </div>
+
+                {/* Floating elements - hidden on small and medium screens */}
+                <div className="absolute -top-6 -right-6 bg-white rounded-xl shadow-lg p-4 border border-gray-100 hidden lg:block">
+                  <div className="flex items-center">
+                    <Lightbulb className="h-5 w-5 text-amber-500 mr-2" />
+                    <p className="text-sm font-medium">Smart suggestions</p>
+                  </div>
+                </div>
+
+                <div className="absolute -bottom-6 -left-6 bg-white rounded-xl shadow-lg p-4 border border-gray-100 hidden lg:block">
+                  <div className="flex items-center">
+                    <Users className="h-5 w-5 text-blue-500 mr-2" />
+                    <p className="text-sm font-medium">Team collaboration</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Testimonials - Show in Overview and Testimonials tabs */}
+      {(activeTab === "overview" || activeTab === "testimonials") && (
+        <section className="py-16 md:py-20 px-4 sm:px-6 lg:px-8 w-full">
+          <div className="max-w-7xl mx-auto">
+            <div className="text-center mb-12 md:mb-16">
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-4">
+                What Our Users Say
+              </h2>
+              <p className="text-base lg:text-lg text-gray-600 max-w-3xl mx-auto">
+                Thousands of users trust our platform for their translation
+                needs. Here's what a few of them have to say.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {testimonials.map((testimonial, idx) => (
+                <Testimonial key={idx} {...testimonial} />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Learning Resources Section with BookOpen icon - Show in Overview and Resources tabs */}
+      {(activeTab === "overview" || activeTab === "resources") && (
+        <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-50 w-full">
+          <div className="max-w-7xl mx-auto">
+            <div className="text-center mb-12">
+              <h2 className="text-2xl md:text-3xl font-bold mb-4">
+                Learning Resources
+              </h2>
+              <p className="text-base lg:text-lg text-gray-600 max-w-3xl mx-auto">
+                Enhance your skills with our comprehensive learning materials
+                and guides.
+              </p>
+
+              {/* Resource dropdown */}
+              <div className="relative mt-6 inline-block" ref={dropdownRef}>
+                <button
+                  onClick={() => setShowResourceDropdown(!showResourceDropdown)}
+                  className="px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm flex items-center text-gray-700 hover:bg-gray-50"
+                >
+                  <BookOpen className="w-4 h-4 mr-2" />
+                  <span>Browse Resources</span>
+                  <ChevronDown
+                    className={`ml-2 h-4 w-4 transition-transform ${
+                      showResourceDropdown ? "rotate-180" : ""
+                    }`}
+                  />
+                </button>
+
+                {showResourceDropdown && (
+                  <div className="absolute mt-2 w-56 bg-white rounded-md shadow-lg z-10 border border-gray-100">
+                    <div className="py-1">
+                      {resourceItems.map((resource, idx) => (
+                        <Link
+                          key={idx}
+                          to={resource.url}
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"
+                        >
+                          <span className="mr-2">{resource.icon}</span>
+                          {resource.title}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
 
-            <div className="relative mt-10 lg:mt-0">
-              <div className="aspect-square max-w-md mx-auto bg-white rounded-2xl shadow-xl p-8 relative overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-purple-50 opacity-50"></div>
-
-                <div className="relative z-10 h-full flex flex-col justify-center items-center">
-                  <div
-                    className={`w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-to-r ${features[currentFeature].gradient} flex items-center justify-center mb-6 text-white`}
-                  >
-                    {features[currentFeature].icon}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {resourceItems.map((resource, idx) => (
+                <Link
+                  key={idx}
+                  to={resource.url}
+                  className="bg-white rounded-xl shadow-md p-6 transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
+                >
+                  <div className="mb-4 p-3 bg-blue-50 inline-block rounded-lg">
+                    {resource.icon}
                   </div>
-
-                  <h3 className="text-xl sm:text-2xl font-bold mb-4 text-center">
-                    {features[currentFeature].title}
-                  </h3>
-                  <p className="text-gray-600 text-center text-sm sm:text-base">
-                    {features[currentFeature].description}
-                  </p>
-
-                  <div className="mt-auto pt-6 flex space-x-2">
-                    {features.map((_, idx) => (
-                      <button
-                        key={idx}
-                        className={`w-2 h-2 rounded-full ${
-                          currentFeature === idx ? "bg-blue-600" : "bg-gray-300"
-                        }`}
-                        onClick={() => setCurrentFeature(idx)}
-                        aria-label={`View feature ${idx + 1}`}
-                      />
-                    ))}
+                  <h3 className="text-xl font-bold mb-2">{resource.title}</h3>
+                  <p className="text-gray-600 mb-4">{resource.description}</p>
+                  <div className="flex items-center text-blue-600">
+                    <span className="font-medium">Learn more</span>
+                    <ChevronRight className="ml-1 h-4 w-4" />
                   </div>
-                </div>
-              </div>
-
-              {/* Floating elements - hidden on small and medium screens */}
-              <div className="absolute -top-6 -right-6 bg-white rounded-xl shadow-lg p-4 border border-gray-100 hidden lg:block">
-                <div className="flex items-center">
-                  <Lightbulb className="h-5 w-5 text-amber-500 mr-2" />
-                  <p className="text-sm font-medium">Smart suggestions</p>
-                </div>
-              </div>
-
-              <div className="absolute -bottom-6 -left-6 bg-white rounded-xl shadow-lg p-4 border border-gray-100 hidden lg:block">
-                <div className="flex items-center">
-                  <Users className="h-5 w-5 text-blue-500 mr-2" />
-                  <p className="text-sm font-medium">Team collaboration</p>
-                </div>
-              </div>
+                </Link>
+              ))}
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
-      {/* Testimonials */}
-      <section className="py-16 md:py-20 px-4 sm:px-6 lg:px-8 w-full">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12 md:mb-16">
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-4">
-              What Our Users Say
-            </h2>
-            <p className="text-base lg:text-lg text-gray-600 max-w-3xl mx-auto">
-              Thousands of users trust our platform for their translation needs.
-              Here's what a few of them have to say.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {testimonials.map((testimonial, idx) => (
-              <Testimonial key={idx} {...testimonial} />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Learning Resources Section with BookOpen icon */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-50 w-full">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-2xl md:text-3xl font-bold mb-4">
-              Learning Resources
-            </h2>
-            <p className="text-base lg:text-lg text-gray-600 max-w-3xl mx-auto">
-              Enhance your skills with our comprehensive learning materials and
-              guides.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {resourceItems.map((resource, idx) => (
-              <Link
-                key={idx}
-                to={resource.url}
-                className="bg-white rounded-xl shadow-md p-6 transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
-              >
-                <div className="mb-4 p-3 bg-blue-50 inline-block rounded-lg">
-                  {resource.icon}
-                </div>
-                <h3 className="text-xl font-bold mb-2">{resource.title}</h3>
-                <p className="text-gray-600 mb-4">{resource.description}</p>
-                <div className="flex items-center text-blue-600">
-                  <span className="font-medium">Learn more</span>
-                  <ChevronRight className="ml-1 h-4 w-4" />
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
+      {/* CTA Section - Show in all tabs */}
       <section className="py-16 md:py-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden w-full">
         <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-purple-50"></div>
 
@@ -644,6 +711,21 @@ const Hero = () => {
           </div>
         </div>
       </section>
+
+      {/* Add custom styles for scrollbar */}
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
+          .hide-scrollbar::-webkit-scrollbar {
+          display: none;
+        }
+        .hide-scrollbar {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+        `,
+        }}
+      />
     </div>
   );
 };

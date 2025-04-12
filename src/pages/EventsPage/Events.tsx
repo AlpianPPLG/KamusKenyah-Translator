@@ -4,19 +4,12 @@ import {
   Calendar,
   MapPin,
   Clock,
-  Users,
-  Tag,
   Filter,
   Search,
   ChevronDown,
   ArrowRight,
-  Star,
-  CalendarCheck,
   Bell,
   Share2,
-  Ticket,
-  Globe,
-  MessageCircle,
   BookOpen,
   Sparkles,
 } from "lucide-react";
@@ -117,7 +110,6 @@ const EventsPage: React.FC = () => {
   const [priceFilter, setPriceFilter] = useState<"all" | "free" | "paid">(
     "all"
   );
-  const [selectedEvent, setSelectedEvent] = useState<string | null>(null);
 
   const filteredEvents = events.filter((event) => {
     const matchesType = selectedType === "all" || event.type === selectedType;

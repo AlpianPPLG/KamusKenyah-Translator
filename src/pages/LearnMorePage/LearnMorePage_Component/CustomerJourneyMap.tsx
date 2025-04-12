@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
 import {
-  ArrowRight,
   Search,
   MousePointer,
   UserPlus,
@@ -101,7 +100,6 @@ const AnimatedCounter: React.FC<AnimatedCounterProps> = ({
 
 const CustomerJourneyMap: React.FC = () => {
   const [activeStage, setActiveStage] = useState<number>(1);
-  const [hoveredStage, setHoveredStage] = useState<number | null>(null);
   const [showInsights, setShowInsights] = useState<boolean>(false);
   const [selectedMetric, setSelectedMetric] = useState<string | null>(null);
   const [metricDetails, setMetricDetails] = useState<{
