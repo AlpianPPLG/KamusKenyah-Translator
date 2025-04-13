@@ -1,4 +1,7 @@
-import React, { useState } from "react";
+"use client";
+
+import type React from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   MessageSquare,
@@ -18,9 +21,10 @@ import {
   Heart,
   Flag,
   Send,
-  Image as ImageIcon,
-  Link as LinkIcon,
+  ImageIcon,
+  LinkIcon,
   Smile,
+  Reply,
 } from "lucide-react";
 
 interface ForumPost {
@@ -47,7 +51,7 @@ interface ForumPost {
   isAnswered?: boolean;
 }
 
-interface Comment {
+interface CommentType {
   id: string;
   content: string;
   author: {
@@ -58,15 +62,96 @@ interface Comment {
   timestamp: string;
   likes: number;
   isLiked?: boolean;
-  replies?: Comment[];
+  replies?: CommentType[];
 }
+
+// Sample comments data using CommentType interface
+const sampleComments: Record<string, CommentType[]> = {
+  "1": [
+    {
+      id: "c1",
+      content:
+        "This is really helpful! I've been struggling with pronunciation.",
+      author: {
+        name: "John Doe",
+        image:
+          "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=50&h=50&fit=crop",
+        role: "Language Learner",
+      },
+      timestamp: new Date(Date.now() - 7200000).toISOString(), // 2 hours ago
+      likes: 5,
+      isLiked: false,
+    },
+    {
+      id: "c2",
+      content: "Great tips! Could you elaborate more on the cultural context?",
+      author: {
+        name: "Jane Smith",
+        image:
+          "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=50&h=50&fit=crop",
+        role: "Cultural Enthusiast",
+      },
+      timestamp: new Date(Date.now() - 3600000).toISOString(), // 1 hour ago
+      likes: 3,
+      isLiked: false,
+      replies: [
+        {
+          id: "r1",
+          content:
+            "I'd be happy to share more details about the cultural context. Let me prepare a follow-up post!",
+          author: {
+            name: "Sarah Chen",
+            image:
+              "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=50&h=50&fit=crop",
+            role: "Language Expert",
+          },
+          timestamp: new Date(Date.now() - 1800000).toISOString(), // 30 minutes ago
+          likes: 2,
+          isLiked: false,
+        },
+      ],
+    },
+  ],
+  "2": [
+    {
+      id: "c3",
+      content:
+        "Your insights on cultural context are invaluable. I've been trying to understand the nuances behind certain phrases.",
+      author: {
+        name: "Alex Johnson",
+        image:
+          "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=50&h=50&fit=crop",
+        role: "Student",
+      },
+      timestamp: new Date(Date.now() - 5400000).toISOString(), // 1.5 hours ago
+      likes: 7,
+      isLiked: false,
+    },
+  ],
+  "3": [
+    {
+      id: "c4",
+      content:
+        "I've faced similar challenges. What helped me was practicing with native speakers.",
+      author: {
+        name: "Maria Garcia",
+        image:
+          "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=50&h=50&fit=crop",
+        role: "Advanced Learner",
+      },
+      timestamp: new Date(Date.now() - 86400000).toISOString(), // 1 day ago
+      likes: 12,
+      isLiked: false,
+    },
+  ],
+};
 
 const forumPosts: ForumPost[] = [
   {
     id: "1",
     title: "Tips for Learning Kenyah Language Effectively",
     content:
-      "Ive been using KamusKenyah for 3 months now and wanted to share some effective learning strategies that worked for me...",
+      "I've been using KamusKenyah for 3 months now and wanted to share some effective learning strategies that worked for me...",
     author: {
       name: "Sarah Chen",
       image:
@@ -148,22 +233,180 @@ const CommunityForum: React.FC = () => {
   );
   const [expandedPost, setExpandedPost] = useState<string | null>(null);
   const [newPostContent, setNewPostContent] = useState("");
+  const [likedPosts, setLikedPosts] = useState<string[]>([]);
+  const [bookmarkedPosts, setBookmarkedPosts] = useState<string[]>([]);
 
-  const handlePostExpand = (postId: string) => {
-    setExpandedPost(expandedPost === postId ? null : postId);
+  // State for comments using CommentType
+  const [comments, setComments] =
+    useState<Record<string, CommentType[]>>(sampleComments);
+  const [newCommentContent, setNewCommentContent] = useState("");
+  const [likedComments, setLikedComments] = useState<string[]>([]);
+  const [showReplyForm, setShowReplyForm] = useState<string | null>(null);
+  const [replyContent, setReplyContent] = useState("");
+
+  const handlePostExpand = (id: string) => {
+    setExpandedPost(expandedPost === id ? null : id);
   };
 
-  const handleLikePost = (postId: string) => {
-    // Handle post liking logic
+  const handleLikePost = (id: string) => {
+    setLikedPosts((prev) => {
+      if (prev.includes(id)) {
+        return prev.filter((postId) => postId !== id);
+      } else {
+        return [...prev, id];
+      }
+    });
   };
 
-  const handleBookmarkPost = (postId: string) => {
-    // Handle post bookmarking logic
+  const handleBookmarkPost = (id: string) => {
+    setBookmarkedPosts((prev) => {
+      if (prev.includes(id)) {
+        return prev.filter((postId) => postId !== id);
+      } else {
+        return [...prev, id];
+      }
+    });
   };
 
   const handleSubmitPost = () => {
-    // Handle new post submission
+    if (!newPostContent.trim()) return;
+
+    // Here you would typically send the new post to your backend
+    console.log("Submitting new post:", newPostContent);
+
+    // Clear the input after submission
     setNewPostContent("");
+  };
+
+  // Function to handle comment submission - using CommentType
+  const handleSubmitComment = (postId: string) => {
+    if (!newCommentContent.trim()) return;
+
+    const newComment: CommentType = {
+      id: `c${Date.now()}`,
+      content: newCommentContent,
+      author: {
+        name: "Current User", // In a real app, this would be the logged-in user
+        image:
+          "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=50&h=50&fit=crop",
+        role: "Member",
+      },
+      timestamp: new Date().toISOString(),
+      likes: 0,
+      isLiked: false,
+    };
+
+    setComments((prev) => ({
+      ...prev,
+      [postId]: [...(prev[postId] || []), newComment],
+    }));
+
+    setNewCommentContent("");
+  };
+
+  // Function to handle liking a comment - using CommentType
+  const handleLikeComment = (commentId: string) => {
+    setLikedComments((prev) => {
+      if (prev.includes(commentId)) {
+        return prev.filter((id) => id !== commentId);
+      } else {
+        return [...prev, commentId];
+      }
+    });
+  };
+
+  // Function to handle reply submission - using CommentType
+  const handleSubmitReply = (postId: string, commentId: string) => {
+    if (!replyContent.trim() || !showReplyForm) return;
+
+    const newReply: CommentType = {
+      id: `r${Date.now()}`,
+      content: replyContent,
+      author: {
+        name: "Current User", // In a real app, this would be the logged-in user
+        image:
+          "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=50&h=50&fit=crop",
+        role: "Member",
+      },
+      timestamp: new Date().toISOString(),
+      likes: 0,
+      isLiked: false,
+    };
+
+    setComments((prev) => {
+      const updatedComments = [...(prev[postId] || [])];
+      const commentIndex = updatedComments.findIndex(
+        (comment) => comment.id === commentId
+      );
+
+      if (commentIndex !== -1) {
+        const updatedComment = { ...updatedComments[commentIndex] };
+        updatedComment.replies = [...(updatedComment.replies || []), newReply];
+        updatedComments[commentIndex] = updatedComment;
+      }
+
+      return {
+        ...prev,
+        [postId]: updatedComments,
+      };
+    });
+
+    setReplyContent("");
+    setShowReplyForm(null);
+  };
+
+  const filteredPosts = forumPosts.filter((post) => {
+    // Filter by category
+    if (
+      selectedCategory !== "All Topics" &&
+      post.category !== selectedCategory
+    ) {
+      return false;
+    }
+
+    // Filter by search term
+    if (
+      searchTerm &&
+      !post.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
+      !post.content.toLowerCase().includes(searchTerm.toLowerCase())
+    ) {
+      return false;
+    }
+
+    // Filter by sort option
+    if (sortBy === "unanswered" && post.isAnswered) {
+      return false;
+    }
+
+    return true;
+  });
+
+  // Sort posts based on sortBy
+  const sortedPosts = [...filteredPosts].sort((a, b) => {
+    if (sortBy === "recent") {
+      return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime();
+    } else if (sortBy === "popular") {
+      return b.stats.likes - a.stats.likes;
+    }
+    return 0;
+  });
+
+  // Format date helper function
+  const formatDate = (dateString: string): string => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffSecs = Math.floor(diffMs / 1000);
+    const diffMins = Math.floor(diffSecs / 60);
+    const diffHours = Math.floor(diffMins / 60);
+    const diffDays = Math.floor(diffHours / 24);
+
+    if (diffSecs < 60) return `${diffSecs} sec ago`;
+    if (diffMins < 60) return `${diffMins} min ago`;
+    if (diffHours < 24) return `${diffHours}h ago`;
+    if (diffDays < 7) return `${diffDays}d ago`;
+
+    return date.toLocaleDateString();
   };
 
   return (
@@ -239,7 +482,12 @@ const CommunityForum: React.FC = () => {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={handleSubmitPost}
-                  className="px-6 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors flex items-center"
+                  disabled={!newPostContent.trim()}
+                  className={`px-6 py-2 ${
+                    newPostContent.trim()
+                      ? "bg-blue-600 hover:bg-blue-700"
+                      : "bg-blue-400 cursor-not-allowed"
+                  } text-white rounded-lg font-medium transition-colors flex items-center`}
                 >
                   Post
                   <Send className="w-4 h-4 ml-2" />
@@ -307,199 +555,373 @@ const CommunityForum: React.FC = () => {
 
         {/* Forum Posts */}
         <div className="space-y-6">
-          {forumPosts.map((post) => (
-            <motion.div
-              key={post.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className={`bg-white rounded-xl border ${
-                post.isPinned
-                  ? "border-blue-200 bg-blue-50/20"
-                  : "border-gray-200"
-              } overflow-hidden`}
-            >
-              <div className="p-6">
-                {/* Post Header */}
-                <div className="flex items-start justify-between mb-4">
-                  <div className="flex items-center gap-4">
-                    <img
-                      src={post.author.image}
-                      alt={post.author.name}
-                      className="w-12 h-12 rounded-full object-cover"
-                    />
-                    <div>
-                      <h3 className="font-medium text-gray-900 flex items-center gap-2">
-                        {post.author.name}
-                        {post.isPinned && (
-                          <span className="text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded-full">
-                            Pinned
+          {sortedPosts.length > 0 ? (
+            sortedPosts.map((post) => (
+              <motion.div
+                key={post.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className={`bg-white rounded-xl border ${
+                  post.isPinned
+                    ? "border-blue-200 bg-blue-50/20"
+                    : "border-gray-200"
+                } overflow-hidden`}
+              >
+                <div className="p-6">
+                  {/* Post Header */}
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="flex items-center gap-4">
+                      <img
+                        src={post.author.image || "/placeholder.svg"}
+                        alt={post.author.name}
+                        className="w-12 h-12 rounded-full object-cover"
+                      />
+                      <div>
+                        <h3 className="font-medium text-gray-900 flex items-center gap-2">
+                          {post.author.name}
+                          {post.isPinned && (
+                            <span className="text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded-full">
+                              Pinned
+                            </span>
+                          )}
+                        </h3>
+                        <div className="flex items-center gap-2 text-sm text-gray-600">
+                          <span>{post.author.role}</span>
+                          <span>•</span>
+                          <span>
+                            {new Date(post.timestamp).toLocaleDateString()}
                           </span>
-                        )}
-                      </h3>
-                      <div className="flex items-center gap-2 text-sm text-gray-600">
-                        <span>{post.author.role}</span>
-                        <span>•</span>
-                        <span>
-                          {new Date(post.timestamp).toLocaleDateString()}
-                        </span>
+                        </div>
                       </div>
                     </div>
+                    <div className="flex gap-2">
+                      {post.author.badges.map((badge) => (
+                        <span
+                          key={badge}
+                          className="px-2 py-1 bg-blue-100 text-blue-600 rounded-full text-xs font-medium"
+                        >
+                          {badge}
+                        </span>
+                      ))}
+                    </div>
                   </div>
-                  <div className="flex gap-2">
-                    {post.author.badges.map((badge) => (
+
+                  {/* Post Content */}
+                  <h2 className="text-xl font-bold text-gray-900 mb-2">
+                    {post.title}
+                  </h2>
+                  <p className="text-gray-600 mb-4">{post.content}</p>
+
+                  {/* Tags */}
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {post.tags.map((tag) => (
                       <span
-                        key={badge}
-                        className="px-2 py-1 bg-blue-100 text-blue-600 rounded-full text-xs font-medium"
+                        key={tag}
+                        className="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-sm"
                       >
-                        {badge}
+                        #{tag}
                       </span>
                     ))}
                   </div>
-                </div>
 
-                {/* Post Content */}
-                <h2 className="text-xl font-bold text-gray-900 mb-2">
-                  {post.title}
-                </h2>
-                <p className="text-gray-600 mb-4">{post.content}</p>
-
-                {/* Tags */}
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {post.tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-sm"
-                    >
-                      #{tag}
-                    </span>
-                  ))}
-                </div>
-
-                {/* Post Stats and Actions */}
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-6">
-                    <button
-                      onClick={() => handleLikePost(post.id)}
-                      className="flex items-center gap-1 text-gray-500 hover:text-blue-600"
-                    >
-                      <ThumbsUp className="w-4 h-4" />
-                      <span>{post.stats.likes}</span>
-                    </button>
-                    <button
-                      onClick={() => handlePostExpand(post.id)}
-                      className="flex items-center gap-1 text-gray-500 hover:text-blue-600"
-                    >
-                      <MessageCircle className="w-4 h-4" />
-                      <span>{post.stats.comments}</span>
-                    </button>
-                    <div className="flex items-center gap-1 text-gray-500">
-                      <Globe className="w-4 h-4" />
-                      <span>{post.stats.views} views</span>
+                  {/* Post Stats and Actions */}
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-6">
+                      <button
+                        onClick={() => handleLikePost(post.id)}
+                        className={`flex items-center gap-1 ${
+                          likedPosts.includes(post.id)
+                            ? "text-blue-600"
+                            : "text-gray-500 hover:text-blue-600"
+                        }`}
+                      >
+                        <ThumbsUp className="w-4 h-4" />
+                        <span>
+                          {post.stats.likes +
+                            (likedPosts.includes(post.id) ? 1 : 0)}
+                        </span>
+                      </button>
+                      <button
+                        onClick={() => handlePostExpand(post.id)}
+                        className="flex items-center gap-1 text-gray-500 hover:text-blue-600"
+                      >
+                        <MessageCircle className="w-4 h-4" />
+                        <span>{post.stats.comments}</span>
+                      </button>
+                      <div className="flex items-center gap-1 text-gray-500">
+                        <Globe className="w-4 h-4" />
+                        <span>{post.stats.views} views</span>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <button className="p-2 text-gray-400 hover:text-gray-600 transition-colors">
+                        <Share2 className="w-5 h-5" />
+                      </button>
+                      <button
+                        onClick={() => handleBookmarkPost(post.id)}
+                        className={`p-2 ${
+                          bookmarkedPosts.includes(post.id)
+                            ? "text-blue-600"
+                            : "text-gray-400 hover:text-blue-600"
+                        } transition-colors`}
+                      >
+                        <Bookmark className="w-5 h-5" />
+                      </button>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <button className="p-2 text-gray-400 hover:text-gray-600 transition-colors">
-                      <Share2 className="w-5 h-5" />
-                    </button>
-                    <button
-                      onClick={() => handleBookmarkPost(post.id)}
-                      className="p-2 text-gray-400 hover:text-blue-600 transition-colors"
-                    >
-                      <Bookmark className="w-5 h-5" />
-                    </button>
-                  </div>
-                </div>
 
-                {/* Expanded Comments Section */}
-                <AnimatePresence>
-                  {expandedPost === post.id && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      className="mt-6 pt-6 border-t border-gray-200"
-                    >
-                      {/* Comment Input */}
-                      <div className="flex items-start gap-4 mb-6">
-                        <img
-                          src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=50&h=50&fit=crop"
-                          alt="User"
-                          className="w-8 h-8 rounded-full object-cover"
-                        />
-                        <div className="flex-grow">
-                          <textarea
-                            placeholder="Write a comment..."
-                            className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
-                            rows={2}
+                  {/* Expanded Comments Section - Using CommentType */}
+                  <AnimatePresence>
+                    {expandedPost === post.id && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        className="mt-6 pt-6 border-t border-gray-200"
+                      >
+                        {/* Comment Input */}
+                        <div className="flex items-start gap-4 mb-6">
+                          <img
+                            src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=50&h=50&fit=crop"
+                            alt="User"
+                            className="w-8 h-8 rounded-full object-cover"
                           />
-                          <div className="flex justify-end mt-2">
-                            <button className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors">
-                              Comment
-                            </button>
+                          <div className="flex-grow">
+                            <textarea
+                              placeholder="Write a comment..."
+                              value={newCommentContent}
+                              onChange={(e) =>
+                                setNewCommentContent(e.target.value)
+                              }
+                              className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                              rows={2}
+                            />
+                            <div className="flex justify-end mt-2">
+                              <button
+                                onClick={() => handleSubmitComment(post.id)}
+                                disabled={!newCommentContent.trim()}
+                                className={`px-4 py-2 ${
+                                  newCommentContent.trim()
+                                    ? "bg-blue-600 hover:bg-blue-700"
+                                    : "bg-blue-400 cursor-not-allowed"
+                                } text-white rounded-lg text-sm font-medium transition-colors`}
+                              >
+                                Comment
+                              </button>
+                            </div>
                           </div>
                         </div>
-                      </div>
 
-                      {/* Sample Comments */}
-                      <div className="space-y-4">
-                        {[1, 2].map((comment) => (
-                          <div key={comment} className="flex items-start gap-4">
-                            <img
-                              src={`https://images.unsplash.com/photo-${
-                                comment === 1
-                                  ? "1472099645785-5658abf4ff4e"
-                                  : "1438761681033-6461ffad8d80"
-                              }?w=50&h=50&fit=crop`}
-                              alt="Commenter"
-                              className="w-8 h-8 rounded-full object-cover"
-                            />
-                            <div className="flex-grow">
-                              <div className="bg-gray-50 rounded-lg p-4">
-                                <div className="flex items-center justify-between mb-2">
-                                  <div className="font-medium text-gray-900">
-                                    {comment === 1 ? "John Doe" : "Jane Smith"}
+                        {/* Comments List - Using CommentType */}
+                        <div className="space-y-4">
+                          {comments[post.id]?.map((comment) => (
+                            <div key={comment.id} className="space-y-4">
+                              <div className="flex items-start gap-4">
+                                <img
+                                  src={
+                                    comment.author.image || "/placeholder.svg"
+                                  }
+                                  alt={comment.author.name}
+                                  className="w-8 h-8 rounded-full object-cover"
+                                />
+                                <div className="flex-grow">
+                                  <div className="bg-gray-50 rounded-lg p-4">
+                                    <div className="flex items-center justify-between mb-2">
+                                      <div className="font-medium text-gray-900">
+                                        {comment.author.name}
+                                      </div>
+                                      <span className="text-sm text-gray-500">
+                                        {formatDate(comment.timestamp)}
+                                      </span>
+                                    </div>
+                                    <p className="text-gray-600">
+                                      {comment.content}
+                                    </p>
+                                    <div className="flex items-center gap-4 mt-2">
+                                      <button
+                                        onClick={() =>
+                                          handleLikeComment(comment.id)
+                                        }
+                                        className={`text-sm ${
+                                          likedComments.includes(comment.id)
+                                            ? "text-blue-600"
+                                            : "text-gray-500 hover:text-blue-600"
+                                        }`}
+                                      >
+                                        Like{" "}
+                                        {comment.likes +
+                                          (likedComments.includes(comment.id)
+                                            ? 1
+                                            : 0)}
+                                      </button>
+                                      <button
+                                        onClick={() =>
+                                          setShowReplyForm(
+                                            showReplyForm === comment.id
+                                              ? null
+                                              : comment.id
+                                          )
+                                        }
+                                        className="text-sm text-gray-500 hover:text-blue-600"
+                                      >
+                                        Reply
+                                      </button>
+                                    </div>
                                   </div>
-                                  <span className="text-sm text-gray-500">
-                                    2h ago
-                                  </span>
-                                </div>
-                                <p className="text-gray-600">
-                                  {comment === 1
-                                    ? "This is really helpful! Ive been struggling with pronunciation."
-                                    : "Great tips! Could you elaborate more on the cultural context?"}
-                                </p>
-                                <div className="flex items-center gap-4 mt-2">
-                                  <button className="text-sm text-gray-500 hover:text-blue-600">
-                                    Like
-                                  </button>
-                                  <button className="text-sm text-gray-500 hover:text-blue-600">
-                                    Reply
-                                  </button>
+
+                                  {/* Reply Form */}
+                                  {showReplyForm === comment.id && (
+                                    <div className="mt-2 ml-4 flex items-start gap-2">
+                                      <img
+                                        src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=50&h=50&fit=crop"
+                                        alt="User"
+                                        className="w-6 h-6 rounded-full object-cover"
+                                      />
+                                      <div className="flex-grow">
+                                        <textarea
+                                          placeholder="Write a reply..."
+                                          value={replyContent}
+                                          onChange={(e) =>
+                                            setReplyContent(e.target.value)
+                                          }
+                                          className="w-full p-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                                          rows={1}
+                                        />
+                                        <div className="flex justify-end mt-1">
+                                          <button
+                                            onClick={() =>
+                                              handleSubmitReply(
+                                                post.id,
+                                                comment.id
+                                              )
+                                            }
+                                            disabled={!replyContent.trim()}
+                                            className={`px-3 py-1 ${
+                                              replyContent.trim()
+                                                ? "bg-blue-600 hover:bg-blue-700"
+                                                : "bg-blue-400 cursor-not-allowed"
+                                            } text-white rounded-lg text-xs font-medium transition-colors flex items-center`}
+                                          >
+                                            Reply
+                                            <Reply className="w-3 h-3 ml-1" />
+                                          </button>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  )}
+
+                                  {/* Replies - Using CommentType */}
+                                  {comment.replies &&
+                                    comment.replies.length > 0 && (
+                                      <div className="mt-2 ml-8 space-y-3">
+                                        {comment.replies.map((reply) => (
+                                          <div
+                                            key={reply.id}
+                                            className="flex items-start gap-2"
+                                          >
+                                            <img
+                                              src={
+                                                reply.author.image ||
+                                                "/placeholder.svg"
+                                              }
+                                              alt={reply.author.name}
+                                              className="w-6 h-6 rounded-full object-cover"
+                                            />
+                                            <div className="flex-grow">
+                                              <div className="bg-gray-50 rounded-lg p-3">
+                                                <div className="flex items-center justify-between mb-1">
+                                                  <div className="font-medium text-sm text-gray-900">
+                                                    {reply.author.name}
+                                                  </div>
+                                                  <span className="text-xs text-gray-500">
+                                                    {formatDate(
+                                                      reply.timestamp
+                                                    )}
+                                                  </span>
+                                                </div>
+                                                <p className="text-sm text-gray-600">
+                                                  {reply.content}
+                                                </p>
+                                                <div className="flex items-center gap-3 mt-1">
+                                                  <button
+                                                    onClick={() =>
+                                                      handleLikeComment(
+                                                        reply.id
+                                                      )
+                                                    }
+                                                    className={`text-xs ${
+                                                      likedComments.includes(
+                                                        reply.id
+                                                      )
+                                                        ? "text-blue-600"
+                                                        : "text-gray-500 hover:text-blue-600"
+                                                    }`}
+                                                  >
+                                                    Like{" "}
+                                                    {reply.likes +
+                                                      (likedComments.includes(
+                                                        reply.id
+                                                      )
+                                                        ? 1
+                                                        : 0)}
+                                                  </button>
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        ))}
+                                      </div>
+                                    )}
                                 </div>
                               </div>
                             </div>
-                          </div>
-                        ))}
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                          ))}
+
+                          {/* Empty state for no comments */}
+                          {(!comments[post.id] ||
+                            comments[post.id].length === 0) && (
+                            <div className="text-center py-6">
+                              <MessageSquare className="w-10 h-10 text-gray-300 mx-auto mb-2" />
+                              <p className="text-gray-500">
+                                No comments yet. Be the first to comment!
+                              </p>
+                            </div>
+                          )}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              </motion.div>
+            ))
+          ) : (
+            <div className="text-center py-12">
+              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 mb-4">
+                <Search className="w-8 h-8 text-gray-400" />
               </div>
-            </motion.div>
-          ))}
+              <h3 className="text-lg font-medium text-gray-900 mb-2">
+                No discussions found
+              </h3>
+              <p className="text-gray-600">
+                Try adjusting your search or filters
+              </p>
+            </div>
+          )}
         </div>
 
         {/* Load More Button */}
-        <div className="mt-8 text-center">
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="px-6 py-3 bg-gray-100 text-gray-600 rounded-lg font-medium hover:bg-gray-200 transition-colors inline-flex items-center"
-          >
-            Load More Discussions
-            <ChevronDown className="w-4 h-4 ml-2" />
-          </motion.button>
-        </div>
+        {sortedPosts.length > 0 && (
+          <div className="mt-8 text-center">
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="px-6 py-3 bg-gray-100 text-gray-600 rounded-lg font-medium hover:bg-gray-200 transition-colors inline-flex items-center"
+            >
+              Load More Discussions
+              <ChevronDown className="w-4 h-4 ml-2" />
+            </motion.button>
+          </div>
+        )}
 
         {/* Community Guidelines */}
         <motion.div
