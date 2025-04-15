@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import type React from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Star,
@@ -92,40 +93,45 @@ const TestimonialsSection: React.FC = () => {
 
   // Animasi untuk slide
   const slideVariants = {
-    enter: (direction: number) => ({
-      x: direction > 0 ? 1000 : -1000,
-      opacity: 0,
-      position: "absolute", // Tetapkan posisi absolut untuk mencegah glitch
-      width: "100%", // Pastikan lebar penuh untuk stabilitas
-      top: 0,
-      left: 0,
-    }),
-    center: {
-      x: 0,
-      opacity: 1,
-      position: "relative", // Kembali ke posisi relatif saat aktif
-      width: "100%",
-      top: 0,
-      left: 0,
-    },
-    exit: (direction: number) => ({
-      x: direction < 0 ? 1000 : -1000,
+    enter: {
+      // Definisikan default value untuk enter
+      x: 1000, // atau -1000 tergantung arah
       opacity: 0,
       position: "absolute",
       width: "100%",
       top: 0,
       left: 0,
-    }),
-  };
+      zIndex: 0,
+    },
+    center: {
+      x: 0,
+      opacity: 1,
+      position: "absolute",
+      width: "100%",
+      top: 0,
+      left: 0,
+      zIndex: 1,
+    },
+    exit: {
+      // Definisikan default value untuk exit
+      x: -1000, // atau 1000 tergantung arah
+      opacity: 0,
+      position: "absolute",
+      width: "100%",
+      top: 0,
+      left: 0,
+      zIndex: 0,
+    },
+  } as const;
 
   // Variasi untuk kontainer agar tetap stabil
   const containerVariants = {
-    hidden: { height: "auto" }, // Tinggi otomatis berdasarkan konten
+    hidden: { height: "auto" },
     visible: {
       height: "auto",
       transition: { duration: 0.5, ease: "easeInOut" },
     },
-  };
+  } as const;
 
   return (
     <section className="py-20 bg-gradient-to-b from-blue-50 to-white overflow-hidden relative">
@@ -161,100 +167,143 @@ const TestimonialsSection: React.FC = () => {
           className="relative mb-20"
         >
           <div className="overflow-hidden relative h-full">
-            <AnimatePresence initial={false} custom={direction}>
-              <motion.div
-                key={currentIndex}
-                custom={direction}
-                variants={slideVariants}
-                initial="enter"
-                animate="center"
-                exit="exit"
-                transition={{ duration: 0.5, ease: "easeInOut" }}
-                className="bg-white rounded-2xl shadow-xl p-8 md:p-12 relative overflow-hidden w-full"
-              >
-                {/* Background Decorations */}
-                <div className="absolute top-0 right-0 w-64 h-64 bg-blue-50 rounded-full -mr-32 -mt-32 opacity-30" />
-                <div className="absolute bottom-0 left-0 w-64 h-64 bg-indigo-50 rounded-full -ml-32 -mb-32 opacity-30" />
+            <div className="relative w-full">
+              <AnimatePresence initial={false} mode="wait" custom={direction}>
+                <motion.div
+                  key={currentIndex}
+                  custom={direction}
+                  variants={slideVariants}
+                  initial="enter"
+                  animate="center"
+                  exit="exit"
+                  transition={{ duration: 0.5, ease: "easeInOut" }}
+                  className="bg-white rounded-2xl shadow-xl p-8 md:p-12 relative overflow-hidden w-full"
+                >
+                  {/* Background Decorations */}
+                  <div className="absolute top-0 right-0 w-64 h-64 bg-blue-50 rounded-full -mr-32 -mt-32 opacity-30" />
+                  <div className="absolute bottom-0 left-0 w-64 h-64 bg-indigo-50 rounded-full -ml-32 -mb-32 opacity-30" />
 
-                <div className="relative grid md:grid-cols-2 gap-8 items-center">
-                  {/* Left: Testimonial Content */}
-                  <div>
-                    <div className="flex items-center mb-4">
-                      {[...Array(testimonials[currentIndex].rating)].map(
-                        (_, i) => (
-                          <Star
-                            key={i}
-                            className="w-5 h-5 text-yellow-400 fill-current"
-                          />
-                        )
-                      )}
-                      {/* Menambahkan Award jika rating tinggi */}
-                      {testimonials[currentIndex].rating === 5 && (
-                        <Award className="w-5 h-5 text-yellow-400 ml-2" />
-                      )}
-                    </div>
-                    <blockquote className="text-lg md:text-xl text-gray-700 italic mb-6">
-                      "{testimonials[currentIndex].content}"
-                    </blockquote>
-                    <div className="flex items-center space-x-4">
-                      <div
-                        className={`w-12 h-12 rounded-full bg-gradient-to-r ${testimonials[currentIndex].avatarColor}`}
-                      />
-                      <div>
-                        <div className="font-medium text-gray-900">
-                          {testimonials[currentIndex].name}
+                  <div className="relative grid md:grid-cols-2 gap-8 items-center">
+                    {/* Left: Testimonial Content */}
+                    <div>
+                      <div className="flex items-center mb-4">
+                        {[...Array(testimonials[currentIndex].rating)].map(
+                          (_, i) => (
+                            <Star
+                              key={i}
+                              className="w-5 h-5 text-yellow-400 fill-current"
+                            />
+                          )
+                        )}
+                        {/* Menambahkan Award jika rating tinggi */}
+                        {testimonials[currentIndex].rating === 5 && (
+                          <Award className="w-5 h-5 text-yellow-400 ml-2" />
+                        )}
+                      </div>
+                      <blockquote className="text-lg md:text-xl text-gray-700 italic mb-6">
+                        "{testimonials[currentIndex].content}"
+                      </blockquote>
+                      <div className="flex items-center space-x-4">
+                        <div
+                          className={`w-12 h-12 rounded-full bg-gradient-to-r ${testimonials[currentIndex].avatarColor}`}
+                        />
+                        <div>
+                          <div className="font-medium text-gray-900">
+                            {testimonials[currentIndex].name}
+                          </div>
+                          <div className="text-sm text-gray-600">
+                            {testimonials[currentIndex].role}
+                          </div>
                         </div>
-                        <div className="text-sm text-gray-600">
-                          {testimonials[currentIndex].role}
+                      </div>
+                      <div className="mt-4 text-sm text-gray-500">
+                        {testimonials[currentIndex].date}
+                      </div>
+                    </div>
+
+                    {/* Right: Community Stats */}
+                    <div className="hidden md:block relative">
+                      <div className="bg-gradient-to-br from-blue-100 to-indigo-100 rounded-xl p-6 shadow-lg">
+                        <Users className="w-12 h-12 text-blue-600 mb-4" />
+                        <h4 className="text-xl font-semibold text-gray-900 mb-2">
+                          Komunitas Kami
+                        </h4>
+                        <p className="text-gray-600 mb-4">
+                          Bergabunglah dengan ribuan pengguna yang peduli akan
+                          pelestarian bahasa Dayak Kenyah.
+                        </p>
+                        <div className="flex items-center space-x-4">
+                          <div className="flex -space-x-2">
+                            {[...Array(5)].map((_, i) => (
+                              <div
+                                key={i}
+                                className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-200 to-indigo-200 border-2 border-white"
+                              />
+                            ))}
+                          </div>
+                          <span className="text-sm text-gray-600">
+                            +10K Pengguna
+                          </span>
                         </div>
                       </div>
                     </div>
-                    <div className="mt-4 text-sm text-gray-500">
-                      {testimonials[currentIndex].date}
-                    </div>
                   </div>
+                </motion.div>
+              </AnimatePresence>
+            </div>
 
-                  {/* Right: Community Stats */}
-                  <div className="hidden md:block relative">
-                    <div className="bg-gradient-to-br from-blue-100 to-indigo-100 rounded-xl p-6 shadow-lg">
-                      <Users className="w-12 h-12 text-blue-600 mb-4" />
-                      <h4 className="text-xl font-semibold text-gray-900 mb-2">
-                        Komunitas Kami
-                      </h4>
-                      <p className="text-gray-600 mb-4">
-                        Bergabunglah dengan ribuan pengguna yang peduli akan
-                        pelestarian bahasa Dayak Kenyah.
-                      </p>
+            {/* Spacer div to maintain container height */}
+            <div className="invisible">
+              <div className="bg-white rounded-2xl p-8 md:p-12">
+                <div className="grid md:grid-cols-2 gap-8 items-center">
+                  <div>
+                    <div className="flex items-center mb-4">
+                      {[...Array(5)].map((_, i) => (
+                        <Star key={i} className="w-5 h-5" />
+                      ))}
+                    </div>
+                    <blockquote className="text-lg md:text-xl mb-6">
+                      "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+                    </blockquote>
+                    <div className="flex items-center space-x-4">
+                      <div className="w-12 h-12 rounded-full" />
+                      <div>
+                        <div className="font-medium">Name</div>
+                        <div className="text-sm">Role</div>
+                      </div>
+                    </div>
+                    <div className="mt-4 text-sm">Date</div>
+                  </div>
+                  <div className="hidden md:block">
+                    <div className="rounded-xl p-6">
+                      <div className="w-12 h-12 mb-4" />
+                      <h4 className="text-xl font-semibold mb-2">Title</h4>
+                      <p className="mb-4">Description text goes here.</p>
                       <div className="flex items-center space-x-4">
                         <div className="flex -space-x-2">
                           {[...Array(5)].map((_, i) => (
-                            <div
-                              key={i}
-                              className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-200 to-indigo-200 border-2 border-white"
-                            />
+                            <div key={i} className="w-8 h-8 rounded-full" />
                           ))}
                         </div>
-                        <span className="text-sm text-gray-600">
-                          +10K Pengguna
-                        </span>
+                        <span className="text-sm">Text</span>
                       </div>
                     </div>
                   </div>
                 </div>
-              </motion.div>
-            </AnimatePresence>
+              </div>
+            </div>
           </div>
 
           {/* Navigation Arrows */}
           <button
             onClick={handlePrev}
-            className="absolute top-1/2 left-4 -translate-y-1/2 bg-white p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 group"
+            className="absolute top-1/2 left-4 -translate-y-1/2 bg-white p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 group z-10"
           >
             <ChevronLeft className="w-6 h-6 text-blue-600 group-hover:scale-110 transition-transform" />
           </button>
           <button
             onClick={handleNext}
-            className="absolute top-1/2 right-4 -translate-y-1/2 bg-white p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 group"
+            className="absolute top-1/2 right-4 -translate-y-1/2 bg-white p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 group z-10"
           >
             <ChevronRight className="w-6 h-6 text-blue-600 group-hover:scale-110 transition-transform" />
           </button>

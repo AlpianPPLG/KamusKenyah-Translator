@@ -1,20 +1,30 @@
-"use client"
+"use client";
 
-import type React from "react"
-import { useState, useRef, useEffect } from "react"
-import { motion, AnimatePresence } from "framer-motion"
-import { ArrowLeft, Clock, Star, Trash2, RefreshCw, Search, Filter, SortAsc, SortDesc } from "lucide-react"
-import type { Translation } from "../../hooks/useHistoryModal"
+import type React from "react";
+import { useState, useRef, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  ArrowLeft,
+  Clock,
+  Star,
+  Trash2,
+  RefreshCw,
+  Search,
+  Filter,
+  SortAsc,
+  SortDesc,
+} from "lucide-react";
+import type { Translation } from "../../hooks/useHistoryModal";
 
 interface HistoryModalPopUpProps {
-  isOpen: boolean
-  onClose: () => void
-  translations: Translation[]
-  onDelete: (id: number) => void
-  onReuse: (translation: Translation) => void
-  onClearAll: () => void
-  onFavorite: (id: number) => void
-  favoritedTranslations: number[]
+  isOpen: boolean;
+  onClose: () => void;
+  translations: Translation[];
+  onDelete: (id: number) => void;
+  onReuse: (translation: Translation) => void;
+  onClearAll: () => void;
+  onFavorite: (id: number) => void;
+  favoritedTranslations: number[];
 }
 
 const HistoryModalPopUp: React.FC<HistoryModalPopUpProps> = ({
@@ -27,48 +37,55 @@ const HistoryModalPopUp: React.FC<HistoryModalPopUpProps> = ({
   onFavorite,
   favoritedTranslations,
 }) => {
-  const [searchQuery, setSearchQuery] = useState("")
-  const [sortBy, setSortBy] = useState<"newest" | "oldest" | "az" | "za">("newest")
-  const [filterBy, setFilterBy] = useState<"all" | "favorites" | "indonesian" | "kenyah">("all")
-  const [isFilterOpen, setIsFilterOpen] = useState(false)
-  const [isSortOpen, setIsSortOpen] = useState(false)
-  const modalRef = useRef<HTMLDivElement>(null)
-  const filterRef = useRef<HTMLDivElement>(null)
-  const sortRef = useRef<HTMLDivElement>(null)
+  const [searchQuery, setSearchQuery] = useState("");
+  const [sortBy, setSortBy] = useState<"newest" | "oldest" | "az" | "za">(
+    "newest"
+  );
+  const [filterBy, setFilterBy] = useState<
+    "all" | "favorites" | "indonesian" | "kenyah"
+  >("all");
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [isSortOpen, setIsSortOpen] = useState(false);
+  const modalRef = useRef<HTMLDivElement>(null);
+  const filterRef = useRef<HTMLDivElement>(null);
+  const sortRef = useRef<HTMLDivElement>(null);
 
   // Close dropdowns when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (filterRef.current && !filterRef.current.contains(event.target as Node)) {
-        setIsFilterOpen(false)
+      if (
+        filterRef.current &&
+        !filterRef.current.contains(event.target as Node)
+      ) {
+        setIsFilterOpen(false);
       }
       if (sortRef.current && !sortRef.current.contains(event.target as Node)) {
-        setIsSortOpen(false)
+        setIsSortOpen(false);
       }
-    }
+    };
 
-    document.addEventListener("mousedown", handleClickOutside)
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside)
-    }
-  }, [])
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   // Handle escape key to close modal
   useEffect(() => {
     const handleEscKey = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
-        onClose()
+        onClose();
       }
-    }
+    };
 
     if (isOpen) {
-      document.addEventListener("keydown", handleEscKey)
+      document.addEventListener("keydown", handleEscKey);
     }
 
     return () => {
-      document.removeEventListener("keydown", handleEscKey)
-    }
-  }, [isOpen, onClose])
+      document.removeEventListener("keydown", handleEscKey);
+    };
+  }, [isOpen, onClose]);
 
   // Filter and sort translations
   const filteredTranslations = translations.filter((translation) => {
@@ -76,45 +93,52 @@ const HistoryModalPopUp: React.FC<HistoryModalPopUpProps> = ({
     const matchesSearch =
       searchQuery === "" ||
       translation.text.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      translation.translatedText.toLowerCase().includes(searchQuery.toLowerCase())
+      translation.translatedText
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase());
 
     // Apply category filter
-    let matchesFilter = true
+    let matchesFilter = true;
     if (filterBy === "favorites") {
-      matchesFilter = favoritedTranslations.includes(translation.id)
+      matchesFilter = favoritedTranslations.includes(translation.id);
     } else if (filterBy === "indonesian") {
-      matchesFilter = translation.from === "Indonesia"
+      matchesFilter = translation.from === "Indonesia";
     } else if (filterBy === "kenyah") {
-      matchesFilter = translation.from === "Dayak Kenyah"
+      matchesFilter = translation.from === "Dayak Kenyah";
     }
 
-    return matchesSearch && matchesFilter
-  })
+    return matchesSearch && matchesFilter;
+  });
 
   // Sort filtered translations
   const sortedTranslations = [...filteredTranslations].sort((a, b) => {
     if (sortBy === "newest") {
-      return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+      return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime();
     } else if (sortBy === "oldest") {
-      return new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
+      return new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime();
     } else if (sortBy === "az") {
-      return a.text.localeCompare(b.text)
+      return a.text.localeCompare(b.text);
     } else {
-      return b.text.localeCompare(a.text)
+      return b.text.localeCompare(a.text);
     }
-  })
+  });
 
   // Animation variants
   const backdropVariants = {
     hidden: { opacity: 0 },
     visible: { opacity: 1 },
-  }
+  };
 
   const modalVariants = {
     hidden: { opacity: 0, y: 50, scale: 0.95 },
-    visible: { opacity: 1, y: 0, scale: 1, transition: { type: "spring", damping: 25, stiffness: 300 } },
+    visible: {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: { type: "spring", damping: 25, stiffness: 300 },
+    },
     exit: { opacity: 0, y: 50, scale: 0.95, transition: { duration: 0.2 } },
-  }
+  };
 
   const itemVariants = {
     hidden: { opacity: 0, y: 20 },
@@ -123,7 +147,7 @@ const HistoryModalPopUp: React.FC<HistoryModalPopUpProps> = ({
       y: 0,
       transition: { delay: i * 0.05, duration: 0.3 },
     }),
-  }
+  };
 
   return (
     <AnimatePresence>
@@ -157,7 +181,9 @@ const HistoryModalPopUp: React.FC<HistoryModalPopUpProps> = ({
                 </button>
                 <div className="flex items-center space-x-2">
                   <Clock className="h-5 w-5 text-blue-600" />
-                  <h2 className="text-xl font-semibold text-gray-900">Translation History</h2>
+                  <h2 className="text-xl font-semibold text-gray-900">
+                    Translation History
+                  </h2>
                 </div>
               </div>
               <div className="flex items-center space-x-2">
@@ -200,10 +226,10 @@ const HistoryModalPopUp: React.FC<HistoryModalPopUpProps> = ({
                         {filterBy === "all"
                           ? "All"
                           : filterBy === "favorites"
-                            ? "Favorites"
-                            : filterBy === "indonesian"
-                              ? "Indonesian"
-                              : "Kenyah"}
+                          ? "Favorites"
+                          : filterBy === "indonesian"
+                          ? "Indonesian"
+                          : "Kenyah"}
                       </span>
                     </button>
 
@@ -224,8 +250,14 @@ const HistoryModalPopUp: React.FC<HistoryModalPopUpProps> = ({
                                   : "text-gray-700 hover:bg-gray-50"
                               }`}
                               onClick={() => {
-                                setFilterBy(option.value as any)
-                                setIsFilterOpen(false)
+                                setFilterBy(
+                                  option.value as
+                                    | "all"
+                                    | "favorites"
+                                    | "indonesian"
+                                    | "kenyah"
+                                );
+                                setIsFilterOpen(false);
                               }}
                             >
                               {option.label}
@@ -257,10 +289,10 @@ const HistoryModalPopUp: React.FC<HistoryModalPopUpProps> = ({
                         {sortBy === "newest"
                           ? "Newest"
                           : sortBy === "oldest"
-                            ? "Oldest"
-                            : sortBy === "az"
-                              ? "A-Z"
-                              : "Z-A"}
+                          ? "Oldest"
+                          : sortBy === "az"
+                          ? "A-Z"
+                          : "Z-A"}
                       </span>
                     </button>
 
@@ -268,10 +300,26 @@ const HistoryModalPopUp: React.FC<HistoryModalPopUpProps> = ({
                       <div className="absolute right-0 mt-1 w-48 bg-white rounded-md shadow-lg z-10 border border-gray-200">
                         <div className="py-1">
                           {[
-                            { value: "newest", label: "Newest First", icon: <SortDesc className="h-4 w-4" /> },
-                            { value: "oldest", label: "Oldest First", icon: <SortAsc className="h-4 w-4" /> },
-                            { value: "az", label: "A to Z", icon: <SortAsc className="h-4 w-4" /> },
-                            { value: "za", label: "Z to A", icon: <SortDesc className="h-4 w-4" /> },
+                            {
+                              value: "newest",
+                              label: "Newest First",
+                              icon: <SortDesc className="h-4 w-4" />,
+                            },
+                            {
+                              value: "oldest",
+                              label: "Oldest First",
+                              icon: <SortAsc className="h-4 w-4" />,
+                            },
+                            {
+                              value: "az",
+                              label: "A to Z",
+                              icon: <SortAsc className="h-4 w-4" />,
+                            },
+                            {
+                              value: "za",
+                              label: "Z to A",
+                              icon: <SortDesc className="h-4 w-4" />,
+                            },
                           ].map((option) => (
                             <button
                               key={option.value}
@@ -281,8 +329,14 @@ const HistoryModalPopUp: React.FC<HistoryModalPopUpProps> = ({
                                   : "text-gray-700 hover:bg-gray-50"
                               }`}
                               onClick={() => {
-                                setSortBy(option.value as any)
-                                setIsSortOpen(false)
+                                setSortBy(
+                                  option.value as
+                                    | "newest"
+                                    | "oldest"
+                                    | "az"
+                                    | "za"
+                                );
+                                setIsSortOpen(false);
                               }}
                             >
                               <span className="mr-2">{option.icon}</span>
@@ -314,8 +368,13 @@ const HistoryModalPopUp: React.FC<HistoryModalPopUpProps> = ({
                         <div className="flex items-center space-x-2 text-sm text-gray-600">
                           <Clock className="h-4 w-4" />
                           <span>
-                            {new Date(translation.timestamp).toLocaleDateString()} {" • "}
-                            {new Date(translation.timestamp).toLocaleTimeString()}
+                            {new Date(
+                              translation.timestamp
+                            ).toLocaleDateString()}{" "}
+                            {" • "}
+                            {new Date(
+                              translation.timestamp
+                            ).toLocaleTimeString()}
                           </span>
                         </div>
                         <div className="flex items-center space-x-1">
@@ -327,13 +386,17 @@ const HistoryModalPopUp: React.FC<HistoryModalPopUpProps> = ({
                       <div className="p-4">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div>
-                            <p className="text-xs text-gray-500 mb-1">{translation.from}</p>
+                            <p className="text-xs text-gray-500 mb-1">
+                              {translation.from}
+                            </p>
                             <p className="text-sm text-gray-900 bg-gray-50 p-2 rounded min-h-[60px]">
                               {translation.text}
                             </p>
                           </div>
                           <div>
-                            <p className="text-xs text-gray-500 mb-1">{translation.to}</p>
+                            <p className="text-xs text-gray-500 mb-1">
+                              {translation.to}
+                            </p>
                             <p className="text-sm text-gray-900 bg-gray-50 p-2 rounded min-h-[60px]">
                               {translation.translatedText}
                             </p>
@@ -379,7 +442,9 @@ const HistoryModalPopUp: React.FC<HistoryModalPopUpProps> = ({
                   <div className="bg-gray-100 p-4 rounded-full mb-4">
                     <Clock className="h-8 w-8 text-gray-400" />
                   </div>
-                  <h3 className="text-lg font-medium text-gray-900 mb-1">No translations found</h3>
+                  <h3 className="text-lg font-medium text-gray-900 mb-1">
+                    No translations found
+                  </h3>
                   <p className="text-gray-600 max-w-md">
                     {translations.length === 0
                       ? "Your translation history will appear here."
@@ -401,11 +466,13 @@ const HistoryModalPopUp: React.FC<HistoryModalPopUpProps> = ({
             <div className="p-4 border-t border-gray-200 bg-gray-50 text-sm text-gray-600">
               <div className="flex justify-between items-center">
                 <span>
-                  Showing {sortedTranslations.length} of {translations.length} translations
+                  Showing {sortedTranslations.length} of {translations.length}{" "}
+                  translations
                 </span>
                 {favoritedTranslations.length > 0 && (
                   <span>
-                    {favoritedTranslations.length} favorite{favoritedTranslations.length !== 1 ? "s" : ""}
+                    {favoritedTranslations.length} favorite
+                    {favoritedTranslations.length !== 1 ? "s" : ""}
                   </span>
                 )}
               </div>
@@ -414,8 +481,7 @@ const HistoryModalPopUp: React.FC<HistoryModalPopUpProps> = ({
         </motion.div>
       )}
     </AnimatePresence>
-  )
-}
+  );
+};
 
-export default HistoryModalPopUp
-
+export default HistoryModalPopUp;
