@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ChevronDown,
@@ -62,7 +62,7 @@ const fetchUpdates = async (): Promise<Update[]> => {
           tags: ["Performance", "Audio", "Bug Fix"],
           isMajor: true,
           icon: <Zap className="h-6 w-6 text-blue-600" />,
-          imageUrl: "/images/update-performance.jpg",
+          imageUrl: "/placeholder.svg?height=300&width=500",
           rating: 4.7,
           comments: [
             {
@@ -87,7 +87,7 @@ const fetchUpdates = async (): Promise<Update[]> => {
           ],
           tags: ["Content", "UI/UX", "Features"],
           icon: <BookOpen className="h-6 w-6 text-purple-600" />,
-          imageUrl: "/images/update-culture.jpg",
+          imageUrl: "/placeholder.svg?height=300&width=500",
           rating: 4.5,
           comments: [],
         },
@@ -327,14 +327,14 @@ const RecentUpdates: React.FC = () => {
                         {update.imageUrl && (
                           <div className="mb-4 rounded-lg overflow-hidden">
                             <img
-                              src={update.imageUrl}
+                              src={update.imageUrl || "/placeholder.svg"}
                               alt={update.title}
                               className="w-full h-48 object-cover"
                             />
                           </div>
                         )}
                         <h4 className="text-sm font-medium text-gray-900 mb-2">
-                          What’s New:
+                          What's New:
                         </h4>
                         <ul className="space-y-2">
                           {update.features.map((feature, idx) => (
@@ -425,10 +425,10 @@ const RecentUpdates: React.FC = () => {
                             <ThumbsDown className="h-5 w-5" />
                             <span className="ml-1">Not Helpful</span>
                           </button>
-                          <MessageCircle
-                            className="h-5 w-5 text-gray-600 ml-5 cursor-pointer"
-                            title="Comment"
-                          />
+                          {/* Fixed: Wrapped MessageCircle in a div with title attribute */}
+                          <div title="Comment" className="ml-5 cursor-pointer">
+                            <MessageCircle className="h-5 w-5 text-gray-600" />
+                          </div>
                         </div>
                       </motion.div>
                     )}
@@ -516,7 +516,9 @@ const RecentUpdates: React.FC = () => {
           <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-8 md:p-12">
             <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">
               Dapatkan Update Terbaru!
-              <Rocket className="inline h-6 w-6 ml-2" />
+              <span className="inline-block ml-2">
+                <Rocket className="h-6 w-6" />
+              </span>
             </h3>
             <p className="text-blue-100 mb-8 max-w-2xl mx-auto">
               Jangan lewatkan fitur baru dan perbaikan yang akan meningkatkan

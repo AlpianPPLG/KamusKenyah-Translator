@@ -1,9 +1,12 @@
-import React, { useState, useEffect } from "react";
+"use client";
+
+import { useState, useEffect } from "react";
 import {
   motion,
   useScroll,
   useTransform,
   AnimatePresence,
+  type Variants,
 } from "framer-motion";
 import {
   Users,
@@ -167,39 +170,27 @@ const FeaturesHighlight: React.FC = () => {
     setCurrentStat((prev) => (prev - 1 + 2) % 2); // Hanya berpindah antara 0 dan 1
   };
 
-  // Animasi untuk statistik carousel
-  const statVariants = {
+  // Animasi untuk statistik carousel - Fixed TypeScript error by properly typing the variants
+  const statVariants: Variants = {
     enter: (direction: number) => ({
-      x: direction > 0 ? 1000 : -1000, // Menggunakan pergerakan yang lebih besar untuk slider
+      x: direction > 0 ? 1000 : -1000,
       opacity: 0,
       scale: 0.9,
-      position: "absolute", // Tetapkan posisi absolut untuk mencegah glitch
-      width: "100%", // Pastikan lebar penuh untuk stabilitas
-      top: 0,
-      left: 0,
     }),
     center: {
       x: 0,
       opacity: 1,
       scale: 1,
-      position: "relative", // Kembali ke posisi relatif saat aktif
-      width: "100%",
-      top: 0,
-      left: 0,
     },
     exit: (direction: number) => ({
       x: direction < 0 ? 1000 : -1000,
       opacity: 0,
       scale: 0.9,
-      position: "absolute",
-      width: "100%",
-      top: 0,
-      left: 0,
     }),
   };
 
   // Variasi untuk kontainer agar tetap stabil
-  const containerVariants = {
+  const containerVariants: Variants = {
     hidden: { height: "auto" }, // Tinggi otomatis berdasarkan konten
     visible: {
       height: "auto",
@@ -216,12 +207,20 @@ const FeaturesHighlight: React.FC = () => {
         <motion.div
           className="absolute top-1/3 left-1/3 w-32 h-32 bg-gradient-to-br from-yellow-200 to-orange-200 rounded-full opacity-20"
           animate={{ rotate: 360 }}
-          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+          transition={{
+            duration: 20,
+            repeat: Number.POSITIVE_INFINITY,
+            ease: "linear",
+          }}
         />
         <motion.div
           className="absolute top-2/3 right-1/3 w-24 h-24 bg-gradient-to-br from-green-200 to-emerald-200 rounded-full opacity-20"
           animate={{ rotate: -360, scale: [1, 1.1, 1] }}
-          transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
+          transition={{
+            duration: 15,
+            repeat: Number.POSITIVE_INFINITY,
+            ease: "easeInOut",
+          }}
         />
       </div>
 
@@ -265,6 +264,12 @@ const FeaturesHighlight: React.FC = () => {
                 exit="exit"
                 transition={{ duration: 0.8, ease: "easeInOut" }}
                 className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+                style={{
+                  position: currentStat === 0 ? "relative" : "absolute",
+                  width: "100%",
+                  top: 0,
+                  left: 0,
+                }}
               >
                 {(currentStat === 0 ? slide1 : slide2).map((stat, index) => (
                   <motion.div
@@ -317,7 +322,7 @@ const FeaturesHighlight: React.FC = () => {
                           animate={{ y: [0, -10, 0] }}
                           transition={{
                             duration: 2,
-                            repeat: Infinity,
+                            repeat: Number.POSITIVE_INFINITY,
                             ease: "easeInOut",
                           }}
                           className="text-gray-400"
@@ -415,9 +420,13 @@ const FeaturesHighlight: React.FC = () => {
               <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-full -mr-12 -mt-12 opacity-20 group-hover:opacity-30 transition-opacity duration-300" />
               <div className="flex items-center space-x-4">
                 <div
-                  className={`p-3 rounded-lg bg-${
-                    index === 0 ? "blue" : index === 1 ? "emerald" : "amber"
-                  }-600 text-white`}
+                  className={`p-3 rounded-lg ${
+                    index === 0
+                      ? "bg-blue-600"
+                      : index === 1
+                      ? "bg-emerald-600"
+                      : "bg-amber-600"
+                  } text-white`}
                 >
                   {feature.icon}
                 </div>

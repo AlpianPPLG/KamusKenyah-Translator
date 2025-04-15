@@ -12,7 +12,7 @@ import {
   ArrowRight,
   Share2,
 } from "lucide-react";
-import React from "react";
+import React, { useState } from "react";
 
 const AboutHero: React.FC = () => {
   const teamStats = [
@@ -21,6 +21,11 @@ const AboutHero: React.FC = () => {
     { value: 4, label: "Penghargaan" }, // Ubah menjadi angka
     { value: 3, label: "Kantor Regional" }, // Ubah menjadi angka
   ];
+
+  // State untuk menyimpan nilai yang dianimasikan
+  const [animatedValues, setAnimatedValues] = useState<number[]>(
+    teamStats.map(() => 0)
+  );
 
   // Hook untuk mendeteksi apakah elemen berada dalam viewport
   const controls = useAnimation();
@@ -31,8 +36,39 @@ const AboutHero: React.FC = () => {
   React.useEffect(() => {
     if (isInView) {
       controls.start("visible");
+
+      // Animasi penghitungan
+      teamStats.forEach((stat, index) => {
+        animateValue(index, 0, stat.value, 2000); // 2000ms = 2 detik
+      });
     }
   }, [isInView, controls]);
+
+  // Fungsi untuk menganimasikan nilai
+  const animateValue = (
+    index: number,
+    start: number,
+    end: number,
+    duration: number
+  ) => {
+    let startTimestamp: number | null = null;
+    const step = (timestamp: number) => {
+      if (!startTimestamp) startTimestamp = timestamp;
+      const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+      const currentValue = Math.floor(progress * (end - start) + start);
+
+      setAnimatedValues((prev) => {
+        const newValues = [...prev];
+        newValues[index] = currentValue;
+        return newValues;
+      });
+
+      if (progress < 1) {
+        window.requestAnimationFrame(step);
+      }
+    };
+    window.requestAnimationFrame(step);
+  };
 
   // Variasi animasi untuk penghitungan
   const countVariants = {
@@ -41,7 +77,7 @@ const AboutHero: React.FC = () => {
       opacity: 1,
       y: 0,
       transition: {
-        duration: 2, // Durasi animasi penghitungan (2 detik)
+        duration: 0.8, // Durasi animasi tampilan (bukan penghitungan)
         ease: "easeOut", // Efek transisi yang halus
       },
     },
@@ -49,7 +85,7 @@ const AboutHero: React.FC = () => {
 
   return (
     <section className="relative min-h-screen pt-24 overflow-hidden bg-gradient-to-b from-white to-blue-50">
-      {/* Background Elements (Tidak diubah) */}
+      {/* Background Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <motion.div
           className="absolute -top-40 -right-40 w-80 h-80 bg-blue-100 rounded-full opacity-20 blur-3xl"
@@ -89,9 +125,9 @@ const AboutHero: React.FC = () => {
       </div>
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Main Hero Content (Tidak diubah) */}
+        {/* Main Hero Content */}
         <div className="grid lg:grid-cols-2 gap-12 items-center pt-8 pb-20">
-          {/* Left Column - Text Content (Tidak diubah) */}
+          {/* Left Column - Text Content */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
@@ -144,7 +180,7 @@ const AboutHero: React.FC = () => {
               ref={ref} // Referensi untuk mendeteksi viewport
               className="grid grid-cols-2 sm:grid-cols-4 gap-4"
             >
-              {teamStats.map((stat) => (
+              {teamStats.map((stat, index) => (
                 <motion.div
                   key={stat.label}
                   initial="hidden"
@@ -152,36 +188,16 @@ const AboutHero: React.FC = () => {
                   variants={countVariants}
                   className="text-center p-4 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300"
                 >
-                  <motion.div
-                    initial={{ value: 0 }}
-                    animate={{
-                      value: stat.value,
-                      transition: {
-                        duration: 2, // Durasi animasi penghitungan
-                        ease: "easeOut", // Efek transisi yang halus
-                      },
-                    }}
-                    className="text-2xl font-bold text-blue-600 mb-1"
-                  >
-                    {stat.value > 999 ? (
-                      stat.value.toString() // Tampilkan angka utuh untuk 2018
-                    ) : (
-                      <motion.span>
-                        {
-                          stat.value >= 10
-                            ? stat.value.toString() // Tampilkan angka utuh untuk 25
-                            : stat.value // Tampilkan angka utuh untuk 4 dan 3
-                        }
-                      </motion.span>
-                    )}
-                  </motion.div>
+                  <div className="text-2xl font-bold text-blue-600 mb-1">
+                    {animatedValues[index]}
+                  </div>
                   <div className="text-xs text-gray-500">{stat.label}</div>
                 </motion.div>
               ))}
             </div>
           </motion.div>
 
-          {/* Right Column - Logo (Tidak diubah) */}
+          {/* Right Column - Logo */}
           <motion.div
             initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
@@ -198,7 +214,7 @@ const AboutHero: React.FC = () => {
                   className="absolute inset-0 flex items-center justify-center p-8"
                 >
                   <img
-                    src="../../../public/assets/img/Logo.png"
+                    src="/placeholder.svg?height=300&width=400"
                     alt="KamusKenyah Logo"
                     className="w-full h-full object-contain rounded-lg"
                   />
@@ -262,7 +278,7 @@ const AboutHero: React.FC = () => {
           </motion.div>
         </div>
 
-        {/* Values Section (Tidak diubah) */}
+        {/* Values Section */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
