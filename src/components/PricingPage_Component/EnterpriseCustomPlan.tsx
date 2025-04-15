@@ -298,9 +298,9 @@ const EnterpriseCustomPlan = () => {
                   <span className="px-4 text-sm text-gray-500 font-medium">Our Enterprise Clients</span>
                   <div className="h-px bg-gray-200 flex-grow"></div>
                 </div>
-                
+  
                 <div className="grid grid-cols-3 gap-4">
-                  {[1, 2, 3, 4, 5, 6].map((logo, i) => (
+                  {[1, 2, 3, 4, 5, 6].map((_logo, i) => (
                     <div key={i} className="h-10 bg-gray-100 rounded-md flex items-center justify-center">
                       <div className="w-16 h-5 bg-gray-200 rounded"></div>
                     </div>
