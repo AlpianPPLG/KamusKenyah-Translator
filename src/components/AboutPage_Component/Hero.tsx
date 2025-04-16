@@ -214,7 +214,7 @@ const AboutHero: React.FC = () => {
                   className="absolute inset-0 flex items-center justify-center p-8"
                 >
                   <img
-                    src="/placeholder.svg?height=300&width=400"
+                    src="../../../public/assets/img/Logo.png"
                     alt="KamusKenyah Logo"
                     className="w-full h-full object-contain rounded-lg"
                   />
