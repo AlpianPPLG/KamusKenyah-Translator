@@ -28,7 +28,7 @@ const communityMembers: CommunityMember[] = [
     id: 1,
     name: "Bulan Lenjau",
     role: "Penerjemah Sukarela",
-    avatar: "../../../public/assets/img/Member1.jpg",
+    avatar: "/assets/img/Member1.jpg",
     contribution: "500+ kata diterjemahkan",
     testimonial:
       "KamusKenyah memberi saya kesempatan untuk berbagi pengetahuan bahasa Kenyah saya dengan dunia.",
@@ -38,7 +38,7 @@ const communityMembers: CommunityMember[] = [
     id: 2,
     name: "Ding Anyie",
     role: "Guru Bahasa",
-    avatar: "../../../public/assets/img/Member2.jpg",
+    avatar: "/assets/img/Member2.jpg",
     contribution: "20 pelajaran bahasa dibuat",
     testimonial:
       "Platform ini membantu saya mengajar bahasa Kenyah dengan cara yang lebih interaktif dan menarik.",
@@ -48,7 +48,7 @@ const communityMembers: CommunityMember[] = [
     id: 3,
     name: "Liah Ding",
     role: "Kontributor Konten",
-    avatar: "../../../public/assets/img/Member3.jpg",
+    avatar: "/assets/img/Member3.jpg",
     contribution: "30 artikel budaya ditulis",
     testimonial:
       "Saya bangga bisa membantu melestarikan warisan budaya kami melalui KamusKenyah.",
@@ -58,7 +58,7 @@ const communityMembers: CommunityMember[] = [
     id: 4,
     name: "Jalong Peluk",
     role: "Moderator Forum",
-    avatar: "../../../public/assets/img/Member4.jpg",
+    avatar: "/assets/img/Member4.jpg",
     contribution: "1000+ diskusi difasilitasi",
     testimonial:
       "Komunitas KamusKenyah adalah tempat yang luar biasa untuk berbagi dan belajar bersama.",
@@ -68,7 +68,7 @@ const communityMembers: CommunityMember[] = [
     id: 5,
     name: "Ubong Emang",
     role: "Pengembang Aplikasi",
-    avatar: "../../../public/assets/img/Member5.jpg",
+    avatar: "/assets/img/Member5.jpg",
     contribution: "5 fitur baru diimplementasikan",
     testimonial:
       "Berkontribusi pada KamusKenyah memungkinkan saya menggabungkan passion teknologi dan pelestarian bahasa.",

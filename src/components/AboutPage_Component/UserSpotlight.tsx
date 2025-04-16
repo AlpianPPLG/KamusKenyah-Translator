@@ -35,7 +35,7 @@ const userSpotlights: UserSpotlight[] = [
     id: 1,
     name: "Dr. Anyi Saging",
     role: "Peneliti Bahasa Kenyah",
-    avatar: "../../../public/assets/img/Clien1.jpg",
+    avatar: "/assets/img/Clien1.jpg",
     testimonial:
       "KamusKenyah telah menjadi alat yang tak ternilai dalam penelitian saya tentang evolusi bahasa Kenyah. Akurasi dan kedalaman informasinya luar biasa.",
     contribution: "Menyumbangkan 1000+ entri kamus dan validasi etimologi",
@@ -46,7 +46,7 @@ const userSpotlights: UserSpotlight[] = [
     id: 2,
     name: "Balang Beludan",
     role: "Guru Bahasa Daerah",
-    avatar: "../../../public/assets/img/Clien2.jpg",
+    avatar: "/assets/img/Clien2.jpg",
     testimonial:
       "Sebagai guru, saya menemukan bahwa KamusKenyah membuat pelajaran bahasa menjadi lebih interaktif dan menarik bagi siswa saya. Ini adalah revolusi dalam pengajaran bahasa daerah.",
     contribution: "Mengembangkan 20 modul pembelajaran interaktif",
@@ -57,7 +57,7 @@ const userSpotlights: UserSpotlight[] = [
     id: 3,
     name: "Liah Ding",
     role: "Aktivis Pelestarian Budaya",
-    avatar: "../../../public/assets/img/Clien3.jpg",
+    avatar: "/assets/img/Clien3.jpg",
     testimonial:
       "KamusKenyah bukan hanya tentang bahasa, tapi juga tentang melestarikan warisan budaya kita. Saya bangga menjadi bagian dari komunitas yang peduli akan hal ini.",
     contribution:

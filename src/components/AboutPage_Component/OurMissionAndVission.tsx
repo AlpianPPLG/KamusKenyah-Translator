@@ -512,7 +512,7 @@ const OurMissionAndVission: React.FC = () => {
               <div className="relative z-10 flex flex-col items-center justify-center text-center space-y-6">
                 <div className="relative w-full">
                   <img
-                    src="../../../public/assets/img/Community.jpg"
+                    src="/assets/img/Community.jpg"
                     alt="KamusKenyah Vision and Mission"
                     className="w-full h-auto rounded-2xl shadow-lg"
                   />
