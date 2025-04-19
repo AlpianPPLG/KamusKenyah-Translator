@@ -24,6 +24,8 @@ import MigrationGuide from "../pages/MigrationGuidePage/MigrationGuide";
 import CommunityForum from "../pages/CommunityForumPage/CommunityForum";
 import BetaProgram from "../pages/BetaProgramPage/BetaProgram";
 import Localization from "../pages/LocalizatioPage/Localization";
+import Documentation from "../pages/DocumentationPage/Documentation";
+import Settings from "../pages/SettingsPage/Settings";
 
 const AppRoutes: React.FC = () => {
   return (
@@ -53,6 +55,8 @@ const AppRoutes: React.FC = () => {
         <Route path="/communityforum" element={<CommunityForum />} />
         <Route path="/betaprogram" element={<BetaProgram />} />
         <Route path="/localization" element={<Localization />} />
+        <Route path="/documentation" element={<Documentation />} />
+        <Route path="/settings" element={<Settings />} />
       </Routes>
     </Router>
   );
