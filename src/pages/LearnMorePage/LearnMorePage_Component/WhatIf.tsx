@@ -253,6 +253,7 @@ const WhatIf: React.FC = () => {
                     {isVideoPlaying ? "Pause" : "Play"} Demo
                   </button>
                   <button
+                    title="Bookmark this scenario"
                     className="p-2 bg-blue-50 rounded-full hover:bg-blue-100 transition-colors"
                     onClick={() => alert("Bookmark feature coming soon!")}
                   >

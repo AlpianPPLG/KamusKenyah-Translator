@@ -100,6 +100,7 @@ const VoiceInput: React.FC<VoiceInputProps> = ({
           <div className="flex items-center">
             <span>{toast.message}</span>
             <button
+              title="Close notification"
               onClick={() => setToast(null)}
               className="ml-3 p-1 bg-white bg-opacity-20 rounded-full"
             >

@@ -583,6 +583,7 @@ const Cookies: React.FC = () => {
                           </span>
                         ) : (
                           <button
+                            title={`Toggle ${category.name}`}
                             onClick={() => togglePreference(category.id)}
                             className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 ${
                               cookiePreferences[
@@ -665,6 +666,8 @@ const Cookies: React.FC = () => {
                           </span>
                         ) : (
                           <button
+                            title={`Toggle ${category.name}`}
+                            aria-label={`Toggle ${category.name}`}
                             onClick={() => togglePreference(category.id)}
                             className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 ${
                               cookiePreferences[

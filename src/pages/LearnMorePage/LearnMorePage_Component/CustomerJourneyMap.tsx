@@ -516,6 +516,7 @@ const CustomerJourneyMap: React.FC = () => {
           <div className="flex justify-between items-center mb-4">
             <h3 className="text-xl font-bold">{selectedMetric} Details</h3>
             <button
+              aria-label="Close metric details"
               onClick={() => setSelectedMetric(null)}
               className="text-gray-500 hover:text-gray-700"
             >

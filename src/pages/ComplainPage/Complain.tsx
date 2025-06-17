@@ -440,6 +440,7 @@ const ComplainPage: React.FC = () => {
                               </span>
                             </div>
                             <button
+                              aria-label={`Remove attachment ${file.name}`}
                               type="button"
                               onClick={() => removeAttachment(index)}
                               className="text-gray-400 hover:text-red-500"
@@ -503,6 +504,7 @@ const ComplainPage: React.FC = () => {
                     <div className="relative">
                       <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                       <select
+                        aria-label="Filter complaints by status"
                         value={statusFilter}
                         onChange={(e) => setStatusFilter(e.target.value)}
                         className="pl-10 pr-8 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none bg-white"

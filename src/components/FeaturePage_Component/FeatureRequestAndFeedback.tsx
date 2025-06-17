@@ -392,6 +392,7 @@ const FeatureRequestAndFeedback: React.FC = () => {
                     <div className="flex flex-col sm:flex-row gap-2">
                       <div className="relative">
                         <select
+                          title="Filter by category"
                           value={selectedCategory}
                           onChange={(e) => setSelectedCategory(e.target.value)}
                           className="pl-10 appearance-none w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500"
@@ -409,6 +410,7 @@ const FeatureRequestAndFeedback: React.FC = () => {
 
                       <div className="relative">
                         <select
+                          title="Filter by status"
                           value={selectedStatus}
                           onChange={(e) =>
                             setSelectedStatus(
@@ -431,6 +433,7 @@ const FeatureRequestAndFeedback: React.FC = () => {
 
                       <div className="relative">
                         <select
+                          title="Sort features"
                           value={sortBy}
                           onChange={(e) =>
                             setSortBy(e.target.value as "votes" | "date")
@@ -627,6 +630,7 @@ const FeatureRequestAndFeedback: React.FC = () => {
                                         placeholder="Tulis komentar Anda..."
                                       />
                                       <button
+                                        title="Submit comment"
                                         onClick={() =>
                                           handleAddComment(feature.id)
                                         }

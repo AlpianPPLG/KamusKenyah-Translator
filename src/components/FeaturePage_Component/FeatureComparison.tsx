@@ -336,6 +336,7 @@ const FeatureComparison: React.FC = () => {
 
                       {/* Info Tooltip */}
                       <button
+                        aria-label="Show feature information"
                         className="absolute right-2 top-2"
                         onMouseEnter={() => setShowTooltip(feature.name)}
                         onMouseLeave={() => setShowTooltip(null)}

@@ -270,6 +270,8 @@ const EventsPage: React.FC = () => {
             <div className="flex gap-4">
               <div className="relative">
                 <select
+                  title="Event type filter"
+                  aria-label="Filter events by type"
                   value={selectedType}
                   onChange={(e) => setSelectedType(e.target.value)}
                   className="pl-4 pr-10 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none bg-white"
@@ -306,6 +308,8 @@ const EventsPage: React.FC = () => {
                       Price
                     </label>
                     <select
+                      title="Price filter"
+                      aria-label="Filter events by price"
                       value={priceFilter}
                       onChange={(e) =>
                         setPriceFilter(
@@ -390,10 +394,18 @@ const EventsPage: React.FC = () => {
                     {event.price}
                   </div>
                   <div className="flex items-center gap-2">
-                    <button className="p-2 text-gray-400 hover:text-gray-600 transition-colors">
+                    <button 
+                      className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
+                      title="Share event"
+                      aria-label="Share this event"
+                    >
                       <Share2 className="w-5 h-5" />
                     </button>
-                    <button className="p-2 text-gray-400 hover:text-gray-600 transition-colors">
+                    <button 
+                      className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
+                      title="Get notifications"
+                      aria-label="Toggle event notifications"
+                    >
                       <Bell className="w-5 h-5" />
                     </button>
                     <motion.button

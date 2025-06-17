@@ -311,12 +311,14 @@ const YouMayAlsoLike: React.FC = () => {
 
           {/* Navigation Buttons */}
           <button
+            title="Previous slide"
             onClick={scrollToPrev}
             className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 lg:-translate-x-8 w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-50 transition-colors"
           >
             <ArrowLeft className="w-6 h-6 text-gray-600" />
           </button>
           <button
+            title="Next slide"
             onClick={scrollToNext}
             className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 lg:translate-x-8 w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-50 transition-colors"
           >
@@ -327,6 +329,7 @@ const YouMayAlsoLike: React.FC = () => {
           <div className="flex justify-center gap-2 mt-6">
             {products.map((_, index) => (
               <button
+                title={`Go to slide ${index + 1}`}
                 key={index}
                 className={`w-2.5 h-2.5 rounded-full transition-all ${
                   index === activeIndex ? "bg-blue-600 w-6" : "bg-gray-300"

@@ -6,7 +6,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Clock,
-  Eye,
+  Eye, // Icon for view count/visibility
   Filter,
   Heart,
   MessageCircle,
@@ -918,7 +918,11 @@ const Blog: React.FC = () => {
                               </div>
                             </div>
 
-                            <button className="text-blue-600 hover:text-blue-700">
+                            <button 
+                              className="text-blue-600 hover:text-blue-700"
+                              title="Share article"
+                              aria-label="Share article"
+                            >
                               <Share2 className="w-4 h-4" />
                             </button>
                           </div>
@@ -1012,7 +1016,11 @@ const Blog: React.FC = () => {
                                 <span className="text-xs">{post.views}</span>
                               </div>
 
-                              <button className="text-blue-600 hover:text-blue-700">
+                              <button 
+                                className="text-blue-600 hover:text-blue-700"
+                                title="Share article"
+                                aria-label="Share article"
+                              >
                                 <Share2 className="w-4 h-4" />
                               </button>
                             </div>
@@ -1149,6 +1157,7 @@ const Blog: React.FC = () => {
               className="bg-white rounded-xl p-6 max-w-md w-full relative"
             >
               <button
+                title="Close subscription dialog"
                 onClick={() => setShowSubscribe(false)}
                 className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
               >

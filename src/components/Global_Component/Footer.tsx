@@ -409,7 +409,11 @@ const Footer: React.FC = () => {
             <div className="flex justify-center md:justify-end items-center">
               <div className="flex items-center">
                 <Globe className="h-5 w-5 mr-2 text-blue-400" />
-                <select className="bg-gray-800 border border-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <select 
+                  aria-label="Select language"
+                  title="Language selector"
+                  className="bg-gray-800 border border-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
                   <option value="en">English</option>
                   <option value="id">Bahasa Indonesia</option>
                   <option value="my">Bahasa Malaysia</option>

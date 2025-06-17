@@ -905,6 +905,7 @@ const Localization: React.FC = () => {
                           </div>
                         </div>
                         <button
+                          title="Close language details"
                           className="p-2 rounded-full hover:bg-gray-100"
                           onClick={() => setSelectedLanguage(null)}
                         >

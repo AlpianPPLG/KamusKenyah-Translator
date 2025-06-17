@@ -154,6 +154,9 @@ const AffiliateAndReferralProgram: React.FC = () => {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <div className="relative flex-1 max-w-md">
                 <input
+                  aria-label="Referral Code"
+                  placeholder="Your referral code"
+                  title="Your referral code"
                   type="text"
                   value={referralCode}
                   readOnly

@@ -33,6 +33,7 @@
     "react-speech": "^1.0.2",
     "react-speech-recognition": "^3.10.0",
     "react-toastify": "^11.0.5",
+    "react-use": "^17.6.0",
     "swiper": "^11.2.5",
     "tailwindcss": "^4.0.8",
     "three": "^0.174.0",
@@ -63,6 +64,6 @@
   "description": "This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.",
   "main": "eslint.config.js",
   "keywords": [],
-  "author": "",
+  "author": "Alpian & Al-Ghani Desta Setyawan",
   "license": "ISC"
 }

@@ -296,12 +296,14 @@ const TestimonialsSection: React.FC = () => {
 
           {/* Navigation Arrows */}
           <button
+            title="Previous testimonial"
             onClick={handlePrev}
             className="absolute top-1/2 left-4 -translate-y-1/2 bg-white p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 group z-10"
           >
             <ChevronLeft className="w-6 h-6 text-blue-600 group-hover:scale-110 transition-transform" />
           </button>
           <button
+            title="Next testimonial"
             onClick={handleNext}
             className="absolute top-1/2 right-4 -translate-y-1/2 bg-white p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 group z-10"
           >
@@ -312,6 +314,7 @@ const TestimonialsSection: React.FC = () => {
           <div className="flex justify-center mt-6 space-x-2">
             {testimonials.map((_, index) => (
               <button
+                title={`View testimonial ${index + 1}`}
                 key={index}
                 onClick={() => {
                   setDirection(index > currentIndex ? 1 : -1);

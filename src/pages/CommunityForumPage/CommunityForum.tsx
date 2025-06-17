@@ -468,13 +468,25 @@ const CommunityForum: React.FC = () => {
               />
               <div className="flex items-center justify-between mt-4">
                 <div className="flex gap-2">
-                  <button className="p-2 text-gray-500 hover:text-gray-700 rounded-lg hover:bg-gray-100">
+                  <button 
+                    className="p-2 text-gray-500 hover:text-gray-700 rounded-lg hover:bg-gray-100"
+                    title="Add image"
+                    aria-label="Add image to post"
+                  >
                     <ImageIcon className="w-5 h-5" />
                   </button>
-                  <button className="p-2 text-gray-500 hover:text-gray-700 rounded-lg hover:bg-gray-100">
+                  <button 
+                    className="p-2 text-gray-500 hover:text-gray-700 rounded-lg hover:bg-gray-100"
+                    title="Add link"
+                    aria-label="Add link to post"
+                  >
                     <LinkIcon className="w-5 h-5" />
                   </button>
-                  <button className="p-2 text-gray-500 hover:text-gray-700 rounded-lg hover:bg-gray-100">
+                  <button 
+                    className="p-2 text-gray-500 hover:text-gray-700 rounded-lg hover:bg-gray-100"
+                    title="Add emoji"
+                    aria-label="Add emoji to post"
+                  >
                     <Smile className="w-5 h-5" />
                   </button>
                 </div>
@@ -512,6 +524,8 @@ const CommunityForum: React.FC = () => {
             </div>
             <div className="flex gap-4">
               <select
+                title="Sort posts"
+                aria-label="Sort posts"
                 value={sortBy}
                 onChange={(e) =>
                   setSortBy(
@@ -654,7 +668,11 @@ const CommunityForum: React.FC = () => {
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
-                      <button className="p-2 text-gray-400 hover:text-gray-600 transition-colors">
+                      <button 
+                        className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
+                        title="Share post"
+                        aria-label="Share this post"
+                      >
                         <Share2 className="w-5 h-5" />
                       </button>
                       <button

@@ -119,6 +119,7 @@ const Navbar: React.FC = () => {
                     {/* Panah untuk dropdown */}
                     {item.hasDropdown && (
                       <button
+                        title={`Toggle ${item.name} dropdown menu`}
                         onClick={(e) => {
                           e.preventDefault();
                           toggleDropdown(item.name);
@@ -297,6 +298,7 @@ const Navbar: React.FC = () => {
                 </button>
                 {item.hasDropdown && (
                   <button
+                    title={`Toggle ${item.name} dropdown menu`}
                     onClick={(e) => {
                       e.preventDefault();
                       toggleDropdown(item.name);

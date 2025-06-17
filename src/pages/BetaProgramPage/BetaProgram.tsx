@@ -366,6 +366,8 @@ const BetaProgram: React.FC = () => {
                       Full Name
                     </label>
                     <input
+                      title="Enter your full name"
+                      placeholder="Enter your full name"
                       type="text"
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
@@ -379,6 +381,8 @@ const BetaProgram: React.FC = () => {
                       Email Address
                     </label>
                     <input
+                      title="Enter your email address"
+                      placeholder="Enter your email address"
                       type="email"
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
@@ -392,6 +396,7 @@ const BetaProgram: React.FC = () => {
                       Experience Level
                     </label>
                     <select
+                      title="Select your experience level"
                       value={formData.experience}
                       onChange={(e) => setFormData({ ...formData, experience: e.target.value })}
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -431,6 +436,8 @@ const BetaProgram: React.FC = () => {
 
                   <div className="flex items-start">
                     <input
+                      title="Accept terms and conditions"
+                      placeholder="Accept terms and conditions"
                       type="checkbox"
                       checked={formData.agreement}
                       onChange={(e) => setFormData({ ...formData, agreement: e.target.checked })}

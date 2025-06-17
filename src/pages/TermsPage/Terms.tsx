@@ -843,6 +843,7 @@ const TermsPage: React.FC = () => {
       {showFloatingToc && (
         <div className="fixed bottom-5 right-5 z-50">
           <button
+            title="Back to top"
             className="bg-indigo-600 text-white p-3 rounded-full shadow-lg hover:bg-indigo-700 transition-colors"
             onClick={() =>
               document

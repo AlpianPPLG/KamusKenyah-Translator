@@ -365,6 +365,7 @@ const FeaturesHighlight: React.FC = () => {
 
           {/* Navigation Arrows for Stats Carousel */}
           <button
+            title="Previous slide"
             onClick={handlePrevStat}
             className="absolute top-1/2 left-4 -translate-y-1/2 bg-white p-3 rounded-full shadow-md hover:shadow-lg transition-all duration-300 group"
             onMouseEnter={() => setIsHovered(-1)} // Gunakan setIsHovered untuk efek hover pada panah kiri
@@ -373,6 +374,7 @@ const FeaturesHighlight: React.FC = () => {
             <ChevronLeft className="w-6 h-6 text-blue-600 group-hover:scale-110 transition-transform" />
           </button>
           <button
+            title="Next slide"
             onClick={handleNextStat}
             className="absolute top-1/2 right-4 -translate-y-1/2 bg-white p-3 rounded-full shadow-md hover:shadow-lg transition-all duration-300 group"
             onMouseEnter={() => setIsHovered(-2)} // Gunakan setIsHovered untuk efek hover pada panah kanan
@@ -385,6 +387,7 @@ const FeaturesHighlight: React.FC = () => {
           <div className="flex justify-center mt-6 space-x-2">
             {Array.from({ length: 2 }).map((_, index) => (
               <button
+                title={`Navigate to slide ${index + 1}`}
                 key={index}
                 onClick={() => {
                   setDirection(index > currentStat ? 1 : -1); // Set direction berdasarkan navigasi

@@ -367,6 +367,7 @@ const SecretDeveloperEasterEgg: React.FC = () => {
               </p>
             )}
             <button
+              title="Close hint"
               className="absolute top-1 right-1 text-gray-400 hover:text-gray-600"
               onClick={() => setShowHint(false)}
             >
@@ -413,6 +414,7 @@ const SecretDeveloperEasterEgg: React.FC = () => {
               CONNECTED
             </span>
             <button
+              title="Close developer console"
               onClick={() => setIsVisible(false)}
               className="text-gray-400 hover:text-white transition-colors"
             >

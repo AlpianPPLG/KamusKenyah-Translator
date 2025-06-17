@@ -235,6 +235,8 @@ const Settings = () => {
                       <div className="ml-4">
                         {setting.type === 'toggle' && (
                           <button
+                            title={`Toggle ${setting.title}`}
+                            aria-label={`Toggle ${setting.title}`}
                             onClick={() => handleSettingChange(group.id, setting.id, !setting.value)}
                             className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
                               setting.value ? 'bg-blue-600' : 'bg-gray-200'
@@ -249,6 +251,8 @@ const Settings = () => {
                         )}
                         {setting.type === 'select' && setting.options && (
                           <select
+                            title={`Select ${setting.title}`}
+                            aria-label={`Select ${setting.title}`}
                             value={setting.value as string}
                             onChange={(e) => handleSettingChange(group.id, setting.id, e.target.value)}
                             className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"

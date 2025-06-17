@@ -347,6 +347,7 @@ const Hero = () => {
                   {!isPlaying && (
                     <div className="absolute inset-0 flex items-center justify-center">
                       <button
+                        title="Play video"
                         onClick={handlePlayVideo}
                         className="w-16 h-16 rounded-full bg-white/30 backdrop-blur-sm flex items-center justify-center hover:bg-white/50 transition-all"
                       >
@@ -366,6 +367,7 @@ const Hero = () => {
                     </p>
                   </div>
                   <button
+                    title="Open in new window"
                     className="text-blue-600 hover:text-blue-800"
                     onClick={() => window.open("#", "_blank")}
                   >

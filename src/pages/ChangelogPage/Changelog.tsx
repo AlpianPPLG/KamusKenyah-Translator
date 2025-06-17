@@ -272,6 +272,7 @@ const Changelog: React.FC = () => {
 
           <div className="flex flex-wrap gap-3 w-full lg:w-auto">
             <select
+              aria-label="Filter changelog by type"
               className="py-3 px-4 text-gray-700 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent cursor-pointer"
               value={filter}
               onChange={(e) => setFilter(e.target.value)}
@@ -284,6 +285,7 @@ const Changelog: React.FC = () => {
             </select>
 
             <select
+              aria-label="Sort changelog entries"
               className="py-3 px-4 text-gray-700 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent cursor-pointer"
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}

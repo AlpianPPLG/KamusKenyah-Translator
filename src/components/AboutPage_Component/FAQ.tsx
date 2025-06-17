@@ -447,6 +447,7 @@ const FAQSection: React.FC = () => {
               />
               {searchQuery && (
                 <button
+                  aria-label="Clear search"
                   onClick={() => setSearchQuery("")}
                   className="absolute right-4 top-1/2 transform -translate-y-1/2"
                 >
@@ -499,6 +500,7 @@ const FAQSection: React.FC = () => {
                     {categories.find((c) => c.name === selectedCategory)?.icon}
                     <span className="ml-1">{selectedCategory}</span>
                     <button
+                      aria-label="Remove category filter"
                       onClick={() => setSelectedCategory("Semua")}
                       className="ml-1 hover:text-blue-900"
                     >
@@ -514,6 +516,7 @@ const FAQSection: React.FC = () => {
                   >
                     <span>{tag}</span>
                     <button
+                      aria-label="Remove tag filter"
                       onClick={() => toggleTag(tag)}
                       className="ml-1 hover:text-indigo-900"
                     >

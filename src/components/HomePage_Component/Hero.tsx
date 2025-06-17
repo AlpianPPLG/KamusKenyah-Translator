@@ -394,6 +394,7 @@ const Hero: React.FC = () => {
           transition={{ duration: 0.6, delay: 0.4 }}
         >
           <button
+            title="Swap Languages"
             onClick={handleSwapLanguages}
             className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 bg-white rounded-full p-3 shadow-lg hover:shadow-xl transition-all duration-300 group"
           >
